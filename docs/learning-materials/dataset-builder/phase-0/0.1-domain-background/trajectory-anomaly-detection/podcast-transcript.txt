@@ -1,0 +1,39 @@
+HOST_A: Welcome back. This episode tackles the first domain-background topic in the dataset builder learning plan: trajectory anomaly detection for LLM agents.
+
+HOST_B: And the first thing to clear up is the word trajectory. In this paper, a trajectory is not a GPS route on a map. It is the agent's full execution trace for a task: the instruction, the reasoning steps, the actions or tool calls, and the observations that come back.
+
+HOST_A: Right. So trajectory anomaly detection means auditing that process over time. The verifier is asking, is this execution normal or anomalous? And if it is anomalous, where is the first bad step?
+
+HOST_B: That second question is the important one. TrajAD is not just about saying, something feels off. It wants first-error localization because that makes rollback possible. If you know the first bad step, you can stop the agent, roll back to the previous safe state, and retry from there instead of restarting the whole task.
+
+HOST_A: That's a major shift from judging only the final answer. An agent might produce a plausible final response while still following a wasteful, unsafe, or irrational process underneath.
+
+HOST_B: Exactly. The paper highlights failures like wrong reasoning, wrong tool selection, wrong tool arguments, loops, redundant actions, and unwarranted continuation. That last one means the agent keeps going when it should already stop, refuse, or declare the task complete.
+
+HOST_A: Now compare that to classic GPS trajectory anomaly detection. There, the trajectory is a sequence of positions, staypoints, durations, or activities in physical space. The anomaly is usually an unusual route, movement pattern, or location behavior.
+
+HOST_B: So the data object is completely different. GPS anomaly detection models movement through space. Agent trajectory anomaly detection models movement through task execution.
+
+HOST_A: And because the object is different, the anomaly is different too. In GPS settings, you're often looking for spatial or temporal outliers. In agent settings, you're looking for procedural failures: bad reasoning, bad actions, inefficient execution, or continuing when the task should end.
+
+HOST_B: The supervision target is also different. A GPS system might score the whole trajectory or highlight suspicious points. TrajAD wants both binary detection and the first erroneous step. That's a much more operational requirement because it is aimed at runtime monitoring.
+
+HOST_A: The paper LM-TAD helps make the contrast sharper. LM-TAD uses language-model ideas for spatial trajectories. It treats locations like tokens and uses perplexity or surprisal to detect anomalous places or unusual behavior for a specific user.
+
+HOST_B: Which is clever, but it's still a physical-trajectory problem. TrajAD is about semantic and procedural correctness in an agent's chain of reasoning, actions, and observations.
+
+HOST_A: That leads to the dataset, TrajBench. The key phrase to remember is perturb-and-complete.
+
+HOST_B: Here's the simple version. Start from a clean successful trajectory. Inject an anomaly at a chosen step. Then continue the trajectory from that corrupted state so the later steps reflect the consequences of the mistake.
+
+HOST_A: And that's better than plain perturbation because if you only break one step and leave the rest untouched, the trajectory can look fake. Later steps may assume the original state still holds, so the sample becomes internally inconsistent in a very obvious way.
+
+HOST_B: Perturb-and-complete makes the bad trajectory feel more realistic. The mistake has downstream effects, and the rest of the process unfolds as if that mistake really happened.
+
+HOST_A: That matters directly for this repo. The current dataset builder uses direct perturbation. It edits a step and leaves later steps unchanged. That's simpler and cheaper, but it can create contradictions that wouldn't appear in a naturally evolving bad trajectory.
+
+HOST_B: So when you're reading the rest of the learning plan, keep this mental model in mind. The project isn't only building labels. It's trying to create supervision that reflects real process failures, with meaningful anomaly types and step-level localization.
+
+HOST_A: Three practical takeaways. First, agent trajectories are execution traces, not routes. Second, first-error localization is what turns anomaly detection into a runtime control mechanism. Third, perturb-and-complete is a stronger realism target than direct one-step corruption.
+
+HOST_B: If you keep those three ideas in view, the later phases on perturbation rules, validation, and manual review will make much more sense.

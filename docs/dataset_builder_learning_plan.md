@@ -82,10 +82,14 @@ each design decision was made — by actually running it, breaking it, and exten
 
 ### 0.1 Domain background (~90 min total)
 
-- [ ] **Read TrajAD abstract, introduction, and related work** (~30 min)
-  - Focus: what is "trajectory anomaly detection" in the agent context?
-  - What distinguishes it from GPS trajectory anomaly detection?
-  - Note how TrajBench was constructed (perturb-and-complete, not just perturbation)
+- [x] **Read TrajAD abstract, introduction, and related work** (~30 min)
+  - Focus answer: in the agent context, trajectory anomaly detection means auditing an agent's full execution trace — instruction plus reasoning, actions/tool calls, and observations — to detect anomalies and localize the first erroneous step.
+  - GPS contrast: GPS trajectory anomaly detection looks for unusual movement in physical space, while agent trajectory anomaly detection looks for procedural failures in task execution such as bad reasoning, bad tool use, loops, or unwarranted continuation.
+  - TrajBench note: TrajBench is built with perturb-and-complete, meaning it injects an error and then continues the trajectory from that corrupted state so downstream behavior stays realistic; this is richer than plain one-step perturbation.
+  - Q&A notes: [answers.md](learning-materials/dataset-builder/phase-0/0.1-domain-background/trajectory-anomaly-detection/answers.md)
+  - Infographic: [PNG](learning-materials/dataset-builder/phase-0/0.1-domain-background/trajectory-anomaly-detection/infographic.png) · [SVG](learning-materials/dataset-builder/phase-0/0.1-domain-background/trajectory-anomaly-detection/infographic.svg)
+  - Podcast: [local MP3](file:///data/audiobookshelf/podcasts/ai-generated/dataset-builder-phase-0-1-trajectory-anomaly-detection/2026-04-21_dataset-builder-phase-0-1-trajectory-anomaly-detection.mp3) · [Audiobookshelf UI](https://vps.taild96651.ts.net:13378/)
+  - Video explainer: [local MP4](file:///data/jellyfin/videos/ai-generated/notebooklm-style-explainers/2026-04-21_dataset-builder-phase-0-1-trajectory-anomaly-detection/2026-04-21_dataset-builder-phase-0-1-trajectory-anomaly-detection.mp4) · [Jellyfin UI](https://vps.taild96651.ts.net:8096/)
 
 - [ ] **Read TrajAD section 3: dataset construction and anomaly taxonomy** (~30 min)
   - What are the three top-level anomaly classes?
