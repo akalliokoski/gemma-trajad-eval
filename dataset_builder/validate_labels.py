@@ -74,14 +74,19 @@ def validate_record(record: dict, idx: int) -> list[str]:
             err("anomalous record has null bad_step")
         elif not isinstance(bad_step, int):
             err(f"bad_step must be int, got {type(bad_step).__name__}")
-        elif isinstance(traj, list) and not (0 <= bad_step < len(traj)):
-            err(f"bad_step={bad_step} out of range [0, {len(traj)})")
-
         anomaly_type = record.get("anomaly_type")
         if anomaly_type is None:
             err("anomalous record has null anomaly_type")
         elif anomaly_type not in VALID_ANOMALY_TYPES:
             err(f"unknown anomaly_type: {anomaly_type!r}")
+
+        if isinstance(bad_step, int) and isinstance(traj, list):
+            max_allowed = len(traj)
+            if anomaly_type == "skipped_required_step":
+                if not (0 <= bad_step <= max_allowed):
+                    err(f"bad_step={bad_step} out of range [0, {max_allowed}] for skipped_required_step")
+            elif not (0 <= bad_step < len(traj)):
+                err(f"bad_step={bad_step} out of range [0, {len(traj)})")
 
     # Optional split field
     split = record.get("split")

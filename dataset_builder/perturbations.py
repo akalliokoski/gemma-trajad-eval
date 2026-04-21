@@ -61,7 +61,8 @@ def parse_tool_call(content: str) -> dict | None:
 
 
 def replace_tool_call(content: str, new_call: dict) -> str:
-    return TOOL_CALL_RE.sub(f"<tool_call>{json.dumps(new_call)}</tool_call>", content)
+    replacement = f"<tool_call>{json.dumps(new_call)}</tool_call>"
+    return TOOL_CALL_RE.sub(lambda _match: replacement, content)
 
 
 # ---------------------------------------------------------------------------
