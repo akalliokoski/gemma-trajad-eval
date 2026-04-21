@@ -1,293 +1,215 @@
-# Gemma-TrajAD
+# gemma-trajad-eval
 
-**Local trajectory anomaly detection for tool-using agents with Gemma 4 E2B**
+Hermes-first applied LLM engineering on Gemma, Unsloth, and Apple Silicon.
 
-A research/dev project that converts Hermes-style agent traces into a TrajAD-inspired supervised dataset and fine-tunes Gemma 4 E2B-it to detect trajectory anomalies, localize bad steps, and classify anomaly types — all runnable locally on Apple Silicon.
-
----
-
-## Overview
-
-This project consists of two tightly connected subprojects:
-
-- **Subproject A — Dataset:** Hermes traces → TrajAD-style supervised dataset
-- **Subproject B — Model:** Gemma 4 E2B trajectory anomaly detector + step localizer
-
-The split is intentional: TrajAD's core setup requires labeled trajectories with anomaly types and localized bad steps, while Hermes-style traces already provide rich multi-turn reasoning, tool calls, and tool responses in a compatible conversational structure.
+This repository is a learn-by-doing project where Nous Research Hermes Agent does the hands-on work across development, data engineering, fine-tuning, evaluation, and documentation. The project keeps the original Gemma-based trajectory-anomaly direction as an important technical track, but the broader scope is now bigger: build with Hermes, and turn the build process itself into reusable course material.
 
 ---
 
-## Hardware target
+## Project pivot
 
-- **Apple Silicon M3, 32 GB unified memory**
-- Local prototyping: MLX / mlx-tune
-- Cloud scaling: Unsloth on NVIDIA GPU (A100/H100)
+The repository started as a focused project for trajectory anomaly detection on Hermes-style agent traces.
 
----
+That thread still matters, but the scope has changed:
+- Hermes is now the primary executor for project work
+- the repo should actively use Hermes skills, tools, and newly created skills
+- the project should maintain a living wiki while work is happening
+- every substantial implementation step should also produce study material for the human learner
+- the same core stack should be preserved where practical: Gemma, Unsloth, and Apple Silicon
 
-## Subproject A — Dataset pipeline
-
-### Input
-
-| Source | Description |
-|--------|-------------|
-| [`DJLougen/hermes-agent-traces-filtered`](https://huggingface.co/datasets/DJLougen/hermes-agent-traces-filtered) | ~3,679 rows, multi-turn, ShareGPT-compatible, filtered for reasoning depth |
-| [`lambda/hermes-agent-reasoning-traces`](https://huggingface.co/datasets/lambda/hermes-agent-reasoning-traces) | Larger, noisier original source (optional) |
-
-### Output tasks
-
-1. **Binary anomaly detection** — `{"anomalous": true}`
-2. **Step localization** — `{"bad_step": 5}`
-3. **Typed anomaly classification** — `{"anomaly_type": "process_inefficiency"}`
-4. **Joint output** — all of the above plus an explanation string
-
-### Anomaly taxonomy
-
-Top-level classes:
-
-| Class | Description |
-|-------|-------------|
-| `normal` | Valid expert trajectory |
-| `task_failure` | Agent failed to complete the task |
-| `process_inefficiency` | Task completed but via a suboptimal path |
-| `unwarranted_continuation` | Agent continued after task was effectively solved |
-
-Operational subtypes:
-
-`wrong_tool_choice`, `bad_tool_arguments`, `skipped_required_step`, `repeated_step`, `premature_final_answer`, `continued_after_sufficient_evidence`, `contradicted_tool_result`, `hallucinated_tool`, `invalid_tool_json`, `unnecessary_replanning`
-
-### Dataset record format
-
-```json
-{
-  "id": "trace_000123_var_02",
-  "source_trace_id": "uuid",
-  "split": "train",
-  "trajectory": [
-    {"role": "system",    "content": "..."},
-    {"role": "user",      "content": "..."},
-    {"role": "assistant", "content": "<think>...</think><tool_call>...</tool_call>"},
-    {"role": "tool",      "content": "<tool_response>...</tool_response>"}
-  ],
-  "is_anomalous": true,
-  "anomaly_type": "bad_tool_arguments",
-  "bad_step": 4,
-  "generation_rule": "mutate_argument_value",
-  "metadata": {
-    "category": "Terminal & Coding",
-    "subcategory": "Terminal Tasks"
-  }
-}
-```
-
-### Generation pipeline stages
-
-| Stage | Description |
-|-------|-------------|
-| A1 | Clean "normal" set from filtered Hermes traces |
-| A2 | Synthetic perturbations (8 perturbation rules) |
-| A3 | Automatic labeling with source/variant metadata |
-| A4 | Manual review of 100–200 samples |
+In short: this is now a Hermes-first build-and-learn lab.
 
 ---
 
-## Subproject B — Model
+## What this repo is for now
 
-### Model
+This repo serves four purposes at once:
 
-| Model | HF ID | Notes |
-|-------|-------|-------|
-| Primary | [`google/gemma-4-E2B-it`](https://huggingface.co/google/gemma-4-E2B-it) | Lower memory, fast local iteration |
-| Optional | `google/gemma-4-E4B-it` | Comparison target |
+1. Development workspace
+   - Build real code, scripts, datasets, and experiments with Hermes doing the execution.
 
-### Training objective
+2. Data engineering lab
+   - Ingest, inspect, normalize, label, mutate, and validate agent-trace data.
 
-SFT for structured judging output.
+3. Fine-tuning and evaluation lab
+   - Prepare training data, run Gemma experiments, and evaluate outputs with local-first constraints.
 
-**Prompt:** system instruction (anomaly detector) + full trajectory + task description  
-**Target:**
-```json
-{
-  "anomalous": true,
-  "bad_step": 5,
-  "anomaly_type": "skipped_required_step",
-  "confidence": 0.81,
-  "explanation": "The agent answered before checking the required file contents."
-}
-```
+4. Course-material factory
+   - Capture project knowledge as explainers, plans, runbooks, and wiki pages so the human can study both concepts and actual implementation steps.
 
-### Training ladder
+---
 
-| Stage | Environment | Method | Objective |
-|-------|-------------|--------|-----------|
-| 1 | Mac / mlx-tune | LoRA SFT | Binary anomaly detection + localization |
-| 2 | Mac / mlx-tune | DPO | Ranking between competing judgments |
-| 3 | Cloud / Unsloth | LoRA SFT | E4B or 31B, larger batches |
-| 4 | Cloud / Unsloth | GRPO | Reward-driven detection + localization |
+## Core operating model
 
-### Metrics
+For meaningful work in this repository, Hermes should:
+- load and use relevant skills first
+- inspect existing code and docs before changing anything
+- create plans for multi-step work in `docs/plans/`
+- execute tasks with tools, scripts, and verification
+- update documentation as part of implementation
+- maintain a project knowledge base with the `llm-wiki` skill
+- create or patch reusable skills when project-specific workflows emerge
 
-- Binary anomaly classification accuracy
-- Macro F1 for anomaly type
-- Exact-match bad-step accuracy
-- ±1 tolerance localization accuracy
-- JSON validity rate
-- Calibration / confidence sanity checks
-- Inference latency on local Mac
+The intent is not just to finish tasks, but to leave behind a high-signal record of what was learned and how the work was done.
 
-### MVP success criteria
+---
 
-| Level | Criteria |
-|-------|---------|
-| Good MVP | Binary detection > base model; localization useful on obvious perturbations; JSON validity > 95% |
-| Strong result | Useful classification on 5–8 subtypes; demo integration with observability stack |
+## Current technical direction
+
+The preferred technical direction remains:
+- model family: Gemma
+- tuning workflow: Unsloth where possible
+- control/orchestration plane: VPS-hosted Hermes Agent
+- local worker target: Apple Silicon MacBook Pro
+- network coordination: Tailscale
+- file synchronization: Syncthing
+- implementation language: Python
+- repo-native documentation: Markdown
+- heavy GPU tier: Modal later, once the project is ready and account setup is done
+
+When local constraints require alternatives, use the closest compatible path that still preserves the spirit of the stack.
+
+### Execution topology and workload placement
+
+The project now uses a three-tier execution model:
+
+1. VPS
+   - Hermes runs here by default.
+   - Use it for orchestration, planning, docs, repo management, lightweight automation, and remote coordination.
+
+2. Apple Silicon MacBook Pro (M3 Pro, 32 GB)
+   - Use it for small and medium heavy-lifting, Apple-Silicon-specific validation, bounded local training runs, and local data processing.
+   - Because this is also the user's daily workstation, high-RAM tasks require explicit user approval before dispatch.
+
+3. Modal serverless GPU
+   - Intended future home for truly heavy compute.
+   - Account setup is intentionally deferred until the project reaches the right stage.
+
+Hermes should actively use Tailscale and Syncthing-aware workflows to coordinate work between the VPS and the Mac instead of assuming all work happens on one machine.
+
+---
+
+## Active workstreams
+
+### 1. Hermes-first project infrastructure
+- project operating rules in `AGENTS.md`
+- implementation plans in `docs/plans/`
+- reusable Hermes skills
+- project wiki and study materials
+
+### 2. Agent-trace data engineering
+- download and inspect source traces
+- normalize trajectory formats
+- define anomaly taxonomies and labels
+- generate perturbations and validation checks
+- build train/eval-ready datasets
+
+### 3. Gemma fine-tuning and evaluation
+- format SFT-ready examples
+- run local-first experiments
+- compare prompt and model variants
+- choose the right execution tier for each experiment
+- measure output quality, localization quality, and structured-output reliability
+
+### 4. Integrations and demos
+- connect outputs to observability or tracing workflows
+- build demos around trace inspection and anomaly analysis
+- create practical examples that can be studied and reproduced
 
 ---
 
 ## Repo layout
 
-```
+Current top-level areas:
+
+```text
 gemma-trajad-eval/
+  AGENTS.md
   README.md
   LICENSE
   pyproject.toml
 
-  docs/
-    project-spec.md          # Full project specification
-    labeling-guidelines.md   # Anomaly labeling rules and examples
-    evaluation-plan.md       # Metrics, splits, and evaluation protocol
-
-  data/
-    raw/                     # Downloaded source traces (gitignored)
-    interim/                 # Normalized, pre-perturbation records
-    processed/               # Final JSONL dataset
-    eval/                    # Held-out evaluation set
-
   dataset_builder/
-    download_hermes.py       # Download and cache Hermes traces
-    inspect_traces.py        # EDA utilities
-    normalize_trajectory.py  # Convert ShareGPT → internal format
-    perturbations.py         # 8 perturbation rules
-    build_trajad_dataset.py  # End-to-end pipeline
-    validate_labels.py       # Schema and consistency checks
-
   training/
-    prepare_sft_data.py      # Format dataset for SFT
-    train_e2b.py             # mlx-tune training script (E2B)
-    train_e4b.py             # Unsloth training script (E4B / cloud)
-    inference.py             # Local inference and batch evaluation
-    evaluate.py              # Metrics computation
-
-  prompts/
-    anomaly_binary.txt       # Binary detection prompt template
-    anomaly_localize.txt     # Localization prompt template
-    anomaly_joint.txt        # Joint detection + localization + type
-
   integrations/
-    langfuse_demo.py         # Langfuse trajectory scorer demo
-    phoenix_openinference_demo.py
-    smolagents_demo.py       # Run agent → export trace → verify
+  prompts/
+  docs/
 
-  notebooks/
-    01_trace_exploration.ipynb
-    02_perturbation_analysis.ipynb
-    03_eval_report.ipynb
-
-  outputs/
-    adapters/                # Saved LoRA adapters (gitignored)
-    reports/                 # Evaluation reports
+  wiki/                      # Project LLM Wiki (to be created and maintained by Hermes)
+  outputs/                   # Generated adapters, reports, artifacts
 ```
 
----
-
-## Milestones
-
-| Week | Goal |
-|------|------|
-| 1 | Load and inspect Hermes filtered traces; write trajectory normalizer; define anomaly taxonomy; review 30 traces manually |
-| 2 | Implement first 4 perturbation rules; generate first synthetic dataset; hand-check 100 examples; publish dataset schema draft |
-| 3 | Create SFT prompts for binary detection; fine-tune Gemma 4 E2B on small sample; evaluate on held-out synthetic set |
-| 4 | Add localization; build local demo with one tracing tool; publish repo and write-up |
-| 5+ | Compare E2B vs E4B; add harder anomaly types; release HF dataset and adapter |
+Important docs:
+- `AGENTS.md` — project operating instructions for Hermes and future agents
+- `docs/execution-topology.md` — workload placement rules across VPS, Mac, and future Modal
+- `docs/project-spec.md` — prior project specification and source context
+- `docs/labeling-guidelines.md` — anomaly labeling rules and examples
+- `docs/evaluation-plan.md` — metrics and evaluation protocol
+- `docs/plans/` — implementation plans for ongoing work
 
 ---
 
-## Community / integration targets
+## Project wiki
 
-| Project | Repo | Potential contribution |
-|---------|------|----------------------|
-| Langfuse | [langfuse/langfuse](https://github.com/langfuse/langfuse) | Cookbook: trajectory anomaly detection for agent traces |
-| Arize Phoenix | [Arize-ai/phoenix](https://github.com/Arize-ai/phoenix) | Notebook / plugin for localized trajectory failure analysis |
-| OpenInference | [spec](https://arize-ai.github.io/openinference/spec/) | Proposal for `trajectory.anomalous`, `trajectory.bad_step`, etc. |
-| AgentOps | [AgentOps-AI/agentops](https://github.com/AgentOps-AI/agentops) | Offline/runtime trace-quality scorer integration |
-| smolagents | [docs](https://huggingface.co/docs/smolagents/en/tutorials/inspect_runs) | End-to-end demo: run agent → export trace → flag step |
+This project should maintain a repository-local wiki under `wiki/` using the `llm-wiki` skill.
 
----
+The wiki should capture:
+- important concepts and terminology
+- models, datasets, tools, and libraries
+- experiment decisions and tradeoffs
+- durable answers to recurring project questions
+- raw sources that informed implementation choices
 
-## Resource links
-
-### Paper
-- **TrajAD paper:** https://arxiv.org/abs/2602.06443
-
-### Hermes resources
-- Hermes Agent trajectory format: https://hermes-agent.nousresearch.com/docs/developer-guide/trajectory-format
-- Hermes Agent batch processing: https://hermes-agent.nousresearch.com/docs/user-guide/features/batch-processing
-- Hermes filtered traces dataset: https://huggingface.co/datasets/DJLougen/hermes-agent-traces-filtered
-- Original Hermes reasoning traces: https://huggingface.co/datasets/lambda/hermes-agent-reasoning-traces
-
-### Gemma resources
-- Google Gemma 4 announcement: https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/
-- Gemma 4 E2B-it model card: https://huggingface.co/google/gemma-4-E2B-it
-- Unsloth Gemma 4 fine-tuning guide: https://unsloth.ai/docs/models/gemma-4/train
-- Unsloth notebooks: https://unsloth.ai/docs/get-started/unsloth-notebooks
-- Google Gemma fine-tuning docs: https://ai.google.dev/gemma/docs/tune
-- Google Gemma QLoRA tutorial: https://ai.google.dev/gemma/docs/core/huggingface_text_finetune_qlora
-
-### Local training resources
-- mlx-tune (Unsloth-compatible MLX trainer): https://github.com/ARahim3/unsloth-mlx
-- mlx-lm LoRA/QLoRA docs: https://github.com/ml-explore/mlx-lm/blob/main/mlx_lm/LORA.md
-
-### Community / integration resources
-- Langfuse repo: https://github.com/langfuse/langfuse
-- Phoenix repo: https://github.com/Arize-ai/phoenix
-- OpenInference spec: https://arize-ai.github.io/openinference/spec/
-- AgentOps repo: https://github.com/AgentOps-AI/agentops
-- smolagents trace inspection docs: https://huggingface.co/docs/smolagents/en/tutorials/inspect_runs
-
-### Related work
-- AOI observer paper (GRPO cautionary evidence): https://arxiv.org/html/2603.03378v3
+The goal is a compounding project memory that survives beyond chat history and doubles as study material.
 
 ---
 
-## Getting started
+## Learn-by-doing output standard
 
-```bash
-# 1. Clone and install
-git clone <repo-url>
-cd gemma-trajad-eval
-pip install -e ".[dev]"
+Substantial work should leave behind material that a human can study later.
 
-# 2. Download Hermes traces
-python dataset_builder/download_hermes.py
+Good outputs include:
+- short technical explainers
+- implementation notes
+- experiment summaries
+- troubleshooting guides
+- architecture notes
+- example commands and verification steps
+- wiki pages for concepts and decisions
 
-# 3. Inspect traces
-python dataset_builder/inspect_traces.py
+A useful artifact should answer:
+- what was done
+- why it was done this way
+- how it was implemented
+- how it was validated
+- what to study next
 
-# 4. Build dataset
-python dataset_builder/build_trajad_dataset.py
+---
 
-# 5. Prepare SFT data
-python training/prepare_sft_data.py
+## Original trajectory-anomaly track
 
-# 6. Train (local Mac)
-python training/train_e2b.py
+The original focus remains a valid and important execution track inside the broader project.
 
-# 7. Evaluate
-python training/evaluate.py
-```
+That track includes:
+- converting Hermes-style traces into supervised trajectory-eval datasets
+- generating anomaly labels and localized bad-step annotations
+- fine-tuning Gemma to judge trajectory quality
+- evaluating binary anomaly detection, anomaly typing, and step localization
+
+Existing scripts under `dataset_builder/`, `training/`, `prompts/`, and `integrations/` remain relevant and should be evolved rather than discarded whenever possible.
+
+---
+
+## Suggested next steps
+
+1. Initialize the project wiki in `wiki/`
+2. Keep execution-topology docs aligned with reality
+3. Pick the next concrete implementation slice
+4. Decide whether it belongs on the VPS, the Mac, or later Modal
+5. Execute it with Hermes while producing course material in parallel
 
 ---
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT — see `LICENSE`.
