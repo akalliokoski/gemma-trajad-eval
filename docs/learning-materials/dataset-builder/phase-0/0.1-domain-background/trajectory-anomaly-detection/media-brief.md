@@ -35,7 +35,10 @@ Explain why this matters to `dataset_builder/`:
 
 ## Source files
 - `answers.md`
-- `infographic.svg`
+- `analysis.md`
+- `structured-content.md`
+- `prompts/infographic.md`
+- `infographic.png` is the current prompt-driven image-generation artifact
 
 ## Sources
 - TrajAD paper: https://arxiv.org/abs/2602.06443
