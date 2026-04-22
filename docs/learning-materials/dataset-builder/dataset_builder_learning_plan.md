@@ -88,7 +88,7 @@ each design decision was made — by actually running it, breaking it, and exten
   - TrajBench note: TrajBench is built with perturb-and-complete, meaning it injects an error and then continues the trajectory from that corrupted state so downstream behavior stays realistic; this is richer than plain one-step perturbation.
   - Q&A notes: [answers.md](learning-materials/dataset-builder/phase-0/0.1-domain-background/trajectory-anomaly-detection/answers.md)
   - Infographic: [PNG](learning-materials/dataset-builder/phase-0/0.1-domain-background/trajectory-anomaly-detection/infographic.png) · [SVG](learning-materials/dataset-builder/phase-0/0.1-domain-background/trajectory-anomaly-detection/infographic.svg)
-  - Podcast: [local MP3](file:///data/audiobookshelf/podcasts/ai-generated/dataset-builder-phase-0-1-trajectory-anomaly-detection/2026-04-21_dataset-builder-phase-0-1-trajectory-anomaly-detection.mp3) · [Audiobookshelf UI](https://vps.taild96651.ts.net:13378/)
+  - Podcast: [local MP3](file:///data/audiobookshelf/podcasts/profiles/gemma/projects/gemma-trajad-eval/dataset-builder/phase-0-orientation/0.1-domain-background/trajectory-anomaly-detection/2026-04-21_dataset-builder-phase-0-1-trajectory-anomaly-detection.mp3) · [Audiobookshelf UI](https://vps.taild96651.ts.net:13378/)
   - Video explainer: [local MP4](file:///data/jellyfin/videos/ai-generated/notebooklm-style-explainers/2026-04-21_dataset-builder-phase-0-1-trajectory-anomaly-detection/2026-04-21_dataset-builder-phase-0-1-trajectory-anomaly-detection.mp4) · [Jellyfin UI](https://vps.taild96651.ts.net:8096/)
 
 - [ ] **Read TrajAD section 3: dataset construction and anomaly taxonomy** (~30 min)

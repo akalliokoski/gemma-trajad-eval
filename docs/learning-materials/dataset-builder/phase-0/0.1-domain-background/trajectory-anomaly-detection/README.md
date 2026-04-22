@@ -10,7 +10,7 @@ This folder contains the study material created for the first completed topic in
 - `video-brief.md` — structured brief used to generate the Jellyfin video explainer
 
 ## Generated media outside the repo
-- Podcast audio: `/data/audiobookshelf/podcasts/ai-generated/dataset-builder-phase-0-1-trajectory-anomaly-detection/2026-04-21_dataset-builder-phase-0-1-trajectory-anomaly-detection.mp3`
+- Podcast audio: `/data/audiobookshelf/podcasts/profiles/gemma/projects/gemma-trajad-eval/dataset-builder/phase-0-orientation/0.1-domain-background/trajectory-anomaly-detection/2026-04-21_dataset-builder-phase-0-1-trajectory-anomaly-detection.mp3`
 - Video explainer: `/data/jellyfin/videos/ai-generated/notebooklm-style-explainers/2026-04-21_dataset-builder-phase-0-1-trajectory-anomaly-detection/2026-04-21_dataset-builder-phase-0-1-trajectory-anomaly-detection.mp4`
 
 ## Service UIs
