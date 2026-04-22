@@ -1,0 +1,32 @@
+<Person1>[gasp] Okay, now that Phase 0 is done, what should actually change in dataset builder? Do we need a rewrite, a framework, a bigger platform?</Person1>
+<Person2>No. That is the most important answer. The current builder already has a good backbone for a home AI lab: normalization, perturbation, leakage-safe split assignment, and lightweight validation.</Person2>
+<Person1>So the right move is not to make it bigger. It is to make it more trustworthy.</Person1>
+<Person2>[chuckle] Exactly. Phase 0 says the main gap is data quality discipline, not missing infrastructure.</Person2>
+<Person1>And that conclusion comes from the actual traces, right? These are not tiny chats. They are long, tool-heavy execution traces.</Person1>
+<Person2>Right. Typical trajectories are about thirty-two messages long, and tool use is basically universal in the filtered dataset. The raw format is also Share G P T style: from and value fields, with tool-call and tool-response markup serialized inside text.</Person2>
+<Person1>[gasp] Which means raw-format awareness is not a detail. It is a foundation. If inspection code assumes role and content, it is already drifting away from the real data.</Person1>
+<Person2>That is why the first improvement in the plan is simple: fix inspect traces so it works on real Hermes raw data. It should understand both from slash value and role slash content.</Person2>
+<Person1>Then the second move is not a schema rewrite, but cheap derived metadata during normalization. Things like tool-call count, tool-response count, think markers, and trajectory length.</Person1>
+<Person2>Exactly. Keep the message schema simple. Just enrich metadata. That follows YAGNI and avoids forcing every downstream component to change.</Person2>
+<Person1>[sigh] The really interesting part is perturbation quality. Phase 0 made it pretty obvious that direct perturbation alone can create unrealistic bad traces.</Person1>
+<Person2>Yes. Traj A D is strongest when anomalies remain coherent after the first wrong step. This repo is not ready for full perturb-and-complete yet, but it is ready for a lightweight coherence screen.</Person2>
+<Person1>So instead of adding an L L M continuation stage immediately, we add a deterministic filter that rejects obviously broken perturbed outputs.</Person1>
+<Person2>That is the practical middle path. Higher quality now, without turning the builder into an orchestration project.</Person2>
+<Person1>And the plan also says to add anomaly class on top of anomaly type. Why is that worth doing?</Person1>
+<Person2>Because Phase 0 clarified the three top-level classes: task failure, process inefficiency, and unwarranted continuation. Keeping only leaf labels hides that conceptual structure.</Person2>
+<Person1>[chuckle] So the dataset becomes easier to analyze without becoming more complicated to generate.</Person1>
+<Person2>Exactly. Small field, big clarity.</Person2>
+<Person1>What about the existing perturbation rules? Are all of them equally good?</Person1>
+<Person2>Not really. The plan calls out P5 and P6. They target useful anomaly ideas, but today they look too synthetic. One creates an awkward continuation pattern, and the other uses an explicit contradiction marker that feels artificial.</Person2>
+<Person1>[gasp] So even before adding new rules, just making the weakest existing rules more natural would improve the dataset a lot.</Person1>
+<Person2>Yes. That is a classic home-lab win: improve realism before increasing rule count.</Person2>
+<Person1>Another good point in the plan is validation. Right now bad-step checks mostly ask whether the index exists, not whether it truly points to the first bad step.</Person1>
+<Person2>Exactly. Rule-aware localization validation is cheap and valuable. If the supervision target is first-error localization, the validator should reflect that instead of only doing range checks.</Person2>
+<Person1>And then there is reproducibility: build manifests, rule diagnostics, and rejection counts.</Person1>
+<Person2>That part is especially elegant. A home lab does not need a giant metadata platform just to remember what happened in one dataset build. A small manifest file is enough.</Person2>
+<Person1>[gasp] Now let us talk compute policy, because this changed. The plan says Modal serverless G P U should now be the default future G P U option.</Person1>
+<Person2>Right. Apple Silicon is still useful, but it is now the secondary option. If future work adds model-assisted perturb-and-complete, semantic filtering, or stronger auditing, start with Modal first.</Person2>
+<Person1>But for the current roadmap, none of the seven tasks actually needs G P U at all.</Person1>
+<Person2>Exactly. These are V P S-friendly Python and J S O N L tasks. The Modal-first policy matters for future extensions, not for repairing the current foundation.</Person2>
+<Person1>[chuckle] That is maybe the best summary: keep the architecture small, make the data discipline stronger, and only spend more compute when the next step truly needs it.</Person1>
+<Person2>Yes. Practical, elegant, and understandable. That is the right style for the first project in a home A I lab.</Person2>

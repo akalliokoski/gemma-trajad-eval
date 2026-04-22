@@ -1,7 +1,7 @@
 # Wiki Index
 
 > Content catalog for the project wiki.
-> Last updated: 2026-04-22 | Total pages: 13
+> Last updated: 2026-04-22 | Total pages: 14
 
 ## Entities
 - [[gemma]] - Model family anchoring the project's local-first fine-tuning direction.
@@ -20,6 +20,7 @@
 ## Queries
 - [[binary-sft-handoff-2026-04-17]] - Durable answer describing the binary SFT data handoff on the VPS.
 - [[hermes-filtered-traces-dataset-structure-2026-04-22]] - Durable answer describing the Hermes filtered traces dataset structure, tool density, and ShareGPT-style storage.
+- [[dataset-builder-phase-0-improvements-2026-04-22]] - Durable answer describing how to improve dataset_builder after Phase 0 without over-engineering it.
 - [[codebase-baseline-2026-04-17]] - Durable answer describing the repo's current state and why the dataset pipeline is the next slice.
 - [[training-smoke-test-audit-2026-04-17]] - Durable answer describing the first training preflight audit and bounded smoke-test recommendation.
 - [[tiny-dataset-pipeline-vps-2026-04-17]] - Durable answer describing the first successful end-to-end VPS dataset pipeline slice.
