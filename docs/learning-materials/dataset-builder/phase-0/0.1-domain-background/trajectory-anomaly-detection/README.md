@@ -1,6 +1,6 @@
 # Trajectory anomaly detection learning artifacts
 
-This folder contains the study material created for the first completed topic in `docs/dataset_builder_learning_plan.md`.
+This folder contains the study material created for the first completed topic in `docs/learning-materials/dataset-builder/dataset_builder_learning_plan.md`.
 
 ## Files
 - `answers.md` — concise Q&A for the topic

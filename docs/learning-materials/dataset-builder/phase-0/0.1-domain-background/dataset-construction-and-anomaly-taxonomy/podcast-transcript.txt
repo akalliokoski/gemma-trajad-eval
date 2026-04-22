@@ -1,0 +1,35 @@
+HOST_A: Welcome back. This episode covers the next Phase 0.1 domain-background topic in the dataset builder learning plan: how TrajBench is constructed and how TrajAD organizes anomaly types.
+
+HOST_B: The first anchor is the taxonomy. TrajAD groups anomalous trajectories into three top-level classes: Task Failure, Process Inefficiency, and Unwarranted Continuation.
+
+HOST_A: Task Failure is the most intuitive one. The agent fails to complete the task because something goes wrong in reasoning or execution.
+
+HOST_B: Process Inefficiency is subtler. The task may still get done, but the trajectory is unnecessarily long, repetitive, or wasteful. The outcome can be correct while the process is still anomalous.
+
+HOST_A: And Unwarranted Continuation means the agent should have stopped, refused, or declared completion, but instead it keeps acting.
+
+HOST_B: That framing matters because it pushes anomaly detection beyond simple success versus failure. The paper is interested in trustworthy execution, not only final answers.
+
+HOST_A: Now let's talk dataset construction. TrajBench uses six perturbation families spread across those three classes.
+
+HOST_B: For Task Failure, the paper describes reasoning-error and execution-error injections. For Process Inefficiency, it uses loop insertion and detour or redundant-subsequence insertion. For Unwarranted Continuation, it creates failure-to-refuse and redundant-continuation cases.
+
+HOST_A: Compared with this repo, that's interesting. Our current dataset builder has 8 perturbation rules, so the raw rule count is a little larger here.
+
+HOST_B: But TrajBench still has the richer generation pipeline, because the key idea is not just how many rules exist. It's what happens after the error is injected.
+
+HOST_A: Right. TrajBench uses perturb-and-complete. Start from a successful trajectory, inject an anomaly at one step, then continue the later steps from that corrupted state.
+
+HOST_B: Which means the bad trajectory evolves naturally. Later reasoning, actions, and observations reflect the consequences of the mistake. That's much more realistic than editing one step and freezing everything after it.
+
+HOST_A: This repo currently uses direct perturbation. It modifies a step and leaves the rest unchanged. That's cheaper and easier to implement, but it can create contradictions. Later steps may behave as if the earlier corruption never happened.
+
+HOST_B: So the lesson is that six richer perturbation families can be more valuable than eight simpler rules if the generated trajectories better preserve causal coherence.
+
+HOST_A: The paper also gives us a quality target. Human agreement is reported at 96.2 percent for anomaly classification and 94.5 percent for first-error localization.
+
+HOST_B: Those numbers matter because later phases of this project include manual review. If our anomalies are realistic and well-labeled, humans should be able to agree consistently about both whether a trace is anomalous and where the first bad step occurs.
+
+HOST_A: So the takeaway is simple. A good anomaly dataset needs both a useful taxonomy and a generation process that produces believable downstream behavior after the first mistake.
+
+HOST_B: And that's exactly why this section is worth studying before diving into the repo's perturbation code. It tells you what quality target to compare against.

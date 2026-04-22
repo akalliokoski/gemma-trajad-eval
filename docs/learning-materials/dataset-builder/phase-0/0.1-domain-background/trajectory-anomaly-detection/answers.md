@@ -1,6 +1,6 @@
 # Trajectory anomaly detection in the agent context
 
-Source topic: Phase 0 → Orientation → 0.1 Domain background → first topic in `docs/dataset_builder_learning_plan.md`
+Source topic: Phase 0 → Orientation → 0.1 Domain background → first topic in `docs/learning-materials/dataset-builder/dataset_builder_learning_plan.md`
 
 ## Questions and answers
 

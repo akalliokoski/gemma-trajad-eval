@@ -1,6 +1,6 @@
 # Media brief: Trajectory anomaly detection for LLM agents
 
-Use this brief to generate a podcast and video explainer for the first topic in `docs/dataset_builder_learning_plan.md`.
+Use this brief to generate a podcast and video explainer for the first topic in `docs/learning-materials/dataset-builder/dataset_builder_learning_plan.md`.
 
 ## Audience
 A technically curious learner working through the dataset-builder plan for the first time.
