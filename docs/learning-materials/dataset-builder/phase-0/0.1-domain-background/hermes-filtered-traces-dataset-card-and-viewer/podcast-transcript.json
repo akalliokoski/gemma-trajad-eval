@@ -1,0 +1,130 @@
+{
+  "duration_hint": "6 minutes",
+  "episode_slug": "phase-0_0.1-03_hermes-filtered-traces-dataset-card-and-viewer",
+  "generation_mode": "manual-canonical",
+  "hosts": {
+    "HOST_A": {
+      "default_emotion": 0.9,
+      "name": "Ava",
+      "podcastfy_speaker": "Person1",
+      "role": "curious guide"
+    },
+    "HOST_B": {
+      "default_emotion": 0.8,
+      "name": "Noah",
+      "podcastfy_speaker": "Person2",
+      "role": "technical explainer"
+    }
+  },
+  "show_slug": "projects/gemma-trajad-eval/dataset-builder/phase-0-orientation/0.1-domain-background/hermes-filtered-traces-dataset-card-and-viewer",
+  "title": "Hermes filtered traces dataset card and viewer",
+  "turns": [
+    {
+      "emotion": 1.0,
+      "speaker": "HOST_A",
+      "tags": [
+        "gasp"
+      ],
+      "text": "[gasp] Today we are checking the third Phase 0.1 topic: what the Hermes filtered traces dataset actually looks like when you open the Hugging Face dataset card and viewer."
+    },
+    {
+      "emotion": 0.8,
+      "speaker": "HOST_B",
+      "tags": [],
+      "text": "And the first surprise is scale. This is not a tiny chat dataset. It has 3,679 rows, and the dataset card reports 32.1 messages per conversation on average."
+    },
+    {
+      "emotion": 1.1,
+      "speaker": "HOST_A",
+      "tags": [],
+      "text": "So a typical item is already a full execution trace, right? Not just one question and one answer, but a whole chain of planning, acting, and reacting."
+    },
+    {
+      "emotion": 0.9,
+      "speaker": "HOST_B",
+      "tags": [],
+      "text": "Exactly. A raw scan of train dot jsonl comes out to about 32.09 messages on average, with a median of 31, a minimum of 5, and a maximum of 54. The center of gravity is a roughly 30-message trajectory."
+    },
+    {
+      "emotion": 1.0,
+      "speaker": "HOST_A",
+      "tags": [
+        "chuckle"
+      ],
+      "text": "[chuckle] Which means anomaly detection here has to look at a long causal trace, not just grade a final answer in isolation."
+    },
+    {
+      "emotion": 0.8,
+      "speaker": "HOST_B",
+      "tags": [],
+      "text": "Right. And the raw roles in conversations are simple: system, human, g p t, and tool. That is the full agent loop stored directly in the data."
+    },
+    {
+      "emotion": 1.2,
+      "speaker": "HOST_A",
+      "tags": [],
+      "text": "The tool role is the interesting part, because this filtered corpus is extremely tool-heavy."
+    },
+    {
+      "emotion": 1.0,
+      "speaker": "HOST_B",
+      "tags": [],
+      "text": "Very tool-heavy. The dataset card says 18.5 tool calls per conversation on average. A scan that counts tool-call markup finds about 20.47 tool-call blocks and about 19.47 tool-response blocks per trace."
+    },
+    {
+      "emotion": 1.1,
+      "speaker": "HOST_A",
+      "tags": [
+        "gasp"
+      ],
+      "text": "[gasp] So tool use is basically the dominant structural pattern, not a rare extra feature."
+    },
+    {
+      "emotion": 0.9,
+      "speaker": "HOST_B",
+      "tags": [],
+      "text": "Exactly. That is why so many perturbation ideas in this repo target assistant and tool-call pairs. If the corpus were mostly plain chat, those rules would miss the real action."
+    },
+    {
+      "emotion": 0.9,
+      "speaker": "HOST_A",
+      "tags": [],
+      "text": "Now, what does the conversations field actually look like? Is it native Open A I chat format?"
+    },
+    {
+      "emotion": 1.0,
+      "speaker": "HOST_B",
+      "tags": [],
+      "text": "Not really. It is much closer to Share G P T style storage. Each message is basically a from and value pair. Then the tool protocol is serialized inside the value text with angle-bracket wrappers like tool-call and tool-response."
+    },
+    {
+      "emotion": 0.8,
+      "speaker": "HOST_A",
+      "tags": [
+        "sigh"
+      ],
+      "text": "[sigh] Meaning the structure is there, but it is packed into strings instead of already being separated into neat tool-call objects."
+    },
+    {
+      "emotion": 1.0,
+      "speaker": "HOST_B",
+      "tags": [],
+      "text": "Exactly. A native Open A I style record would usually expose role, content, structured tool-calls, and explicit tool-call identifiers. Here, the normalizer has to recover that structure by parsing the embedded markup."
+    },
+    {
+      "emotion": 1.0,
+      "speaker": "HOST_A",
+      "tags": [],
+      "text": "So the practical lesson for dataset builder is threefold: the traces are long, the role mapping matters, and the parser has to reconstruct tool structure from text before perturbation or validation can work cleanly."
+    },
+    {
+      "emotion": 1.1,
+      "speaker": "HOST_B",
+      "tags": [
+        "chuckle"
+      ],
+      "text": "[chuckle] Exactly. Once you see the dataset this way, normalize trajectory stops looking like boring plumbing. It becomes the step that turns a tool-rich Share G P T style corpus into something the rest of the pipeline can reason about."
+    }
+  ],
+  "version": 1
+}

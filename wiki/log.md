@@ -63,3 +63,11 @@
   - docs/training-smoke-test-audit.md
 - Updated navigation:
   - index.md
+
+## [2026-04-22] query | Hermes filtered traces dataset structure recorded
+- Added raw research snapshot:
+  - raw/transcripts/phase-0-domain-background-hermes-filtered-traces-2026-04-22.md
+- Added durable query page:
+  - queries/hermes-filtered-traces-dataset-structure-2026-04-22.md
+- Updated navigation:
+  - index.md
