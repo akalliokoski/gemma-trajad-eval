@@ -1,0 +1,114 @@
+{
+  "duration_hint": "7 minutes",
+  "episode_slug": "phase-0-playlist-09_finale_how-phase-0-changes-next-steps",
+  "generation_mode": "manual-canonical",
+  "hosts": {
+    "HOST_A": {
+      "name": "Ava",
+      "role": "curious architect",
+      "podcastfy_speaker": "Person1",
+      "default_emotion": 0.95
+    },
+    "HOST_B": {
+      "name": "Noah",
+      "role": "practical systems explainer",
+      "podcastfy_speaker": "Person2",
+      "default_emotion": 0.85
+    }
+  },
+  "show_slug": "projects/gemma-trajad-eval/dataset-builder/phase-0-orientation/0.4-implementation-synthesis/dataset-builder-phase-0-improvements-playlist",
+  "title": "Finale: how the implemented Phase 0 tasks reshape the next steps",
+  "turns": [
+    {
+      "speaker": "HOST_A",
+      "emotion": 1.03,
+      "tags": [
+        "gasp"
+      ],
+      "text": "[gasp] After all seven task episodes, the big question is: what actually changed for the next phase of work?"
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.91,
+      "tags": [],
+      "text": "A lot changed, even though none of the tasks looked glamorous. The dataset builder is now better grounded in the raw schema, richer in metadata, clearer in taxonomy, stricter about coherence, more realistic in weak perturbation rules, more semantic in validation, and more reproducible in its outputs."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.96,
+      "tags": [],
+      "text": "So the plan did not add spectacle. It added trust."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "Exactly. And that trust compounds. Phase 1-style work can now ask better questions: which anomaly classes are hardest, how balanced are splits, which rules are most useful, and whether later training results came from real improvements or just dirty data."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.94,
+      "tags": [],
+      "text": "What does this mean for model training specifically?"
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.89,
+      "tags": [],
+      "text": "It means later fine-tuning or evaluation runs are less likely to overfit to broken synthetic artifacts. The bad_step signal is sharper, the anomaly structure is easier to slice, and build manifests make comparisons across runs tractable."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.97,
+      "tags": [],
+      "text": "And for future generation methods, like perturb-and-complete or semantic filtering?"
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "Those are now better staged. If the project later adds GPU-backed continuation or stronger auditing, the default should be Modal serverless GPU. But the crucial point is that the dataset foundation is now mature enough to justify that extra sophistication."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.92,
+      "tags": [
+        "sigh"
+      ],
+      "text": "[sigh] I like that the final lesson is almost conservative: do the boring quality work first."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.94,
+      "tags": [],
+      "text": "Yes. In a first home AI lab project, elegance often means resisting unnecessary infrastructure until the data pipeline earns it."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 1.0,
+      "tags": [],
+      "text": "So the finale should leave listeners with a map: next comes evaluation, training readiness checks, maybe targeted rule expansion, and only then more compute-intensive generation techniques."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.92,
+      "tags": [],
+      "text": "That is the right map. The seven implemented tasks do not finish the project; they make the following steps legible, measurable, and worth doing."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.98,
+      "tags": [
+        "chuckle"
+      ],
+      "text": "[chuckle] In other words: fewer mysteries, better data, cleaner experiments."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.95,
+      "tags": [],
+      "text": "Exactly. That is a strong ending for the playlist and a strong beginning for the next phase."
+    }
+  ],
+  "version": 1
+}

@@ -1,0 +1,12 @@
+<Person1>Task 2 sounds simple on paper: Preserve more useful signal about tool-heavy trajectories without redesigning the schema.</Person1>
+<Person2>And the reason it matters is straightforward: Phase 0 established that the corpus is tool-dense and structure-heavy. The current normalized format is appropriately simple, but it throws away cheap-to-compute metadata that would help diagnostics and filtering.</Person2>
+<Person1>What I like here is that the implementation does not chase a grand redesign. It tightens one seam in the pipeline.</Person1>
+<Person2>Exactly. The implemented result for Task 2 is now marked done in the plan, with concrete verification commands recorded for the repo.</Person2>
+<Person1>[gasp] So what changes downstream because Task 2 is already implemented?</Person1>
+<Person2>This metadata becomes the cheap signal that later filtering, diagnostics, and evaluation slices can depend on.</Person2>
+<Person1>That means the value is not just local correctness. It is leverage for everything that comes after.</Person1>
+<Person2>With richer metadata in place, anomaly taxonomy and perturbation analysis stop being blind to trajectory structure.</Person2>
+<Person1>[chuckle] This is very home-lab coded: small patch, big increase in trust.</Person1>
+<Person2>Yes. It follows the same discipline across the whole plan: keep the architecture modest, but make the data and labels harder to fool.</Person2>
+<Person1>And because Task 2 is complete, the listener can treat this as a concrete repo change rather than a hypothetical roadmap item.</Person1>
+<Person2>Exactly. This episode is not selling a future intention. It is documenting an implemented improvement and the next layer of value it unlocks.</Person2>

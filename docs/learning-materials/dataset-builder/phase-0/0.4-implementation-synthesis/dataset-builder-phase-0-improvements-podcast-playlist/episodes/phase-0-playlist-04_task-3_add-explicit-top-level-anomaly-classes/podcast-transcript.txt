@@ -1,0 +1,12 @@
+<Person1>Task 3 sounds simple on paper: Align the dataset output with the Phase-0 anomaly taxonomy while keeping the current rule-level labels.</Person1>
+<Person2>And the reason it matters is straightforward: Phase 0 framed the problem in top-level classes: - task failure - process inefficiency - unwarranted continuation</Person2>
+<Person1>What I like here is that the implementation does not chase a grand redesign. It tightens one seam in the pipeline.</Person1>
+<Person2>Exactly. The implemented result for Task 3 is now marked done in the plan, with concrete verification commands recorded for the repo.</Person2>
+<Person1>[gasp] So what changes downstream because Task 3 is already implemented?</Person1>
+<Person2>Explicit anomaly classes make later reporting, stratified evaluation, and curriculum choices far easier.</Person2>
+<Person1>That means the value is not just local correctness. It is leverage for everything that comes after.</Person1>
+<Person2>Once class labels exist, coherence screening and rule tuning can be analyzed at both rule-level and class-level granularity.</Person2>
+<Person1>[chuckle] This is very home-lab coded: small patch, big increase in trust.</Person1>
+<Person2>Yes. It follows the same discipline across the whole plan: keep the architecture modest, but make the data and labels harder to fool.</Person2>
+<Person1>And because Task 3 is complete, the listener can treat this as a concrete repo change rather than a hypothetical roadmap item.</Person1>
+<Person2>Exactly. This episode is not selling a future intention. It is documenting an implemented improvement and the next layer of value it unlocks.</Person2>

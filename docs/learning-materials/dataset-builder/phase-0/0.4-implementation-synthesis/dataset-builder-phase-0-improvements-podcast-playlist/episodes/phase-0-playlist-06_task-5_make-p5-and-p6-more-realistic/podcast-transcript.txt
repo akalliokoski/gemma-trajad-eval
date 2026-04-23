@@ -1,0 +1,12 @@
+<Person1>Task 5 sounds simple on paper: Improve the most obviously synthetic perturbations without adding model-generated continuation.</Person1>
+<Person2>And the reason it matters is straightforward: Phase 0 made it clear that unrealistic anomalies hurt dataset quality. Right now: - `P5` creates a dangling continuation pattern - `P6` uses an explicit contradiction marker that is too artificial</Person2>
+<Person1>What I like here is that the implementation does not chase a grand redesign. It tightens one seam in the pipeline.</Person1>
+<Person2>Exactly. The implemented result for Task 5 is now marked done in the plan, with concrete verification commands recorded for the repo.</Person2>
+<Person1>[gasp] So what changes downstream because Task 5 is already implemented?</Person1>
+<Person2>Improving P5 and P6 raises realism where the synthetic feel was most visible, so later models learn from more plausible failures.</Person2>
+<Person1>That means the value is not just local correctness. It is leverage for everything that comes after.</Person1>
+<Person2>Better realism raises the value of deeper validation because the pipeline is now checking stronger examples rather than obviously fake ones.</Person2>
+<Person1>[chuckle] This is very home-lab coded: small patch, big increase in trust.</Person1>
+<Person2>Yes. It follows the same discipline across the whole plan: keep the architecture modest, but make the data and labels harder to fool.</Person2>
+<Person1>And because Task 5 is complete, the listener can treat this as a concrete repo change rather than a hypothetical roadmap item.</Person1>
+<Person2>Exactly. This episode is not selling a future intention. It is documenting an implemented improvement and the next layer of value it unlocks.</Person2>

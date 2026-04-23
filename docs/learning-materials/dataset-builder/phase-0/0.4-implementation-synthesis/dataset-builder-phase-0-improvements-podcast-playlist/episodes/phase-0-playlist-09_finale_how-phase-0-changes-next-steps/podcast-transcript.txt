@@ -1,0 +1,14 @@
+<Person1>[gasp] After all seven task episodes, the big question is: what actually changed for the next phase of work?</Person1>
+<Person2>A lot changed, even though none of the tasks looked glamorous. The dataset builder is now better grounded in the raw schema, richer in metadata, clearer in taxonomy, stricter about coherence, more realistic in weak perturbation rules, more semantic in validation, and more reproducible in its outputs.</Person2>
+<Person1>So the plan did not add spectacle. It added trust.</Person1>
+<Person2>Exactly. And that trust compounds. Phase 1-style work can now ask better questions: which anomaly classes are hardest, how balanced are splits, which rules are most useful, and whether later training results came from real improvements or just dirty data.</Person2>
+<Person1>What does this mean for model training specifically?</Person1>
+<Person2>It means later fine-tuning or evaluation runs are less likely to overfit to broken synthetic artifacts. The bad_step signal is sharper, the anomaly structure is easier to slice, and build manifests make comparisons across runs tractable.</Person2>
+<Person1>And for future generation methods, like perturb-and-complete or semantic filtering?</Person1>
+<Person2>Those are now better staged. If the project later adds GPU-backed continuation or stronger auditing, the default should be Modal serverless GPU. But the crucial point is that the dataset foundation is now mature enough to justify that extra sophistication.</Person2>
+<Person1>[sigh] I like that the final lesson is almost conservative: do the boring quality work first.</Person1>
+<Person2>Yes. In a first home AI lab project, elegance often means resisting unnecessary infrastructure until the data pipeline earns it.</Person2>
+<Person1>So the finale should leave listeners with a map: next comes evaluation, training readiness checks, maybe targeted rule expansion, and only then more compute-intensive generation techniques.</Person1>
+<Person2>That is the right map. The seven implemented tasks do not finish the project; they make the following steps legible, measurable, and worth doing.</Person2>
+<Person1>[chuckle] In other words: fewer mysteries, better data, cleaner experiments.</Person1>
+<Person2>Exactly. That is a strong ending for the playlist and a strong beginning for the next phase.</Person2>

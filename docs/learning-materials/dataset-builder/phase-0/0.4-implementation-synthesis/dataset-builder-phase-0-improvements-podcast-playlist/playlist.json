@@ -1,0 +1,88 @@
+{
+  "title": "Dataset Builder Phase 0 Improvements \u2014 podcast playlist",
+  "show_slug": "projects/gemma-trajad-eval/dataset-builder/phase-0-orientation/0.4-implementation-synthesis/dataset-builder-phase-0-improvements-playlist",
+  "episodes": [
+    {
+      "index": 1,
+      "slug": "phase-0-playlist-01_intro_quality-staircase",
+      "title": "Phase 0 improvements playlist intro: why these seven tasks are a quality staircase",
+      "duration_hint": "6 minutes",
+      "folder": "episodes/phase-0-playlist-01_intro_quality-staircase",
+      "blurb": "Introduces the seven-task sequence as a compact quality staircase that unlocks safer later training, evaluation, and future model-assisted steps."
+    },
+    {
+      "index": 2,
+      "slug": "phase-0-playlist-02_task-1_repair-raw-data-inspection-for-sharegpt-style-he",
+      "title": "Task 1: Repair raw-data inspection for ShareGPT-style Hermes traces",
+      "duration_hint": "5 minutes",
+      "folder": "episodes/phase-0-playlist-02_task-1_repair-raw-data-inspection-for-sharegpt-style-he",
+      "blurb": "Explains the implemented Task 1 improvement, why it matters, and what later steps it unlocks."
+    },
+    {
+      "index": 3,
+      "slug": "phase-0-playlist-03_task-2_add-derived-structural-metadata-during-normaliza",
+      "title": "Task 2: Add derived structural metadata during normalization",
+      "duration_hint": "5 minutes",
+      "folder": "episodes/phase-0-playlist-03_task-2_add-derived-structural-metadata-during-normaliza",
+      "blurb": "Explains the implemented Task 2 improvement, why it matters, and what later steps it unlocks."
+    },
+    {
+      "index": 4,
+      "slug": "phase-0-playlist-04_task-3_add-explicit-top-level-anomaly-classes",
+      "title": "Task 3: Add explicit top-level anomaly classes",
+      "duration_hint": "5 minutes",
+      "folder": "episodes/phase-0-playlist-04_task-3_add-explicit-top-level-anomaly-classes",
+      "blurb": "Explains the implemented Task 3 improvement, why it matters, and what later steps it unlocks."
+    },
+    {
+      "index": 5,
+      "slug": "phase-0-playlist-05_task-4_add-a-lightweight-coherence-screen-after-perturb",
+      "title": "Task 4: Add a lightweight coherence screen after perturbation",
+      "duration_hint": "5 minutes",
+      "folder": "episodes/phase-0-playlist-05_task-4_add-a-lightweight-coherence-screen-after-perturb",
+      "blurb": "Explains the implemented Task 4 improvement, why it matters, and what later steps it unlocks."
+    },
+    {
+      "index": 6,
+      "slug": "phase-0-playlist-06_task-5_make-p5-and-p6-more-realistic",
+      "title": "Task 5: Make P5 and P6 more realistic",
+      "duration_hint": "5 minutes",
+      "folder": "episodes/phase-0-playlist-06_task-5_make-p5-and-p6-more-realistic",
+      "blurb": "Explains the implemented Task 5 improvement, why it matters, and what later steps it unlocks."
+    },
+    {
+      "index": 7,
+      "slug": "phase-0-playlist-07_task-6_deepen-validation-for-first-error-localization",
+      "title": "Task 6: Deepen validation for first-error localization",
+      "duration_hint": "5 minutes",
+      "folder": "episodes/phase-0-playlist-07_task-6_deepen-validation-for-first-error-localization",
+      "blurb": "Explains the implemented Task 6 improvement, why it matters, and what later steps it unlocks."
+    },
+    {
+      "index": 8,
+      "slug": "phase-0-playlist-08_task-7_add-build-manifests-and-perturbation-diagnostics",
+      "title": "Task 7: Add build manifests and perturbation diagnostics",
+      "duration_hint": "5 minutes",
+      "folder": "episodes/phase-0-playlist-08_task-7_add-build-manifests-and-perturbation-diagnostics",
+      "blurb": "Explains the implemented Task 7 improvement, why it matters, and what later steps it unlocks."
+    },
+    {
+      "index": 9,
+      "slug": "phase-0-playlist-09_finale_how-phase-0-changes-next-steps",
+      "title": "Finale: how the implemented Phase 0 tasks reshape the next steps",
+      "duration_hint": "7 minutes",
+      "folder": "episodes/phase-0-playlist-09_finale_how-phase-0-changes-next-steps",
+      "blurb": "Synthesizes how the seven completed tasks change the project\u2019s readiness for later evaluation, training, and future GPU-backed extensions."
+    }
+  ],
+  "execution_recommendation": {
+    "strategy": "coordinator-local artifact generation plus bounded VPS batch audio rendering",
+    "overnight_run_needed": false,
+    "why": "The work is mostly deterministic file generation plus repeated make-podcast invocations. It does not benefit from stateless worker fanout, and it is small enough to run as one bounded local batch on the VPS.",
+    "notes": [
+      "Use direct local execution to avoid delegation overhead on the VPS.",
+      "If audio generation takes longer than expected, run the batch in a tracked background process rather than an overnight tmux mission.",
+      "No GPU is needed for this playlist generation workflow."
+    ]
+  }
+}

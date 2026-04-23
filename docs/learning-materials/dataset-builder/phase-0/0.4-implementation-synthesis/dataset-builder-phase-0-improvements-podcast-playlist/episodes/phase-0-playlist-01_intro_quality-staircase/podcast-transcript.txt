@@ -1,0 +1,12 @@
+<Person1>[gasp] I want this playlist to do more than recap a plan. I want it to explain why these seven implementation tasks matter as a sequence.</Person1>
+<Person2>That is exactly the right framing. The plan is not a bucket of fixes. It is a quality staircase for the dataset builder.</Person2>
+<Person1>So episode by episode, we move from raw data truth, to better metadata, to clearer anomaly taxonomy, to stronger perturbation realism, to better validation, and finally to reproducible diagnostics.</Person1>
+<Person2>Right. And the key design choice is that all of this stays script-first and VPS-friendly. No workflow engine, no orchestration layer, no premature platform project.</Person2>
+<Person1>The intro also needs to tell listeners what changes downstream after these tasks are implemented.</Person1>
+<Person2>Here is the downstream picture. Better raw inspection means future analysis starts from the real schema. Better metadata means slicing and diagnostics get easier. Better anomaly labels and coherence checks mean training data becomes more trustworthy. Better validation and manifests mean later experiments are reproducible instead of mysterious.</Person2>
+<Person1>[chuckle] So the playlist is really about how to earn the right to do later training and evaluation work.</Person1>
+<Person2>Exactly. If Phase 1 wants model evaluation, curriculum choices, or eventually model-assisted perturb-and-complete, Phase 0 has to make the dataset less brittle first.</Person2>
+<Person1>And compute policy matters too. Modal is the default future GPU path, Apple Silicon is secondary, but these particular tasks are all cheap enough for the VPS.</Person1>
+<Person2>That is why this does not need an overnight multi-agent swarm. The smartest path is coordinator-local artifact creation and then a bounded batch audio render on the VPS.</Person2>
+<Person1>So listeners should hear this playlist as the bridge between learning what TrajAD-style data needs and actually implementing the boring, important quality discipline that makes later steps credible.</Person1>
+<Person2>Perfect. That is the promise of the series: practical improvements now, cleaner downstream research later.</Person2>
