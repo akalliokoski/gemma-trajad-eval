@@ -1,7 +1,7 @@
 # Wiki Index
 
 > Content catalog for the project wiki.
-> Last updated: 2026-04-22 | Total pages: 14
+> Last updated: 2026-04-23 | Total pages: 15
 
 ## Entities
 - [[gemma]] - Model family anchoring the project's local-first fine-tuning direction.
@@ -24,3 +24,4 @@
 - [[codebase-baseline-2026-04-17]] - Durable answer describing the repo's current state and why the dataset pipeline is the next slice.
 - [[training-smoke-test-audit-2026-04-17]] - Durable answer describing the first training preflight audit and bounded smoke-test recommendation.
 - [[tiny-dataset-pipeline-vps-2026-04-17]] - Durable answer describing the first successful end-to-end VPS dataset pipeline slice.
+- [[task-4-lightweight-coherence-screen-2026-04-23]] - Durable answer describing the lightweight post-perturbation coherence screen, its determinism fix, and why repeated_step remains in scope.

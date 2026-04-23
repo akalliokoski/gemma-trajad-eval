@@ -79,3 +79,9 @@
   - queries/dataset-builder-phase-0-improvements-2026-04-22.md
 - Updated navigation:
   - index.md
+
+## [2026-04-23] query | Task 4 lightweight coherence screen recorded
+- Added durable query page:
+  - queries/task-4-lightweight-coherence-screen-2026-04-23.md
+- Updated navigation:
+  - index.md

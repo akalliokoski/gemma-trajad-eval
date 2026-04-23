@@ -19,7 +19,12 @@ import random
 from collections import Counter
 from pathlib import Path
 
-from perturbations import ALL_RULES, MVP_RULES, apply_perturbation
+try:
+    from dataset_builder.coherence import is_plausible_trajectory
+    from dataset_builder.perturbations import ALL_RULES, MVP_RULES, apply_perturbation
+except ModuleNotFoundError:
+    from coherence import is_plausible_trajectory
+    from perturbations import ALL_RULES, MVP_RULES, apply_perturbation
 
 INTERIM_DIR = Path(__file__).parent.parent / "data" / "interim"
 PROCESSED_DIR = Path(__file__).parent.parent / "data" / "processed"
@@ -50,8 +55,20 @@ def ensure_label_fields(record: dict) -> dict:
     return out
 
 
+def unique_source_ids_in_order(records: list[dict]) -> list[str]:
+    seen: set[str] = set()
+    ordered_ids: list[str] = []
+    for record in records:
+        source_id = record["source_trace_id"]
+        if source_id not in seen:
+            seen.add(source_id)
+            ordered_ids.append(source_id)
+    return ordered_ids
+
+
 def build(rules: list, seed: int) -> None:
     rng = random.Random(seed)
+    rejection_reasons: Counter[str] = Counter()
 
     # Load normalized normal records
     normal_files = list(INTERIM_DIR.glob("*.jsonl"))
@@ -70,17 +87,29 @@ def build(rules: list, seed: int) -> None:
     for record in normals:
         for v_idx, rule_fn in enumerate(rules):
             result = apply_perturbation(record, rule_fn, v_idx + 1, rng)
-            if result is not None:
-                anomalous.append(result)
+            if result is None:
+                continue
 
+            plausible, reason = is_plausible_trajectory(result)
+            if plausible:
+                anomalous.append(result)
+            else:
+                rejection_reasons[reason or "unknown"] += 1
+
+    rejected_total = sum(rejection_reasons.values())
     print(f"Generated {len(anomalous):,} anomalous records")
+    print(f"Coherence screen: kept={len(anomalous):,} rejected={rejected_total:,}")
+    if rejection_reasons:
+        print("Rejected by reason:")
+        for reason, count in rejection_reasons.most_common():
+            print(f"  {reason:30s}: {count:,}")
 
     # Combine and shuffle
     all_records = normals + anomalous
     rng.shuffle(all_records)
 
     # Assign split by source_trace_id to avoid leakage
-    unique_ids = list({r["source_trace_id"] for r in all_records})
+    unique_ids = unique_source_ids_in_order(all_records)
     rng.shuffle(unique_ids)
     n = len(unique_ids)
     train_ids = set(unique_ids[: int(n * TRAIN_FRAC)])

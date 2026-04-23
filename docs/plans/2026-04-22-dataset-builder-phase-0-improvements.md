@@ -273,6 +273,10 @@ git commit -m "feat: add top-level anomaly classes"
 
 ### Task 4: Add a lightweight coherence screen after perturbation
 
+**Status:** Done (2026-04-23)
+**Verification:** `PYTHONPATH=. uv run --with pytest --no-project pytest tests/test_coherence.py tests/test_perturbations.py tests/test_validate_labels.py tests/test_build_trajad_dataset.py -q`, `python3 dataset_builder/build_trajad_dataset.py --mvp --seed 42`, `python3 dataset_builder/validate_labels.py data/processed/all.jsonl --strict`, and `diff -u /tmp/task4_build1.log /tmp/task4_build2.log`
+**Implementation infographic:** `infographic/task-4-lightweight-coherence-screen/infographic.png`
+
 **Objective:** Filter out obviously implausible anomalous records without adding a full perturb-and-complete system.
 
 **Files:**
