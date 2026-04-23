@@ -88,6 +88,30 @@ def replace_tool_call(content: str, new_call: dict) -> str:
     return TOOL_CALL_RE.sub(lambda _match: replacement, content)
 
 
+def extract_tool_response_text(content: str) -> str:
+    match = TOOL_RESP_RE.search(content or "")
+    if match is None:
+        return content or ""
+    return match.group(1).strip()
+
+
+def tool_response_looks_empty(content: str) -> bool:
+    normalized = extract_tool_response_text(content).strip().lower()
+    if normalized in {"", "[]", "{}", "null", "none", "false"}:
+        return True
+
+    empty_markers = (
+        '"count": 0',
+        '"results": []',
+        "0 results",
+        "no results",
+        "not found",
+        "no matches",
+        "empty",
+    )
+    return any(marker in normalized for marker in empty_markers)
+
+
 # ---------------------------------------------------------------------------
 # Perturbation rules
 # ---------------------------------------------------------------------------
@@ -234,31 +258,42 @@ def p4_duplicate_tool_step(record: dict, rng: random.Random) -> dict | None:
 
 
 def p5_append_continuation(record: dict, rng: random.Random) -> dict | None:
-    """P5: Append an unnecessary follow-up step after the final answer."""
+    """P5: Append an unnecessary but structurally complete follow-up after the final answer."""
     traj = record["trajectory"]
     if not traj or traj[-1]["role"] != "assistant":
         return None
 
-    # Append a fake extra tool call at the end
-    fake_step = {
+    extra_assistant_step = {
         "role": "assistant",
         "content": (
-            "<think>Let me double-check this with one more search.</think>"
-            '<tool_call>{"name": "search_web", "arguments": {"query": "verify previous result"}}</tool_call>'
+            "<think>I should do one more quick verification pass even though the answer is already clear.</think>"
+            '<tool_call>{"name": "search_web", "arguments": {"query": "additional confirmation for the same answer"}}</tool_call>'
         ),
     }
+    extra_tool_response = {
+        "role": "tool",
+        "content": (
+            '<tool_response>{"results": [{"title": "No materially new information"}], '
+            '"count": 1}</tool_response>'
+        ),
+    }
+    extra_wrap_up = {
+        "role": "assistant",
+        "content": "I checked once more and it still supports the same conclusion, so my previous answer stands.",
+    }
+
     out = copy.deepcopy(record)
-    out["trajectory"].append(fake_step)
+    out["trajectory"].extend([extra_assistant_step, extra_tool_response, extra_wrap_up])
 
     out["is_anomalous"] = True
     out["anomaly_type"] = "continued_after_sufficient_evidence"
-    out["bad_step"] = len(out["trajectory"]) - 1
+    out["bad_step"] = len(traj)
     out["generation_rule"] = "P5"
     return out
 
 
 def p6_contradict_final_answer(record: dict, rng: random.Random) -> dict | None:
-    """P6: Alter the final assistant answer so it contradicts the last tool result."""
+    """P6: Alter the final assistant answer so it subtly contradicts the last tool result."""
     traj = record["trajectory"]
     # Find last tool response
     last_tool_idx = None
@@ -279,13 +314,18 @@ def p6_contradict_final_answer(record: dict, rng: random.Random) -> dict | None:
     if final_assistant_idx is None:
         return None
 
+    last_tool_content = traj[last_tool_idx].get("content") or ""
+    if tool_response_looks_empty(last_tool_content):
+        contradictory_answer = (
+            "The tool output surfaced a concrete result, so I can give a confirmed answer now."
+        )
+    else:
+        contradictory_answer = (
+            "The tool output did not show a concrete result, so there is nothing reliable to report."
+        )
+
     out = copy.deepcopy(record)
-    original = out["trajectory"][final_assistant_idx]["content"] or ""
-    # Prepend a contradicting statement
-    out["trajectory"][final_assistant_idx]["content"] = (
-        "[CONTRADICTION] Based on my analysis, the result is the opposite of what was returned. "
-        + original
-    )
+    out["trajectory"][final_assistant_idx]["content"] = contradictory_answer
     out["is_anomalous"] = True
     out["anomaly_type"] = "contradicted_tool_result"
     out["bad_step"] = final_assistant_idx

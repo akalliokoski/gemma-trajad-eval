@@ -1,7 +1,7 @@
 # Wiki Index
 
 > Content catalog for the project wiki.
-> Last updated: 2026-04-23 | Total pages: 15
+> Last updated: 2026-04-23 | Total pages: 17
 
 ## Entities
 - [[gemma]] - Model family anchoring the project's local-first fine-tuning direction.
@@ -14,6 +14,7 @@
 ## Concepts
 - [[execution-topology]] - Rules for deciding whether work runs on the VPS, the Mac, or later Modal.
 - [[hermes-first-development]] - Operating model where Hermes performs the work and generates study material in parallel.
+- [[home-ai-lab-principles]] - Practical operating philosophy for this repo as the first project in the user's home AI lab.
 
 ## Comparisons
 
@@ -25,3 +26,4 @@
 - [[training-smoke-test-audit-2026-04-17]] - Durable answer describing the first training preflight audit and bounded smoke-test recommendation.
 - [[tiny-dataset-pipeline-vps-2026-04-17]] - Durable answer describing the first successful end-to-end VPS dataset pipeline slice.
 - [[task-4-lightweight-coherence-screen-2026-04-23]] - Durable answer describing the lightweight post-perturbation coherence screen, its determinism fix, and why repeated_step remains in scope.
+- [[task-5-p5-p6-realism-2026-04-23]] - Durable answer describing how P5 and P6 were made less synthetic while preserving deterministic dataset builds.

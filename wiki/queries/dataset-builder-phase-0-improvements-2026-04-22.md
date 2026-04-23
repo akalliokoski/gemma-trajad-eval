@@ -1,7 +1,7 @@
 ---
 title: Dataset-builder improvements after Phase 0
 created: 2026-04-22
-updated: 2026-04-22
+updated: 2026-04-23
 type: query
 tags: [dataset, workflow, decision, documentation, python, course-material]
 sources: [raw/transcripts/dataset-builder-phase-0-improvements-2026-04-22.md]
@@ -41,6 +41,24 @@ A small, deterministic, quality-focused roadmap is the best fit for the repo's c
 
 For future GPU-backed extensions, Modal serverless GPU is now the default path. Apple Silicon remains useful as a secondary local option, but it is no longer the default GPU tier.
 
+## Implementation progress
+
+As of 2026-04-23, the first five improvement tasks from the plan have been completed and committed:
+- Task 1: raw-schema-safe inspection for ShareGPT-style Hermes traces
+- Task 2: derived structural metadata during normalization
+- Task 3: explicit top-level anomaly classes
+- Task 4: lightweight perturbation coherence screening
+- Task 5: more realistic P5/P6 continuation and contradiction rules
+
+These changes reinforce the core conclusion of this page: the right path is small, high-leverage quality improvements on top of the existing script-first pipeline, not a rewrite.
+
+## Home-lab fit
+
+This repository is now explicitly the first project in the user's home AI lab. That raises the bar for craft, but not for complexity: best practices should be applied in a practical, elegant, community-friendly way, with over-engineering treated as a failure mode rather than a mark of seriousness.
+
 ## Related pages
 - [[hermes-filtered-traces-dataset-structure-2026-04-22]]
 - [[codebase-baseline-2026-04-17]]
+- [[task-4-lightweight-coherence-screen-2026-04-23]]
+- [[task-5-p5-p6-realism-2026-04-23]]
+- [[home-ai-lab-principles]]

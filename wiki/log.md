@@ -85,3 +85,24 @@
   - queries/task-4-lightweight-coherence-screen-2026-04-23.md
 - Updated navigation:
   - index.md
+
+## [2026-04-23] update | Home AI lab principles and Phase 0 progress refreshed
+- Added raw source snapshot:
+  - raw/transcripts/home-ai-lab-principles-2026-04-23.md
+- Added wiki page:
+  - concepts/home-ai-lab-principles.md
+- Updated wiki pages:
+  - concepts/hermes-first-development.md
+  - queries/dataset-builder-phase-0-improvements-2026-04-22.md
+- Updated navigation:
+  - index.md
+
+## [2026-04-23] query | Task 5 P5/P6 realism upgrade recorded
+- Added raw execution snapshot:
+  - raw/transcripts/task-5-p5-p6-realism-2026-04-23.md
+- Added durable query page:
+  - queries/task-5-p5-p6-realism-2026-04-23.md
+- Updated wiki pages:
+  - queries/dataset-builder-phase-0-improvements-2026-04-22.md
+- Updated navigation:
+  - index.md

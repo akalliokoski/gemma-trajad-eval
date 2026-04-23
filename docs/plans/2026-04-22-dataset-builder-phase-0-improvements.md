@@ -343,6 +343,10 @@ git commit -m "feat: screen implausible perturbed trajectories"
 
 ### Task 5: Make P5 and P6 more realistic
 
+**Status:** Done (2026-04-23)
+**Verification:** `PYTHONPATH=. uv run --with pytest --no-project pytest tests/test_perturbations.py -v`, `python3 dataset_builder/build_trajad_dataset.py --seed 42`, and `python3 dataset_builder/validate_labels.py data/processed/all.jsonl --strict`
+**Implementation infographic:** `infographic/task-5-p5-p6-realism/infographic.png`
+
 **Objective:** Improve the most obviously synthetic perturbations without adding model-generated continuation.
 
 **Files:**
