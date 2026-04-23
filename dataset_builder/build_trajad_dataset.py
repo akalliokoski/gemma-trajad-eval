@@ -42,6 +42,14 @@ def write_jsonl(records: list[dict], path: Path) -> None:
     print(f"  Wrote {len(records):,} records → {path}")
 
 
+def ensure_label_fields(record: dict) -> dict:
+    out = dict(record)
+    out.setdefault("bad_step", None)
+    out.setdefault("anomaly_type", None)
+    out.setdefault("anomaly_class", None)
+    return out
+
+
 def build(rules: list, seed: int) -> None:
     rng = random.Random(seed)
 
@@ -54,7 +62,7 @@ def build(rules: list, seed: int) -> None:
 
     normals: list[dict] = []
     for f in normal_files:
-        normals.extend(load_jsonl(f))
+        normals.extend(ensure_label_fields(record) for record in load_jsonl(f))
     print(f"Loaded {len(normals):,} normal records from {INTERIM_DIR}")
 
     # Generate anomalous variants

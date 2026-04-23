@@ -34,6 +34,7 @@ def test_validate_record_allows_missing_step_index_at_trajectory_end() -> None:
         ],
         "is_anomalous": True,
         "anomaly_type": "skipped_required_step",
+        "anomaly_class": "task_failure",
         "bad_step": 3,
         "generation_rule": "P3",
     }

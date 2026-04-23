@@ -9,6 +9,11 @@ import argparse
 import json
 from pathlib import Path
 
+try:
+    from dataset_builder.perturbations import VALID_ANOMALY_CLASSES
+except ModuleNotFoundError:
+    from perturbations import VALID_ANOMALY_CLASSES
+
 VALID_ANOMALY_TYPES = {
     "wrong_tool_choice",
     "bad_tool_arguments",
@@ -66,6 +71,8 @@ def validate_record(record: dict, idx: int) -> list[str]:
             err("normal record has non-null bad_step")
         if record.get("anomaly_type") is not None:
             err("normal record has non-null anomaly_type")
+        if record.get("anomaly_class") is not None:
+            err("normal record has non-null anomaly_class")
 
     # Consistency: anomalous records
     if is_anomalous:
@@ -79,6 +86,12 @@ def validate_record(record: dict, idx: int) -> list[str]:
             err("anomalous record has null anomaly_type")
         elif anomaly_type not in VALID_ANOMALY_TYPES:
             err(f"unknown anomaly_type: {anomaly_type!r}")
+
+        anomaly_class = record.get("anomaly_class")
+        if anomaly_class is None:
+            err("anomalous record has null anomaly_class")
+        elif anomaly_class not in VALID_ANOMALY_CLASSES:
+            err(f"unknown anomaly_class: {anomaly_class!r}")
 
         if isinstance(bad_step, int) and isinstance(traj, list):
             max_allowed = len(traj)

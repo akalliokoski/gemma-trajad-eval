@@ -40,6 +40,29 @@ NEARBY_TOOLS: dict[str, list[str]] = {
     "sql_query": ["nosql_query", "read_csv"],
 }
 
+VALID_ANOMALY_CLASSES = {
+    "task_failure",
+    "process_inefficiency",
+    "unwarranted_continuation",
+}
+
+ANOMALY_TYPE_TO_CLASS = {
+    # A semantically wrong but schema-valid tool choice can still leave the task
+    # recoverable/completable, so it belongs under process_inefficiency.
+    "wrong_tool_choice": "process_inefficiency",
+    "bad_tool_arguments": "task_failure",
+    # Skipping or reordering a required step breaks task completion rather than
+    # merely making the process inefficient, so we classify it as task_failure.
+    "skipped_required_step": "task_failure",
+    "repeated_step": "process_inefficiency",
+    "premature_final_answer": "task_failure",
+    "continued_after_sufficient_evidence": "unwarranted_continuation",
+    "contradicted_tool_result": "task_failure",
+    "hallucinated_tool": "task_failure",
+    "invalid_tool_json": "task_failure",
+    "unnecessary_replanning": "process_inefficiency",
+}
+
 
 def find_assistant_steps(trajectory: list[dict]) -> list[int]:
     """Return indices of assistant steps that contain a tool call."""
@@ -364,6 +387,7 @@ def apply_perturbation(
         return None
     source_id = record["source_trace_id"]
     rule_name = rule_fn.__name__
+    result["anomaly_class"] = ANOMALY_TYPE_TO_CLASS[result["anomaly_type"]]
     result["id"] = f"{source_id}_var_{variant_index:02d}"
     result["source_trace_id"] = source_id
     return result
