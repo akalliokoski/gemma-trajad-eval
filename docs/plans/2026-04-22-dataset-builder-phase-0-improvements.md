@@ -203,6 +203,7 @@ git commit -m "feat: derive structural metadata during normalization"
 
 **Status:** Done (2026-04-23)
 **Verification:** `PYTHONPATH=. uv run --with pytest --no-project pytest tests/test_validate_labels.py tests/test_perturbations.py -q`, `python3 dataset_builder/build_trajad_dataset.py --mvp --seed 42`, and `python3 dataset_builder/validate_labels.py data/processed/all.jsonl --strict`
+**Implementation infographic:** `infographic/task-3-top-level-anomaly-classes/infographic.png`
 
 **Objective:** Align the dataset output with the Phase-0 anomaly taxonomy while keeping the current rule-level labels.
 
