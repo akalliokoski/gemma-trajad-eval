@@ -106,3 +106,13 @@
   - queries/dataset-builder-phase-0-improvements-2026-04-22.md
 - Updated navigation:
   - index.md
+
+## [2026-04-23] query | Task 6 rule-aware bad-step validation recorded
+- Added raw execution snapshot:
+  - raw/transcripts/task-6-rule-aware-bad-step-validation-2026-04-23.md
+- Added durable query page:
+  - queries/task-6-rule-aware-bad-step-validation-2026-04-23.md
+- Updated wiki pages:
+  - queries/dataset-builder-phase-0-improvements-2026-04-22.md
+- Updated navigation:
+  - index.md

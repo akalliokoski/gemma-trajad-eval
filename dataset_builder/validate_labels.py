@@ -31,6 +31,73 @@ VALID_SPLITS = {"train", "dev", "test"}
 VALID_ROLES = {"system", "user", "assistant", "tool"}
 
 
+def _content(step: dict) -> str:
+    return step.get("content") or ""
+
+
+def _has_tool_call(step: dict) -> bool:
+    return step.get("role") == "assistant" and "<tool_call>" in _content(step)
+
+
+def _validate_rule_aware_bad_step(record: dict) -> list[str]:
+    errors: list[str] = []
+    traj = record.get("trajectory")
+    bad_step = record.get("bad_step")
+    generation_rule = record.get("generation_rule")
+
+    if not isinstance(traj, list) or not isinstance(bad_step, int):
+        return errors
+
+    if generation_rule == "P4":
+        if bad_step + 1 >= len(traj):
+            errors.append("P4 repeated_step bad_step must leave room for the duplicated assistant/tool pair")
+            return errors
+        duplicate_assistant = traj[bad_step]
+        duplicate_tool = traj[bad_step + 1]
+        if not _has_tool_call(duplicate_assistant) or duplicate_tool.get("role") != "tool":
+            errors.append("P4 repeated_step bad_step must point to the duplicated assistant step")
+            return errors
+        if bad_step < 2:
+            errors.append("P4 repeated_step bad_step must point to a duplicated pair that follows an original pair")
+            return errors
+        original_assistant = traj[bad_step - 2]
+        original_tool = traj[bad_step - 1]
+        if (
+            original_assistant.get("role") != duplicate_assistant.get("role")
+            or _content(original_assistant) != _content(duplicate_assistant)
+            or original_tool.get("role") != duplicate_tool.get("role")
+            or _content(original_tool) != _content(duplicate_tool)
+        ):
+            errors.append("P4 repeated_step bad_step must point to the duplicated assistant step")
+
+    elif generation_rule == "P5":
+        if bad_step < 1 or bad_step + 2 >= len(traj):
+            errors.append("P5 continuation bad_step must point to the first unnecessary extra step")
+            return errors
+        prior_step = traj[bad_step - 1]
+        first_extra = traj[bad_step]
+        middle_extra = traj[bad_step + 1]
+        last_extra = traj[bad_step + 2]
+        if _has_tool_call(prior_step):
+            errors.append("P5 continuation bad_step must point to the first unnecessary extra step")
+        elif not _has_tool_call(first_extra):
+            errors.append("P5 continuation bad_step must point to the first unnecessary extra step")
+        elif middle_extra.get("role") != "tool" or last_extra.get("role") != "assistant":
+            errors.append("P5 continuation bad_step must point to the first unnecessary extra step")
+
+    elif generation_rule == "P7":
+        if bad_step != len(traj) - 1:
+            errors.append("P7 premature_final_answer bad_step must point to the inserted premature final answer")
+            return errors
+        premature_answer = traj[bad_step]
+        if premature_answer.get("role") != "assistant" or _has_tool_call(premature_answer):
+            errors.append("P7 premature_final_answer bad_step must point to the inserted premature final answer")
+        elif not any(step.get("role") == "tool" for step in traj[:bad_step]):
+            errors.append("P7 premature_final_answer requires earlier tool evidence before the inserted premature final answer")
+
+    return errors
+
+
 def validate_record(record: dict, idx: int) -> list[str]:
     errors: list[str] = []
 
@@ -105,6 +172,9 @@ def validate_record(record: dict, idx: int) -> list[str]:
     split = record.get("split")
     if split is not None and split not in VALID_SPLITS:
         err(f"invalid split: {split!r}")
+
+    for rule_error in _validate_rule_aware_bad_step(record):
+        err(rule_error)
 
     return errors
 

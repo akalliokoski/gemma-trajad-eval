@@ -52,6 +52,9 @@ As of 2026-04-23, the first five improvement tasks from the plan have been compl
 
 These changes reinforce the core conclusion of this page: the right path is small, high-leverage quality improvements on top of the existing script-first pipeline, not a rewrite.
 
+As of later on 2026-04-23, Task 6 is also complete:
+- Task 6: rule-aware bad-step validation for first-error localization semantics
+
 ## Home-lab fit
 
 This repository is now explicitly the first project in the user's home AI lab. That raises the bar for craft, but not for complexity: best practices should be applied in a practical, elegant, community-friendly way, with over-engineering treated as a failure mode rather than a mark of seriousness.
@@ -61,4 +64,5 @@ This repository is now explicitly the first project in the user's home AI lab. T
 - [[codebase-baseline-2026-04-17]]
 - [[task-4-lightweight-coherence-screen-2026-04-23]]
 - [[task-5-p5-p6-realism-2026-04-23]]
+- [[task-6-rule-aware-bad-step-validation-2026-04-23]]
 - [[home-ai-lab-principles]]

@@ -405,6 +405,10 @@ git commit -m "feat: improve realism of continuation and contradiction rules"
 
 ### Task 6: Deepen validation for first-error localization
 
+**Status:** Done (2026-04-23)
+**Verification:** `PYTHONPATH=. uv run --with pytest --no-project pytest tests/test_validate_labels.py -v` and `python3 dataset_builder/validate_labels.py data/processed/all.jsonl --strict`
+**Implementation infographic:** `infographic/task-6-rule-aware-bad-step-validation/infographic.png`
+
 **Objective:** Make label validation care more about the intended first-bad-step semantics, not just type/range checks.
 
 **Files:**
