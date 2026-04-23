@@ -1,0 +1,270 @@
+{
+  "duration_hint": "8 minutes",
+  "episode_slug": "phase-0_0.2-01_dataset-builder-codebase-orientation",
+  "generation_mode": "manual-canonical",
+  "hosts": {
+    "HOST_A": {
+      "default_emotion": 0.95,
+      "name": "Ava",
+      "podcastfy_speaker": "Person1",
+      "role": "curious architect"
+    },
+    "HOST_B": {
+      "default_emotion": 0.85,
+      "name": "Noah",
+      "podcastfy_speaker": "Person2",
+      "role": "practical systems explainer"
+    }
+  },
+  "show_slug": "projects/gemma-trajad-eval/dataset-builder/phase-0-orientation/0.2-codebase-orientation/dataset-builder-codebase-orientation",
+  "title": "Dataset builder codebase orientation",
+  "turns": [
+    {
+      "speaker": "HOST_A",
+      "emotion": 1.0,
+      "tags": [
+        "gasp"
+      ],
+      "text": "[gasp] Okay, if I open dataset_builder for the first time, what am I actually looking at? A random pile of scripts or a pipeline with a shape?"
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "It is definitely a pipeline with a shape. The backbone is six small scripts: download, inspect, normalize, perturb, build, and validate."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.95,
+      "tags": [],
+      "text": "So the first good sign is that responsibilities are narrow."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.88,
+      "tags": [
+        "chuckle"
+      ],
+      "text": "[chuckle] Exactly. This repo is script-first on purpose. Each file is trying to do one job well instead of hiding logic behind a giant framework."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.96,
+      "tags": [],
+      "text": "Start me at the front door. What does download hermes do?"
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.87,
+      "tags": [],
+      "text": "It freezes the source dataset locally. It uses Hugging Face datasets, pulls a split, and writes one JSON object per line into data slash raw. No inspection, no normalization, no labels yet."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 1.02,
+      "tags": [
+        "gasp"
+      ],
+      "text": "[gasp] So that script is basically saying: before you reason about the data, make the raw artifact real and local."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "Yes. That separation matters because source download problems should not be mixed together with schema translation problems."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.94,
+      "tags": [],
+      "text": "Then inspect traces is the microscope, right?"
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.89,
+      "tags": [],
+      "text": "Exactly. It loads JSONL into normal Python list and dict objects, then looks for a trajectory under conversations, trajectory, or messages. It also reads either role slash content or from slash value."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.98,
+      "tags": [],
+      "text": "Which means that file is teaching the repo to inspect more than one schema layer without caring which one it got first."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.88,
+      "tags": [],
+      "text": "Right. It summarizes lengths, role counts, tool call prevalence, and think markers. It is E D A, not dataset assembly."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.95,
+      "tags": [
+        "sigh"
+      ],
+      "text": "[sigh] The real bridge seems to be normalize trajectory."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.94,
+      "tags": [],
+      "text": "That is the schema bridge. It maps human to user, g p t to assistant, rewrites messages into role and content pairs, carries metadata forward, and adds derived structural fields like trajectory length and tool call count."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 1.04,
+      "tags": [
+        "gasp"
+      ],
+      "text": "[gasp] And that is also where source trace I D becomes important."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "Yes. If the source already has an id, use it. If not, hash the raw trajectory content. That gives one stable identity for the trace family."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.93,
+      "tags": [],
+      "text": "So stable identity is not just bookkeeping. It is what keeps train test leakage under control later."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.94,
+      "tags": [],
+      "text": "Exactly. Build trajad dataset splits by source trace I D, not by individual record. Clean examples and their anomaly variants stay together."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.97,
+      "tags": [],
+      "text": "And the var zero zero suffix is the clean baseline before perturbations?"
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.86,
+      "tags": [],
+      "text": "Yes. Var zero zero means the original normalized record. Var zero one and beyond are anomalous variants produced by rule functions."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 1.0,
+      "tags": [
+        "chuckle"
+      ],
+      "text": "[chuckle] Okay, now the fun file: perturbations. What is the key idea there?"
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.92,
+      "tags": [],
+      "text": "The key idea is surgical mutation. P one and P two do not rewrite entire traces. They open the tool call J S O N embedded inside assistant text and change either the tool name or one argument value."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.96,
+      "tags": [],
+      "text": "So the anomalies live inside serialized tool-call markup, not in some separate structured call object."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.88,
+      "tags": [],
+      "text": "Right, and that is why schema awareness matters so much in this repo. The raw storage is Share G P T style outside and serialized tool protocol inside."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.94,
+      "tags": [],
+      "text": "I noticed nearby tools too. That seems like a tiny ontology of plausible confusion."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "That is a good way to say it. It tries to model wrong but nearby tool choice rather than total nonsense, although coverage is still limited."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.95,
+      "tags": [
+        "gasp"
+      ],
+      "text": "[gasp] And then build trajad dataset is the foreman of the whole construction site."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.91,
+      "tags": [],
+      "text": "Exactly. It loads normalized records, applies rules, runs the lightweight coherence screen, assigns leakage-safe splits, writes the processed files, and records a build manifest."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.93,
+      "tags": [],
+      "text": "Which means the manifest is the memory of what build happened, with what rules and what counts."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.89,
+      "tags": [],
+      "text": "Yes, and that is elegantly small. You do not need a giant metadata platform to get reproducibility here."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.94,
+      "tags": [],
+      "text": "Last file: validate labels. What does it guarantee, and what does it not guarantee?"
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.95,
+      "tags": [],
+      "text": "It guarantees structural correctness and some rule-aware bad step semantics. It checks fields, roles, anomaly labels, split names, and special contracts for some rules. But it does not guarantee that a perturbed trace feels realistic to a human reviewer."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 1.02,
+      "tags": [
+        "gasp"
+      ],
+      "text": "[gasp] So schema validity is necessary, but realism is a separate quality layer."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "Exactly. That distinction is one of the most important things to learn from this codebase."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.96,
+      "tags": [],
+      "text": "And the taxonomy is actually broader than the generator today, right? Hallucinated tool, invalid tool J S O N, and unnecessary replanning are valid labels but not real rules yet."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.88,
+      "tags": [],
+      "text": "Right. So the code already points toward future growth, but the current implementation stays modest. That is a healthy place for a first home-lab pipeline to be."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.98,
+      "tags": [
+        "chuckle"
+      ],
+      "text": "[chuckle] Best summary: small files, explicit contracts, stable identities, and a very clear line between valid data and believable data."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.94,
+      "tags": [],
+      "text": "Yes. Once that mental map clicks, the whole dataset builder becomes much easier to extend without over-engineering it."
+    }
+  ],
+  "version": 1
+}

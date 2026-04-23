@@ -105,43 +105,41 @@ each design decision was made — by actually running it, breaking it, and exten
 
 ### 0.2 Codebase orientation (~120 min total)
 
-- [ ] **Read `download_hermes.py` + `inspect_traces.py`** (~30 min)
-  - Understand what each function does and its single responsibility
-  - Trace the data types: what does `load_jsonl()` return? What format is JSONL vs. HF Dataset?
-  - Note: inspect_traces auto-detects the trajectory field name — why is this needed?
+- [x] **Read `download_hermes.py` + `inspect_traces.py`** (~30 min)
+  - Focus answer: `download_hermes.py` is the ingestion edge that freezes a remote HF dataset into local JSONL, while `inspect_traces.py` is the EDA microscope that works over plain Python `list[dict]` records and can inspect either raw `conversations` or normalized `trajectory` data.
+  - Key design note: inspect_traces auto-detects `conversations`, `trajectory`, and `messages` so one script can inspect multiple schema layers instead of breaking on raw-vs-normalized differences.
+  - Q&A notes: [answers.md](learning-materials/dataset-builder/phase-0/0.2-codebase-orientation/dataset-builder-codebase-orientation/answers.md)
+  - Infographic: [PNG](learning-materials/dataset-builder/phase-0/0.2-codebase-orientation/dataset-builder-codebase-orientation/infographic.png)
+  - Podcast: [local MP3](file:///data/audiobookshelf/podcasts/profiles/gemma/projects/gemma-trajad-eval/dataset-builder/phase-0-orientation/0.2-codebase-orientation/dataset-builder-codebase-orientation/phase-0_0.2-01_dataset-builder-codebase-orientation.mp3) · [Audiobookshelf UI](https://vps.taild96651.ts.net:13378/)
 
-- [ ] **Read `normalize_trajectory.py`** (~30 min)
-  - Map every field transformation: what comes in, what comes out
-  - Why is `source_trace_id` assigned via a hash? What problem does this solve?
-  - What is the `var_00` suffix convention? When does it get replaced?
+- [x] **Read `normalize_trajectory.py`** (~30 min)
+  - Key takeaway: normalization is the schema bridge from ShareGPT-like `{from, value}` messages to internal `{role, content}` trajectories, and `source_trace_id` exists to keep split assignment stable and leakage-safe across rebuilds.
+  - `var_00` means the clean baseline record; later perturbation variants replace it with `var_01+` IDs while keeping the same `source_trace_id` family.
 
-- [ ] **Read `perturbations.py`** (~30 min)
-  - Understand the function signature: `apply_perturbation(record, rule_fn) → record | None`
-  - For P1 and P2: trace exactly what bytes change in the trajectory
-  - Understand `NEARBY_TOOLS`: what is it trying to model? What is its coverage gap?
-  - Note `MVP_RULES` vs. `ALL_RULES` split
+- [x] **Read `perturbations.py`** (~30 min)
+  - Key takeaway: `apply_perturbation(record, rule_fn) -> dict | None` is a bounded mutation contract that either returns a fully labeled anomalous variant or signals inapplicability with `None`.
+  - P1/P2 make surgical edits inside serialized `<tool_call>` JSON, `NEARBY_TOOLS` models plausible wrong-tool confusion, and the `MVP_RULES` / `ALL_RULES` split lets the builder trade rule coverage against early-stage trustworthiness.
 
-- [ ] **Read `build_trajad_dataset.py` + `validate_labels.py`** (~30 min)
-  - Understand the split-by-source-trace-id mechanism: why does this prevent leakage?
-  - What fields does `validate_labels.py` check? What does it NOT check?
-  - Note the three anomaly types that are in the valid types list but have no perturbation rule
+- [x] **Read `build_trajad_dataset.py` + `validate_labels.py`** (~30 min)
+  - Key takeaway: split assignment by `source_trace_id` prevents train/test leakage across clean-plus-variant trace families, while `validate_labels.py` checks schema and some rule-aware localization semantics but not full semantic realism.
+  - The valid-but-unimplemented anomaly types remain `hallucinated_tool`, `invalid_tool_json`, and `unnecessary_replanning`.
 
 ### 0.3 Environment setup (~60 min total)
 
-- [ ] **Create and activate the Python environment** (~20 min)
-  - `python3 -m venv .venv && source .venv/bin/activate`
-  - `pip install -e ".[dev]"` (or equivalent from `pyproject.toml`)
-  - Verify: `python -c "import datasets, tqdm, pydantic; print('ok')`
+- [x] **Create and activate the Python environment** (~20 min)
+  - Canonical plan path: `python3 -m venv .venv && source .venv/bin/activate` followed by `pip install -e ".[dev]"`.
+  - Repo-specific note: on this VPS, the practical documented path used `uv` to create `.venv` because system `pip` under `/usr/bin/python3` was unavailable.
+  - Q&A notes: [answers.md](learning-materials/dataset-builder/phase-0/0.3-environment-setup/dataset-builder-environment-setup/answers.md)
+  - Infographic: [PNG](learning-materials/dataset-builder/phase-0/0.3-environment-setup/dataset-builder-environment-setup/infographic.png)
+  - Podcast: [local MP3](file:///data/audiobookshelf/podcasts/profiles/gemma/projects/gemma-trajad-eval/dataset-builder/phase-0-orientation/0.3-environment-setup/dataset-builder-environment-setup/phase-0_0.3-01_dataset-builder-environment-setup.mp3) · [Audiobookshelf UI](https://vps.taild96651.ts.net:13378/)
 
-- [ ] **Configure HuggingFace authentication** (~15 min)
-  - Install `huggingface-hub` CLI: `pip install huggingface-hub`
-  - Log in: `huggingface-cli login`
-  - Verify access: `huggingface-cli whoami`
-  - Note: the Hermes filtered dataset is public; you only need auth for later upload
+- [x] **Configure HuggingFace authentication** (~15 min)
+  - The Hermes filtered dataset is public, so auth is mainly future-facing setup for later upload/publication work rather than a blocker for early download and inspection.
+  - Expected flow: `pip install huggingface-hub`, `huggingface-cli login`, `huggingface-cli whoami`.
 
-- [ ] **Verify directory structure exists** (~10 min)
-  - Create `data/raw/`, `data/interim/`, `data/processed/` if not present
-  - `mkdir -p data/{raw,interim,processed}`
+- [x] **Verify directory structure exists** (~10 min)
+  - The pipeline’s on-disk contract is `data/raw/` -> `data/interim/` -> `data/processed/`.
+  - Directory creation command: `mkdir -p data/{raw,interim,processed}`.
 
 ---
 

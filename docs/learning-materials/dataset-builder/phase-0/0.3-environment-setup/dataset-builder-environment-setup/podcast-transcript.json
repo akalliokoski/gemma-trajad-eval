@@ -1,0 +1,194 @@
+{
+  "duration_hint": "7 minutes",
+  "episode_slug": "phase-0_0.3-01_dataset-builder-environment-setup",
+  "generation_mode": "manual-canonical",
+  "hosts": {
+    "HOST_A": {
+      "default_emotion": 0.95,
+      "name": "Ava",
+      "podcastfy_speaker": "Person1",
+      "role": "curious architect"
+    },
+    "HOST_B": {
+      "default_emotion": 0.85,
+      "name": "Noah",
+      "podcastfy_speaker": "Person2",
+      "role": "practical systems explainer"
+    }
+  },
+  "show_slug": "projects/gemma-trajad-eval/dataset-builder/phase-0-orientation/0.3-environment-setup/dataset-builder-environment-setup",
+  "title": "Dataset builder environment setup",
+  "turns": [
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.98,
+      "tags": [
+        "gasp"
+      ],
+      "text": "[gasp] Before we run anything in dataset builder, what does Phase zero point three really want from setup?"
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "It wants a boring, reproducible local environment. Not a platform adventure. Just a clean Python environment, the repo dependencies, optional Hugging Face readiness, and the expected data directories."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.95,
+      "tags": [],
+      "text": "So setup is infrastructure in the smallest possible sense."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.88,
+      "tags": [
+        "chuckle"
+      ],
+      "text": "[chuckle] Exactly. The goal is to remove ambiguity, not to add ceremony."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.97,
+      "tags": [],
+      "text": "What does the repo itself say about the contract?"
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.89,
+      "tags": [],
+      "text": "Pyproject says Python must be three point eleven or newer. The core dependencies are data-pipeline packages like datasets, huggingface hub, jsonlines, tqdm, pydantic, transformers, tokenizers, scikit learn, and numpy. The dev extra adds pytest, coverage, ruff, and mypy."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 1.01,
+      "tags": [
+        "gasp"
+      ],
+      "text": "[gasp] Which means the learning-plan command pip install dash e dot open bracket dev close bracket is actually a nice compact way to install the whole working baseline."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "Yes. The canonical path in the plan is standard and sensible: create dot venv, activate it, install the project in editable mode with dev extras, then run a small import test."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.94,
+      "tags": [],
+      "text": "But the walkthrough in this repo used u v instead. Why?"
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.93,
+      "tags": [],
+      "text": "Because the V P S had system python three, but the pip module under slash usr slash bin slash python three was not available. U V was available, so the practical choice was uv venv dot venv and uv pip install."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.99,
+      "tags": [
+        "gasp"
+      ],
+      "text": "[gasp] That is a really good lesson. Keep the setup contract stable, but swap the tool if the host is awkward."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.88,
+      "tags": [],
+      "text": "Exactly. Do not confuse the idea of the environment with one specific installer command."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.95,
+      "tags": [],
+      "text": "So on a normal machine, python dash m venv plus pip install dash e is fine. On this V P S, uv was the robust path. Same destination."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "Right. In both cases, the real outcome should be a repo-local environment that can import the pipeline dependencies."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.96,
+      "tags": [
+        "sigh"
+      ],
+      "text": "[sigh] I like that the verification is not just did the command finish. It is can the environment import datasets, tqdm, and pydantic."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.94,
+      "tags": [],
+      "text": "Yes. Import checks are the honest smoke test. You can even extend that with huggingface hub, numpy, and scikit learn if you want a slightly stronger readiness check."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.92,
+      "tags": [],
+      "text": "What about Hugging Face login? Is that actually needed right away?"
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.89,
+      "tags": [],
+      "text": "Not for the filtered Hermes dataset, because it is public. Login matters later when you want to publish or push artifacts. That is why the learning plan frames auth as setup for later phases, not a blocker for reading the data."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.97,
+      "tags": [
+        "gasp"
+      ],
+      "text": "[gasp] So huggingface cli login is more about future upload readiness than about today's download."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.87,
+      "tags": [],
+      "text": "Exactly. Install the client, authenticate once, verify with whoami, and then you are ready when the publication phase arrives."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.95,
+      "tags": [],
+      "text": "The directory part also seems deceptively important: data slash raw, data slash interim, data slash processed."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "That layout is part of the repo contract. Raw snapshots go into data raw, normalized records into data interim, and final train dev test plus manifests into data processed."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.99,
+      "tags": [
+        "chuckle"
+      ],
+      "text": "[chuckle] Which means mkdir dash p data slash open brace raw comma interim comma processed close brace is not housekeeping. It is making the pipeline architecture visible on disk."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.91,
+      "tags": [],
+      "text": "Well said. The walkthrough later wrote hermes filtered J S O N L into raw, normalized output into interim, and the split files plus manifest into processed. So the directory contract really is how the pipeline thinks."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.94,
+      "tags": [],
+      "text": "Best-practice summary then: preserve the portable repo contract, adapt the installer only when the host forces you to, verify imports, and keep setup boring."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.95,
+      "tags": [],
+      "text": "Yes. That is exactly the kind of elegant setup discipline that makes the rest of the learning path easier instead of noisier."
+    }
+  ],
+  "version": 1
+}

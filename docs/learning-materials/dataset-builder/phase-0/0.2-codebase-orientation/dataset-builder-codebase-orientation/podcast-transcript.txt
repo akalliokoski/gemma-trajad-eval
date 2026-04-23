@@ -1,0 +1,75 @@
+Ava: [gasp] Okay, if I open dataset_builder for the first time, what am I actually looking at? A random pile of scripts or a pipeline with a shape?
+
+Noah: It is definitely a pipeline with a shape. The backbone is six small scripts: download, inspect, normalize, perturb, build, and validate.
+
+Ava: So the first good sign is that responsibilities are narrow.
+
+Noah: [chuckle] Exactly. This repo is script-first on purpose. Each file is trying to do one job well instead of hiding logic behind a giant framework.
+
+Ava: Start me at the front door. What does download hermes do?
+
+Noah: It freezes the source dataset locally. It uses Hugging Face datasets, pulls a split, and writes one JSON object per line into data slash raw. No inspection, no normalization, no labels yet.
+
+Ava: [gasp] So that script is basically saying: before you reason about the data, make the raw artifact real and local.
+
+Noah: Yes. That separation matters because source download problems should not be mixed together with schema translation problems.
+
+Ava: Then inspect traces is the microscope, right?
+
+Noah: Exactly. It loads JSONL into normal Python list and dict objects, then looks for a trajectory under conversations, trajectory, or messages. It also reads either role slash content or from slash value.
+
+Ava: Which means that file is teaching the repo to inspect more than one schema layer without caring which one it got first.
+
+Noah: Right. It summarizes lengths, role counts, tool call prevalence, and think markers. It is E D A, not dataset assembly.
+
+Ava: [sigh] The real bridge seems to be normalize trajectory.
+
+Noah: That is the schema bridge. It maps human to user, g p t to assistant, rewrites messages into role and content pairs, carries metadata forward, and adds derived structural fields like trajectory length and tool call count.
+
+Ava: [gasp] And that is also where source trace I D becomes important.
+
+Noah: Yes. If the source already has an id, use it. If not, hash the raw trajectory content. That gives one stable identity for the trace family.
+
+Ava: So stable identity is not just bookkeeping. It is what keeps train test leakage under control later.
+
+Noah: Exactly. Build trajad dataset splits by source trace I D, not by individual record. Clean examples and their anomaly variants stay together.
+
+Ava: And the var zero zero suffix is the clean baseline before perturbations?
+
+Noah: Yes. Var zero zero means the original normalized record. Var zero one and beyond are anomalous variants produced by rule functions.
+
+Ava: [chuckle] Okay, now the fun file: perturbations. What is the key idea there?
+
+Noah: The key idea is surgical mutation. P one and P two do not rewrite entire traces. They open the tool call J S O N embedded inside assistant text and change either the tool name or one argument value.
+
+Ava: So the anomalies live inside serialized tool-call markup, not in some separate structured call object.
+
+Noah: Right, and that is why schema awareness matters so much in this repo. The raw storage is Share G P T style outside and serialized tool protocol inside.
+
+Ava: I noticed nearby tools too. That seems like a tiny ontology of plausible confusion.
+
+Noah: That is a good way to say it. It tries to model wrong but nearby tool choice rather than total nonsense, although coverage is still limited.
+
+Ava: [gasp] And then build trajad dataset is the foreman of the whole construction site.
+
+Noah: Exactly. It loads normalized records, applies rules, runs the lightweight coherence screen, assigns leakage-safe splits, writes the processed files, and records a build manifest.
+
+Ava: Which means the manifest is the memory of what build happened, with what rules and what counts.
+
+Noah: Yes, and that is elegantly small. You do not need a giant metadata platform to get reproducibility here.
+
+Ava: Last file: validate labels. What does it guarantee, and what does it not guarantee?
+
+Noah: It guarantees structural correctness and some rule-aware bad step semantics. It checks fields, roles, anomaly labels, split names, and special contracts for some rules. But it does not guarantee that a perturbed trace feels realistic to a human reviewer.
+
+Ava: [gasp] So schema validity is necessary, but realism is a separate quality layer.
+
+Noah: Exactly. That distinction is one of the most important things to learn from this codebase.
+
+Ava: And the taxonomy is actually broader than the generator today, right? Hallucinated tool, invalid tool J S O N, and unnecessary replanning are valid labels but not real rules yet.
+
+Noah: Right. So the code already points toward future growth, but the current implementation stays modest. That is a healthy place for a first home-lab pipeline to be.
+
+Ava: [chuckle] Best summary: small files, explicit contracts, stable identities, and a very clear line between valid data and believable data.
+
+Noah: Yes. Once that mental map clicks, the whole dataset builder becomes much easier to extend without over-engineering it.
