@@ -1,7 +1,7 @@
 # Wiki Index
 
 > Content catalog for the project wiki.
-> Last updated: 2026-04-23 | Total pages: 18
+> Last updated: 2026-04-23 | Total pages: 19
 
 ## Entities
 - [[gemma]] - Model family anchoring the project's local-first fine-tuning direction.
@@ -28,3 +28,4 @@
 - [[task-4-lightweight-coherence-screen-2026-04-23]] - Durable answer describing the lightweight post-perturbation coherence screen, its determinism fix, and why repeated_step remains in scope.
 - [[task-5-p5-p6-realism-2026-04-23]] - Durable answer describing how P5 and P6 were made less synthetic while preserving deterministic dataset builds.
 - [[task-6-rule-aware-bad-step-validation-2026-04-23]] - Durable answer describing how the validator now checks rule-aware bad_step localization for P4, P5, and P7.
+- [[task-7-build-manifest-and-diagnostics-2026-04-23]] - Durable answer describing how each dataset build now writes build_manifest.json with reproducibility and diagnostics data.

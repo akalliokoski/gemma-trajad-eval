@@ -116,3 +116,13 @@
   - queries/dataset-builder-phase-0-improvements-2026-04-22.md
 - Updated navigation:
   - index.md
+
+## [2026-04-23] query | Task 7 build manifest and diagnostics recorded
+- Added raw execution snapshot:
+  - raw/transcripts/task-7-build-manifest-and-diagnostics-2026-04-23.md
+- Added durable query page:
+  - queries/task-7-build-manifest-and-diagnostics-2026-04-23.md
+- Updated wiki pages:
+  - queries/dataset-builder-phase-0-improvements-2026-04-22.md
+- Updated navigation:
+  - index.md

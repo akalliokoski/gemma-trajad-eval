@@ -1,0 +1,51 @@
+{
+  "anomaly_class_counts": {
+    "process_inefficiency": 14716,
+    "task_failure": 35644,
+    "unwarranted_continuation": 6364
+  },
+  "anomaly_type_counts": {
+    "bad_tool_arguments": 7290,
+    "continued_after_sufficient_evidence": 6364,
+    "contradicted_tool_result": 6364,
+    "premature_final_answer": 7316,
+    "repeated_step": 7358,
+    "skipped_required_step": 14674,
+    "wrong_tool_choice": 7358
+  },
+  "coherence_rejection_reasons": {},
+  "coherence_rejections_by_rule": {},
+  "perturbation_failures_by_rule": {
+    "p2_mutate_argument_value": 68,
+    "p5_append_continuation": 994,
+    "p6_contradict_final_answer": 994,
+    "p7_truncate_before_decision": 42,
+    "p8_swap_dependent_steps": 42
+  },
+  "rules_used": [
+    "p1_replace_tool_choice",
+    "p2_mutate_argument_value",
+    "p3_remove_step_pair",
+    "p4_duplicate_tool_step",
+    "p5_append_continuation",
+    "p6_contradict_final_answer",
+    "p7_truncate_before_decision",
+    "p8_swap_dependent_steps"
+  ],
+  "seed": 42,
+  "source_input_paths": [
+    "data/interim/hermes_filtered.normalized.jsonl",
+    "data/interim/hermes_normalized.jsonl"
+  ],
+  "split_counts": {
+    "dev": 6413,
+    "test": 9696,
+    "train": 47973
+  },
+  "timestamp": "2026-04-23T10:10:07.135702Z",
+  "totals": {
+    "all_records": 64082,
+    "anomalous": 56724,
+    "normal": 7358
+  }
+}

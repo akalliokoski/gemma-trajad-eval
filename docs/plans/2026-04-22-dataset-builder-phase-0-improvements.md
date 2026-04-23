@@ -457,6 +457,10 @@ git commit -m "feat: add rule-aware bad-step validation"
 
 ### Task 7: Add build manifests and perturbation diagnostics
 
+**Status:** Done (2026-04-23)
+**Verification:** `PYTHONPATH=. uv run --with pytest --no-project pytest tests/test_build_manifest.py -v`, `python3 dataset_builder/build_trajad_dataset.py --seed 42`, `python3 -m json.tool data/processed/build_manifest.json > /tmp/build_manifest.pretty.json`, and `python3 dataset_builder/validate_labels.py data/processed/all.jsonl --strict`
+**Implementation infographic:** `infographic/task-7-build-manifest-and-diagnostics/infographic.png`
+
 **Objective:** Make every dataset build reproducible and inspectable.
 
 **Files:**

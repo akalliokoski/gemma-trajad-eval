@@ -17,6 +17,7 @@ import argparse
 import json
 import random
 from collections import Counter
+from datetime import UTC, datetime
 from pathlib import Path
 
 try:
@@ -66,16 +67,120 @@ def unique_source_ids_in_order(records: list[dict]) -> list[str]:
     return ordered_ids
 
 
-def build(rules: list, seed: int) -> None:
+def _sorted_counter(counter: Counter[str]) -> dict[str, int]:
+    return {key: counter[key] for key in sorted(counter)}
+
+
+def build_manifest(
+    *,
+    seed: int,
+    rule_names: list[str],
+    source_input_paths: list[str],
+    split_records: dict[str, list[dict]],
+    perturbation_failures: Counter[str],
+    coherence_rejections: Counter[str],
+    coherence_rejection_reasons: Counter[str],
+) -> dict:
+    all_records = [record for records in split_records.values() for record in records]
+    anomaly_type_counts = Counter(
+        record["anomaly_type"] for record in all_records if record.get("anomaly_type") is not None
+    )
+    anomaly_class_counts = Counter(
+        record["anomaly_class"] for record in all_records if record.get("anomaly_class") is not None
+    )
+    normal_total = sum(1 for record in all_records if not record.get("is_anomalous", record.get("anomaly_type") is not None))
+    anomalous_total = sum(1 for record in all_records if record.get("is_anomalous", record.get("anomaly_type") is not None))
+
+    return {
+        "timestamp": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+        "seed": seed,
+        "rules_used": list(rule_names),
+        "source_input_paths": list(source_input_paths),
+        "totals": {
+            "normal": normal_total,
+            "anomalous": anomalous_total,
+            "all_records": len(all_records),
+        },
+        "split_counts": {split: len(records) for split, records in split_records.items()},
+        "anomaly_type_counts": _sorted_counter(anomaly_type_counts),
+        "anomaly_class_counts": _sorted_counter(anomaly_class_counts),
+        "perturbation_failures_by_rule": _sorted_counter(perturbation_failures),
+        "coherence_rejections_by_rule": _sorted_counter(coherence_rejections),
+        "coherence_rejection_reasons": _sorted_counter(coherence_rejection_reasons),
+    }
+
+
+def write_manifest(manifest: dict, path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w") as f:
+        json.dump(manifest, f, indent=2, sort_keys=True)
+        f.write("\n")
+    print(f"  Wrote build manifest → {path}")
+
+
+def format_manifest_summary(manifest: dict) -> str:
+    split_counts = manifest["split_counts"]
+    totals = manifest["totals"]
+    lines = [
+        "Build manifest summary:",
+        f"  seed: {manifest['seed']}",
+        f"  rules used: {len(manifest['rules_used'])}",
+        (
+            "  split counts: "
+            f"train={split_counts.get('train', 0):,} "
+            f"dev={split_counts.get('dev', 0):,} "
+            f"test={split_counts.get('test', 0):,}"
+        ),
+        (
+            "  totals: "
+            f"normal={totals['normal']:,} "
+            f"anomalous={totals['anomalous']:,} "
+            f"all={totals['all_records']:,}"
+        ),
+    ]
+
+    if manifest["anomaly_type_counts"]:
+        lines.append("  anomaly types:")
+        for name, count in manifest["anomaly_type_counts"].items():
+            lines.append(f"    {name}: {count:,}")
+
+    if manifest["anomaly_class_counts"]:
+        lines.append("  anomaly classes:")
+        for name, count in manifest["anomaly_class_counts"].items():
+            lines.append(f"    {name}: {count:,}")
+
+    if manifest["perturbation_failures_by_rule"]:
+        lines.append("  perturbation failures by rule:")
+        for name, count in manifest["perturbation_failures_by_rule"].items():
+            lines.append(f"    {name}: {count:,}")
+
+    if manifest["coherence_rejections_by_rule"]:
+        lines.append("  coherence rejections by rule:")
+        for name, count in manifest["coherence_rejections_by_rule"].items():
+            lines.append(f"    {name}: {count:,}")
+
+    if manifest["coherence_rejection_reasons"]:
+        lines.append("  coherence rejection reasons:")
+        for name, count in manifest["coherence_rejection_reasons"].items():
+            lines.append(f"    {name}: {count:,}")
+
+    return "\n".join(lines)
+
+
+def build(rules: list, seed: int) -> dict | None:
     rng = random.Random(seed)
     rejection_reasons: Counter[str] = Counter()
+    perturbation_failures: Counter[str] = Counter()
+    coherence_rejections_by_rule: Counter[str] = Counter()
 
     # Load normalized normal records
     normal_files = list(INTERIM_DIR.glob("*.jsonl"))
     if not normal_files:
         print(f"ERROR: No JSONL files found in {INTERIM_DIR}")
         print("Run normalize_trajectory.py first.")
-        return
+        return None
+
+    source_input_paths = [str(path.relative_to(Path(__file__).parent.parent)) for path in sorted(normal_files)]
 
     normals: list[dict] = []
     for f in normal_files:
@@ -86,8 +191,10 @@ def build(rules: list, seed: int) -> None:
     anomalous: list[dict] = []
     for record in normals:
         for v_idx, rule_fn in enumerate(rules):
+            rule_name = rule_fn.__name__
             result = apply_perturbation(record, rule_fn, v_idx + 1, rng)
             if result is None:
+                perturbation_failures[rule_name] += 1
                 continue
 
             plausible, reason = is_plausible_trajectory(result)
@@ -95,6 +202,7 @@ def build(rules: list, seed: int) -> None:
                 anomalous.append(result)
             else:
                 rejection_reasons[reason or "unknown"] += 1
+                coherence_rejections_by_rule[rule_name] += 1
 
     rejected_total = sum(rejection_reasons.values())
     print(f"Generated {len(anomalous):,} anomalous records")
@@ -145,6 +253,20 @@ def build(rules: list, seed: int) -> None:
 
     # Write combined for easy inspection
     write_jsonl(all_records, PROCESSED_DIR / "all.jsonl")
+
+    manifest = build_manifest(
+        seed=seed,
+        rule_names=[rule.__name__ for rule in rules],
+        source_input_paths=source_input_paths,
+        split_records={"train": train, "dev": dev, "test": test},
+        perturbation_failures=perturbation_failures,
+        coherence_rejections=coherence_rejections_by_rule,
+        coherence_rejection_reasons=rejection_reasons,
+    )
+    write_manifest(manifest, PROCESSED_DIR / "build_manifest.json")
+    print()
+    print(format_manifest_summary(manifest))
+    return manifest
 
 
 def main() -> None:

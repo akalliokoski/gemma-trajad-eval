@@ -54,6 +54,7 @@ These changes reinforce the core conclusion of this page: the right path is smal
 
 As of later on 2026-04-23, Task 6 is also complete:
 - Task 6: rule-aware bad-step validation for first-error localization semantics
+- Task 7: build manifest and diagnostics for reproducible dataset builds
 
 ## Home-lab fit
 
@@ -65,4 +66,5 @@ This repository is now explicitly the first project in the user's home AI lab. T
 - [[task-4-lightweight-coherence-screen-2026-04-23]]
 - [[task-5-p5-p6-realism-2026-04-23]]
 - [[task-6-rule-aware-bad-step-validation-2026-04-23]]
+- [[task-7-build-manifest-and-diagnostics-2026-04-23]]
 - [[home-ai-lab-principles]]
