@@ -65,6 +65,10 @@ This plan implements seven practical improvements:
 
 ### Task 1: Repair raw-data inspection for ShareGPT-style Hermes traces
 
+**Status:** Done (2026-04-23)
+**Verification:** `PYTHONPATH=. uv run --with pytest --no-project pytest tests/test_inspect_traces.py -v` and `python3 dataset_builder/inspect_traces.py data/raw/hermes_filtered.jsonl`
+**Implementation infographic:** `infographic/task-1-raw-inspection/infographic.png`
+
 **Objective:** Make the inspection path trustworthy on the real raw dataset before deeper changes.
 
 **Files:**
@@ -132,6 +136,10 @@ git commit -m "fix: support raw Hermes trace schema in inspection"
 ---
 
 ### Task 2: Add derived structural metadata during normalization
+
+**Status:** Done (2026-04-23)
+**Verification:** `PYTHONPATH=. uv run --with pytest --no-project pytest tests/test_normalize_trajectory.py -v` and `python3 dataset_builder/normalize_trajectory.py data/raw/hermes_filtered.jsonl data/interim/hermes_normalized.jsonl`
+**Implementation infographic:** `infographic/task-2-derived-metadata/infographic.png`
 
 **Objective:** Preserve more useful signal about tool-heavy trajectories without redesigning the schema.
 

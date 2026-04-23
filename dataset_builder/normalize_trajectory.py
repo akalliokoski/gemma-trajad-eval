@@ -14,8 +14,6 @@ Internal format (one record):
 
 import hashlib
 import json
-import re
-import uuid
 from pathlib import Path
 from typing import Any
 
@@ -48,6 +46,26 @@ def extract_metadata(record: dict) -> dict:
     return meta
 
 
+def derive_trace_metadata(trajectory: list[dict[str, str]]) -> dict[str, Any]:
+    """Compute cheap structural metadata from a normalized trajectory."""
+    tool_call_count = 0
+    tool_response_count = 0
+    has_think = False
+
+    for message in trajectory:
+        content = message.get("content", "") or ""
+        tool_call_count += content.count("<tool_call>")
+        tool_response_count += content.count("<tool_response>")
+        has_think = has_think or "<think>" in content
+
+    return {
+        "trajectory_length": len(trajectory),
+        "tool_call_count": tool_call_count,
+        "tool_response_count": tool_response_count,
+        "has_think": has_think,
+    }
+
+
 def normalize_record(record: dict, index: int) -> dict:
     """Normalize one raw Hermes record to internal format."""
     # Detect trajectory field
@@ -72,6 +90,9 @@ def normalize_record(record: dict, index: int) -> dict:
         h = hashlib.sha256(json.dumps(raw_traj, sort_keys=True).encode()).hexdigest()[:16]
         source_id = f"hermes_{h}"
 
+    metadata = extract_metadata(record)
+    metadata.update(derive_trace_metadata(trajectory))
+
     return {
         "id": f"trace_{index:06d}_var_00",
         "source_trace_id": str(source_id),
@@ -80,7 +101,7 @@ def normalize_record(record: dict, index: int) -> dict:
         "anomaly_type": None,
         "bad_step": None,
         "generation_rule": None,
-        "metadata": extract_metadata(record),
+        "metadata": metadata,
     }
 
 

@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1320"/>
+      <stop offset="100%" stop-color="#102a43"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000000" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect x="40" y="40" width="1520" height="820" rx="28" fill="none" stroke="#52d1ff" stroke-width="2" stroke-dasharray="10 10" opacity="0.55"/>
+  <text x="80" y="100" fill="#9fd9ff" font-size="24" font-family="Arial, Helvetica, sans-serif" letter-spacing="4">GEMMA-TRAJAD-EVAL / IMPLEMENTATION INFOGRAPHIC</text>
+  <text x="80" y="155" fill="#ffffff" font-size="44" font-weight="700" font-family="Arial, Helvetica, sans-serif">Task 2 — Derived Structural Metadata</text>
+  <text x="80" y="198" fill="#c8e8ff" font-size="23" font-family="Arial, Helvetica, sans-serif">Add structural metadata during normalization so tool-dense Hermes traces preserve cheap diagnostic signals without changing the core trajectory shape.</text>
+
+  <g filter="url(#shadow)">
+    <rect x="80" y="250" width="430" height="260" rx="24" fill="#102f4a" stroke="#63d8ff" stroke-width="2"/>
+    <rect x="535" y="250" width="430" height="260" rx="24" fill="#102f4a" stroke="#63d8ff" stroke-width="2"/>
+    <rect x="990" y="250" width="530" height="260" rx="24" fill="#102f4a" stroke="#63d8ff" stroke-width="2"/>
+    <rect x="80" y="535" width="885" height="250" rx="24" fill="#102f4a" stroke="#63d8ff" stroke-width="2"/>
+    <rect x="990" y="535" width="530" height="250" rx="24" fill="#102f4a" stroke="#63d8ff" stroke-width="2"/>
+  </g>
+
+  <text x="110" y="295" fill="#7fe8ff" font-size="24" font-weight="700" font-family="Arial, Helvetica, sans-serif">PROBLEM / MOTIVATION</text>
+  <text x="110" y="340" fill="#e7f6ff" font-size="24" font-family="Arial, Helvetica, sans-serif">• Normalization kept a simple schema but lost cheap structural signal.</text>
+  <text x="110" y="374" fill="#e7f6ff" font-size="24" font-family="Arial, Helvetica, sans-serif">• Tool-heavy traces need metadata for diagnostics and filtering.</text>
+  <text x="110" y="408" fill="#e7f6ff" font-size="24" font-family="Arial, Helvetica, sans-serif">• The goal was enrichment without schema redesign.</text>
+
+  <text x="565" y="295" fill="#7fe8ff" font-size="24" font-weight="700" font-family="Arial, Helvetica, sans-serif">IMPLEMENTATION</text>
+  <text x="565" y="340" fill="#e7f6ff" font-size="24" font-family="Arial, Helvetica, sans-serif">• Added derive_trace_metadata(trajectory).</text>
+  <text x="565" y="374" fill="#e7f6ff" font-size="24" font-family="Arial, Helvetica, sans-serif">• Derived trajectory_length, tool_call_count, tool_response_count, has_think.</text>
+  <text x="565" y="408" fill="#e7f6ff" font-size="24" font-family="Arial, Helvetica, sans-serif">• Merged values into metadata while keeping role/content items unchanged.</text>
+
+  <text x="1020" y="295" fill="#7fe8ff" font-size="24" font-weight="700" font-family="Arial, Helvetica, sans-serif">VERIFICATION METRICS</text>
+  <g>
+      <rect x="1020" y="330" width="235" height="92" rx="18" fill="#0b2338" stroke="#75e2ff" stroke-width="2"/>
+      <text x="1038" y="364" fill="#88e8ff" font-size="18" font-family="Arial, Helvetica, sans-serif">Tests passed</text>
+      <text x="1038" y="400" fill="#ffffff" font-size="30" font-weight="700" font-family="Arial, Helvetica, sans-serif">2</text>
+    </g>
+  <g>
+      <rect x="1285" y="330" width="235" height="92" rx="18" fill="#0b2338" stroke="#75e2ff" stroke-width="2"/>
+      <text x="1303" y="364" fill="#88e8ff" font-size="18" font-family="Arial, Helvetica, sans-serif">Normalized</text>
+      <text x="1303" y="400" fill="#ffffff" font-size="30" font-weight="700" font-family="Arial, Helvetica, sans-serif">3,679</text>
+    </g>
+  <g>
+      <rect x="1020" y="445" width="235" height="92" rx="18" fill="#0b2338" stroke="#75e2ff" stroke-width="2"/>
+      <text x="1038" y="479" fill="#88e8ff" font-size="18" font-family="Arial, Helvetica, sans-serif">Errors</text>
+      <text x="1038" y="515" fill="#ffffff" font-size="30" font-weight="700" font-family="Arial, Helvetica, sans-serif">0</text>
+    </g>
+  <g>
+      <rect x="1285" y="445" width="235" height="92" rx="18" fill="#0b2338" stroke="#75e2ff" stroke-width="2"/>
+      <text x="1303" y="479" fill="#88e8ff" font-size="18" font-family="Arial, Helvetica, sans-serif">Example</text>
+      <text x="1303" y="515" fill="#ffffff" font-size="30" font-weight="700" font-family="Arial, Helvetica, sans-serif">13 / 11 / 10 / True</text>
+    </g>
+
+  <text x="110" y="580" fill="#7fe8ff" font-size="24" font-weight="700" font-family="Arial, Helvetica, sans-serif">COMMANDS / FILES</text>
+  <text x="110" y="625" fill="#e7f6ff" font-size="20" font-family="Arial, Helvetica, sans-serif">• PYTHONPATH=. uv run --with pytest --no-project pytest tests/test_normalize_trajectory.py -v</text>
+  <text x="110" y="667" fill="#e7f6ff" font-size="20" font-family="Arial, Helvetica, sans-serif">• python3 dataset_builder/normalize_trajectory.py data/raw/hermes_filtered.jsonl data/interim/hermes_normalized.jsonl</text>
+  <text x="110" y="709" fill="#e7f6ff" font-size="20" font-family="Arial, Helvetica, sans-serif">• Files: dataset_builder/normalize_trajectory.py, tests/test_normalize_trajectory.py</text>
+
+  <text x="1020" y="580" fill="#7fe8ff" font-size="24" font-weight="700" font-family="Arial, Helvetica, sans-serif">KEY TAKEAWAY</text>
+  <text x="1020" y="635" fill="#e7f6ff" font-size="24" font-family="Arial, Helvetica, sans-serif">• Task 2 preserves the simple normalized trajectory shape.</text>
+  <text x="1020" y="677" fill="#e7f6ff" font-size="24" font-family="Arial, Helvetica, sans-serif">• Metadata now carries useful structural signal for later analysis.</text>
+</svg>
