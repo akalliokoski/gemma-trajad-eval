@@ -10,9 +10,9 @@ import json
 from pathlib import Path
 
 try:
-    from dataset_builder.perturbations import VALID_ANOMALY_CLASSES
+    from dataset_builder.perturbations import VALID_ANOMALY_CLASSES, has_malformed_tool_call_json
 except ModuleNotFoundError:
-    from perturbations import VALID_ANOMALY_CLASSES
+    from perturbations import VALID_ANOMALY_CLASSES, has_malformed_tool_call_json
 
 VALID_ANOMALY_TYPES = {
     "wrong_tool_choice",
@@ -94,6 +94,16 @@ def _validate_rule_aware_bad_step(record: dict) -> list[str]:
             errors.append("P7 premature_final_answer bad_step must point to the inserted premature final answer")
         elif not any(step.get("role") == "tool" for step in traj[:bad_step]):
             errors.append("P7 premature_final_answer requires earlier tool evidence before the inserted premature final answer")
+
+    elif generation_rule == "P9":
+        if bad_step < 0 or bad_step >= len(traj):
+            errors.append("P9 invalid_tool_json bad_step must point to an assistant tool-call step with malformed JSON")
+            return errors
+        bad_step_message = traj[bad_step]
+        if bad_step_message.get("role") != "assistant" or "<tool_call>" not in _content(bad_step_message):
+            errors.append("P9 invalid_tool_json bad_step must point to an assistant tool-call step with malformed JSON")
+        elif not has_malformed_tool_call_json(_content(bad_step_message)):
+            errors.append("P9 invalid_tool_json bad_step must point to an assistant tool-call step with malformed JSON")
 
     return errors
 

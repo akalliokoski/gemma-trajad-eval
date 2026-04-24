@@ -67,6 +67,13 @@ def unique_source_ids_in_order(records: list[dict]) -> list[str]:
     return ordered_ids
 
 
+def build_all_records_with_split(split_records: dict[str, list[dict]]) -> list[dict]:
+    ordered: list[dict] = []
+    for split_name in ("train", "dev", "test"):
+        ordered.extend(split_records.get(split_name, []))
+    return ordered
+
+
 def _sorted_counter(counter: Counter[str]) -> dict[str, int]:
     return {key: counter[key] for key in sorted(counter)}
 
@@ -252,13 +259,14 @@ def build(rules: list, seed: int) -> dict | None:
     write_jsonl(test, PROCESSED_DIR / "test.jsonl")
 
     # Write combined for easy inspection
-    write_jsonl(all_records, PROCESSED_DIR / "all.jsonl")
+    split_records = {"train": train, "dev": dev, "test": test}
+    write_jsonl(build_all_records_with_split(split_records), PROCESSED_DIR / "all.jsonl")
 
     manifest = build_manifest(
         seed=seed,
         rule_names=[rule.__name__ for rule in rules],
         source_input_paths=source_input_paths,
-        split_records={"train": train, "dev": dev, "test": test},
+        split_records=split_records,
         perturbation_failures=perturbation_failures,
         coherence_rejections=coherence_rejections_by_rule,
         coherence_rejection_reasons=rejection_reasons,

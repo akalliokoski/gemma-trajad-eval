@@ -69,6 +69,25 @@ The preferred technical direction remains:
 
 When local constraints require alternatives, use the closest compatible path that still preserves the spirit of the stack.
 
+## Dataset-builder quickstart
+
+Repo standard: use `uv`.
+
+```bash
+uv sync --extra dev
+./scripts/bootstrap_dataset_builder.sh
+uv run pytest -q
+```
+
+Useful commands:
+
+```bash
+uv run python dataset_builder/inspect_traces.py --help
+uv run python dataset_builder/build_trajad_dataset.py --seed 42
+uv run python dataset_builder/validate_labels.py data/processed/all.jsonl --strict
+uv run python dataset_builder/audit_dataset.py data/processed/all.jsonl
+```
+
 ### Execution topology and workload placement
 
 The project now uses a three-tier execution model:
@@ -142,6 +161,7 @@ gemma-trajad-eval/
 Important docs:
 - `AGENTS.md` — project operating instructions for Hermes and future agents
 - `docs/execution-topology.md` — workload placement rules across VPS, Mac, and future Modal
+- `docs/dataset-builder-data-contract.md` — concise storage contract for `data/raw`, `data/interim`, and `data/processed`
 - `docs/project-spec.md` — prior project specification and source context
 - `docs/labeling-guidelines.md` — anomaly labeling rules and examples
 - `docs/evaluation-plan.md` — metrics and evaluation protocol

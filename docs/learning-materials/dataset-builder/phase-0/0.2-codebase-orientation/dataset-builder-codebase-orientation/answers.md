@@ -18,6 +18,11 @@ That means the script is working with plain Python dicts and lists, not a Huggin
 
 From there, helper functions treat each record as “some dict that might store a trajectory.” `get_trajectory()` checks `conversations`, then `trajectory`, then `messages`. `get_role()` and `get_content()` similarly accept either normalized keys (`role`, `content`) or ShareGPT-style keys (`from`, `value`). The script then computes summary statistics like trajectory lengths, role counts, tool-call prevalence, and `<think>` usage.
 
+It now also supports focused reports for the next implementation phase:
+- `--schema-report` to describe detected trajectory/message shapes
+- `--tool-stats` to summarize tool-call density
+- `--eligibility-report` to estimate which perturbation rules are structurally likely to fire
+
 The important learning point is that `inspect_traces.py` is not part of the label-producing pipeline. It is the codebase’s microscope.
 
 ### 3) Why does `inspect_traces.py` auto-detect the trajectory field name?

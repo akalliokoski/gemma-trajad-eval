@@ -134,3 +134,11 @@
   - queries/dataset-builder-phase-0-improvements-2026-04-22.md
 - Updated navigation:
   - index.md
+
+## [2026-04-24] query | Dataset-builder Phase-1 readiness improvements recorded
+- Added raw source snapshot:
+  - raw/transcripts/dataset-builder-phase-1-readiness-2026-04-24.md
+- Added durable query page:
+  - queries/dataset-builder-phase-1-readiness-2026-04-24.md
+- Updated navigation:
+  - index.md

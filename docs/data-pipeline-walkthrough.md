@@ -30,15 +30,22 @@ Reason:
 - system `pip` module was not available under `/usr/bin/python3`
 - `uv` was available at `/home/hermes/.local/bin/uv`
 
-### Decision
-Use `uv` to create a repo-local virtualenv instead of trying to repair the system Python.
+### Current repo standard
+Use `uv` for this repo. Keep `requires-python >=3.11`, but use a checked-in `uv` workflow for syncing dependencies and running commands.
 
-### Commands used
+### Commands used at the time
 
 ```bash
 uv venv .venv
 . .venv/bin/activate
 uv pip install setuptools wheel datasets huggingface_hub jsonlines tqdm pydantic transformers tokenizers scikit-learn numpy pytest
+```
+
+### Recommended commands now
+
+```bash
+uv sync --extra dev
+uv run python -c "import datasets, tqdm, pydantic, huggingface_hub, numpy, sklearn; print('ok')"
 ```
 
 ## Pipeline commands used

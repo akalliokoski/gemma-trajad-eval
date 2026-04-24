@@ -83,8 +83,31 @@ def parse_tool_call(content: str) -> dict | None:
         return None
 
 
+def extract_tool_call_json(content: str) -> str | None:
+    match = TOOL_CALL_RE.search(content)
+    if match is None:
+        return None
+    return match.group(1)
+
+
+def has_malformed_tool_call_json(content: str) -> bool:
+    raw_json = extract_tool_call_json(content)
+    if raw_json is None:
+        return False
+    try:
+        json.loads(raw_json)
+    except json.JSONDecodeError:
+        return True
+    return False
+
+
 def replace_tool_call(content: str, new_call: dict) -> str:
     replacement = f"<tool_call>{json.dumps(new_call)}</tool_call>"
+    return TOOL_CALL_RE.sub(lambda _match: replacement, content)
+
+
+def replace_tool_call_raw(content: str, raw_tool_call_json: str) -> str:
+    replacement = f"<tool_call>{raw_tool_call_json}</tool_call>"
     return TOOL_CALL_RE.sub(lambda _match: replacement, content)
 
 
@@ -397,6 +420,34 @@ def p8_swap_dependent_steps(record: dict, rng: random.Random) -> dict | None:
     return out
 
 
+def p9_invalid_tool_json(record: dict, rng: random.Random) -> dict | None:
+    """P9: Corrupt one assistant tool-call payload so the embedded JSON becomes invalid."""
+    traj = record["trajectory"]
+    candidates = []
+    for idx in find_assistant_steps(traj):
+        raw_json = extract_tool_call_json(traj[idx]["content"])
+        if raw_json is not None and parse_tool_call(traj[idx]["content"]) is not None:
+            candidates.append((idx, raw_json))
+
+    if not candidates:
+        return None
+
+    step_idx, raw_json = rng.choice(candidates)
+    corruption_mode = rng.choice(["drop_brace", "trailing_comma"])
+    if corruption_mode == "drop_brace" and raw_json.endswith("}"):
+        corrupted_json = raw_json[:-1]
+    else:
+        corrupted_json = raw_json[:-1] + ",}" if raw_json.endswith("}") else raw_json + ","
+
+    out = copy.deepcopy(record)
+    out["trajectory"][step_idx]["content"] = replace_tool_call_raw(traj[step_idx]["content"], corrupted_json)
+    out["is_anomalous"] = True
+    out["anomaly_type"] = "invalid_tool_json"
+    out["bad_step"] = step_idx
+    out["generation_rule"] = "P9"
+    return out
+
+
 # ---------------------------------------------------------------------------
 # Registry
 # ---------------------------------------------------------------------------
@@ -410,6 +461,7 @@ ALL_RULES = [
     p6_contradict_final_answer,
     p7_truncate_before_decision,
     p8_swap_dependent_steps,
+    p9_invalid_tool_json,
 ]
 
 MVP_RULES = ALL_RULES[:4]  # P1–P4 for the MVP

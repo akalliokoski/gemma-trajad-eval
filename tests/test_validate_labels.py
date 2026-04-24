@@ -179,3 +179,22 @@ def test_validate_record_accepts_skipped_required_step_missing_position_at_end()
     errors = validate_record(record, 0)
 
     assert not any("out of range" in error for error in errors)
+
+
+def test_validate_record_rejects_invalid_tool_json_when_bad_step_is_not_assistant_tool_call() -> None:
+    invalid_json_trajectory = [
+        {"role": "system", "content": "system"},
+        {"role": "user", "content": "find x"},
+        {"role": "assistant", "content": "plain answer"},
+        {"role": "tool", "content": "<tool_response>ok</tool_response>"},
+    ]
+    record = make_anomalous_record(
+        generation_rule="P9",
+        bad_step=2,
+        trajectory=invalid_json_trajectory,
+        anomaly_type="invalid_tool_json",
+    )
+
+    errors = validate_record(record, 0)
+
+    assert any("P9 invalid_tool_json bad_step must point to an assistant tool-call step with malformed JSON" in error for error in errors)

@@ -3,9 +3,11 @@ import random
 
 from dataset_builder.coherence import is_plausible_trajectory
 from dataset_builder.perturbations import (
+    ALL_RULES,
     ANOMALY_TYPE_TO_CLASS,
     p5_append_continuation,
     p6_contradict_final_answer,
+    p9_invalid_tool_json,
     parse_tool_call,
     replace_tool_call,
 )
@@ -101,3 +103,21 @@ def test_p6_contradicts_tool_result_without_bracketed_marker() -> None:
     assert "one matching result" not in final_message
     perturbed["anomaly_class"] = ANOMALY_TYPE_TO_CLASS[perturbed["anomaly_type"]]
     assert validate_record(perturbed, 0) == []
+
+
+def test_p9_invalid_tool_json_marks_bad_assistant_step() -> None:
+    perturbed = p9_invalid_tool_json(BASE_RECORD, random.Random(0))
+
+    assert perturbed is not None
+    assert perturbed["anomaly_type"] == "invalid_tool_json"
+    assert perturbed["bad_step"] == 2
+    assert perturbed["generation_rule"] == "P9"
+    assert perturbed["trajectory"][2]["role"] == "assistant"
+    assert "<tool_call>" in perturbed["trajectory"][2]["content"]
+    assert parse_tool_call(perturbed["trajectory"][2]["content"]) is None
+    perturbed["anomaly_class"] = ANOMALY_TYPE_TO_CLASS[perturbed["anomaly_type"]]
+    assert validate_record(perturbed, 0) == []
+
+
+def test_all_rules_includes_invalid_tool_json_rule() -> None:
+    assert p9_invalid_tool_json in ALL_RULES

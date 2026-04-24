@@ -35,17 +35,17 @@ The `dev` extra adds:
 - `ruff`
 - `mypy`
 
-That means the learning-plan command `pip install -e ".[dev]"` is a sensible canonical setup because it installs both runtime and developer tooling in one step.
+That means the old learning-plan command `pip install -e ".[dev]"` was a sensible baseline when the material was first written, but the repo should now standardize on `uv sync --extra dev` for day-to-day use.
 
 ### 3) What is the canonical setup sequence from the learning plan?
-The plan’s generic sequence is:
+The original plan’s generic sequence is:
 
 1. `python3 -m venv .venv`
 2. `source .venv/bin/activate`
 3. `pip install -e ".[dev]"`
 4. `python -c "import datasets, tqdm, pydantic; print('ok')"`
 
-That path is portable and easy to understand. It is a good default explanation for the learning materials because it matches the repo metadata directly.
+That still explains the portable Python packaging idea, but it is no longer the best repo-specific instruction set.
 
 ### 4) Why does the repo’s practical VPS walkthrough recommend `uv` instead?
 The VPS walkthrough documented a machine-specific reality: system `python3` existed, but the system `pip` module was not available under `/usr/bin/python3`. However, `uv` was available.
@@ -56,19 +56,16 @@ Because of that, the practical setup decision on the VPS was:
 - `. .venv/bin/activate`
 - `uv pip install ...`
 
-So the right mental model is:
-- the learning plan gives the generic Python-venv recipe
-- the walkthrough shows the more robust VPS-specific recipe that was actually used here
-
-This is a good example of practical elegance: keep the conceptual setup simple, but adapt the implementation to the host.
+That host-specific workaround ended up pointing to the better long-term repo standard too: use `uv` directly for reproducible dependency sync and command execution.
 
 ### 5) What should a learner do on this repo specifically?
-In this repo, the most practical recommendation is:
+Use `uv` as the default path:
 
-- if standard `python3 -m venv` and `pip install -e ".[dev]"` work on your machine, use them
-- if the host behaves like the VPS described in `docs/data-pipeline-walkthrough.md`, use `uv` to create the venv and install the dependencies
+- `uv sync --extra dev`
+- `uv run python -c "import datasets, tqdm, pydantic, huggingface_hub, numpy, sklearn; print('ok')"`
+- `mkdir -p data/{raw,interim,processed}`
 
-In both cases, the outcome should be the same: a repo-local `.venv` that can import the core dataset-builder dependencies.
+The important outcome is still the same: a repo-local environment that can import the dataset-builder dependencies and a data directory layout that matches the pipeline.
 
 ### 6) What is the real verification target after environment creation?
 The real target is not “the command completed.” It is “the environment can import the libraries the pipeline needs.”

@@ -17,4 +17,5 @@ This folder contains the study material created for Phase 0.3 environment setup 
 
 ## Notes
 - No video explainer was created for this topic.
-- This topic explains the learning-plan setup steps while also noting that the practical VPS workflow documented in this repo used `uv` to create `.venv`.
+- This topic explains the original learning-plan setup steps.
+- Current repo standard: use `uv`, not mixed `venv + pip` instructions, for local setup and command execution.
