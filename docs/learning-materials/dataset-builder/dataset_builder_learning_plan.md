@@ -91,17 +91,19 @@ each design decision was made — by actually running it, breaking it, and exten
   - Podcast: [local MP3](file:///data/audiobookshelf/podcasts/profiles/gemma/projects/gemma-trajad-eval/dataset-builder/phase-0-orientation/0.1-domain-background/trajectory-anomaly-detection/phase-0_0.1-01_trajectory-anomaly-detection.mp3) · [Audiobookshelf UI](https://vps.taild96651.ts.net:13378/)
   - Video explainer: [local MP4](file:///data/jellyfin/videos/ai-generated/notebooklm-style-explainers/2026-04-21_dataset-builder-phase-0-1-trajectory-anomaly-detection/2026-04-21_dataset-builder-phase-0-1-trajectory-anomaly-detection.mp4) · [Jellyfin UI](https://vps.taild96651.ts.net:8096/)
 
-- [ ] **Read TrajAD section 3: dataset construction and anomaly taxonomy** (~30 min)
-  - What are the three top-level anomaly classes?
-  - How many perturbation rules does TrajBench use? Compare to this project's 8 rules.
-  - What does "perturb-and-complete" add that this project does not do?
-  - Note the human agreement rates (96.2% classification, 94.5% localization) — these set
-    a quality bar to aim for in manual review
+- [x] **Read TrajAD section 3: dataset construction and anomaly taxonomy** (~30 min)
+  - Focus answer: TrajAD organizes anomalies into Task Failure, Process Inefficiency, and Unwarranted Continuation, and TrajBench uses six perturbation families that become more realistic because the paper uses perturb-and-complete rather than one-step corruption.
+  - Quality bar: the reported 96.2% anomaly-classification agreement and 94.5% first-error-localization agreement are the benchmark this repo should keep in mind for later manual review.
+  - Q&A notes: [answers.md](learning-materials/dataset-builder/phase-0/0.1-domain-background/dataset-construction-and-anomaly-taxonomy/answers.md)
+  - Infographic: [PNG](learning-materials/dataset-builder/phase-0/0.1-domain-background/dataset-construction-and-anomaly-taxonomy/infographic.png)
+  - Podcast: [local MP3](file:///data/audiobookshelf/podcasts/profiles/gemma/projects/gemma-trajad-eval/dataset-builder/phase-0-orientation/0.1-domain-background/dataset-construction-and-anomaly-taxonomy/phase-0_0.1-02_dataset-construction-and-anomaly-taxonomy.mp3) · [Audiobookshelf UI](https://vps.taild96651.ts.net:13378/)
 
-- [ ] **Browse the Hermes filtered traces HF dataset card + dataset viewer** (~30 min)
-  - Open the dataset on HF Hub and browse 5–10 examples in the viewer
-  - Identify: how long are typical trajectories? What roles appear? How common are tool calls?
-  - Note the `conversations` field structure; understand ShareGPT format vs. OpenAI chat format
+- [x] **Browse the Hermes filtered traces HF dataset card + dataset viewer** (~30 min)
+  - Focus answer: the dataset is a tool-heavy ShareGPT-style corpus with `conversations` stored as `{from, value}` messages; typical traces are about 32 messages long, roles are `system`, `human`, `gpt`, and `tool`, and tool use is the dominant structural pattern.
+  - Structural note: tool calls and tool responses are serialized inside message text with `<tool_call>` / `<tool_response>` markup, so downstream normalization has to reconstruct structure before perturbation or validation.
+  - Q&A notes: [answers.md](learning-materials/dataset-builder/phase-0/0.1-domain-background/hermes-filtered-traces-dataset-card-and-viewer/answers.md)
+  - Infographic: [PNG](learning-materials/dataset-builder/phase-0/0.1-domain-background/hermes-filtered-traces-dataset-card-and-viewer/infographic.png)
+  - Podcast: [local MP3](file:///data/audiobookshelf/podcasts/profiles/gemma/projects/gemma-trajad-eval/dataset-builder/phase-0-orientation/0.1-domain-background/hermes-filtered-traces-dataset-card-and-viewer/phase-0_0.1-03_hermes-filtered-traces-dataset-card-and-viewer.mp3) · [Audiobookshelf UI](https://vps.taild96651.ts.net:13378/)
 
 ### 0.2 Codebase orientation (~120 min total)
 

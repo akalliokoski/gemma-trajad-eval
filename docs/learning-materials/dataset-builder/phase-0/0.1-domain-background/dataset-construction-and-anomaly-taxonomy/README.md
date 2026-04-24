@@ -9,7 +9,8 @@ This folder contains the study material created for the second Phase 0.1 domain-
 - `prompts/infographic.md` — prompt-assembled source of truth for the image-generation workflow
 - `infographic.png` — current in-repo infographic artifact regenerated from the prompt-driven image-generation workflow
 - `media-brief.md` — shared brief used to shape media outputs
-- `podcast-transcript.txt` — source script for the podcast explainer
+- `podcast-transcript.json` — canonical two-host transcript with per-turn emotion metadata
+- `podcast-transcript.txt` — rendered two-host transcript for the podcast pipeline
 
 ## Generated media outside the repo
 - Podcast: [local MP3](file:///data/audiobookshelf/podcasts/profiles/gemma/projects/gemma-trajad-eval/dataset-builder/phase-0-orientation/0.1-domain-background/dataset-construction-and-anomaly-taxonomy/phase-0_0.1-02_dataset-construction-and-anomaly-taxonomy.mp3) · [Audiobookshelf UI](https://vps.taild96651.ts.net:13378/)

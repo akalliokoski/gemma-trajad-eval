@@ -126,3 +126,11 @@
   - queries/dataset-builder-phase-0-improvements-2026-04-22.md
 - Updated navigation:
   - index.md
+
+## [2026-04-24] update | Phase 0 learning-materials status refreshed
+- Added raw source snapshot:
+  - raw/transcripts/phase-0-learning-materials-status-2026-04-24.md
+- Updated wiki pages:
+  - queries/dataset-builder-phase-0-improvements-2026-04-22.md
+- Updated navigation:
+  - index.md

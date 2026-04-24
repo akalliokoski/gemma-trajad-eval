@@ -1,7 +1,7 @@
 # Wiki Index
 
 > Content catalog for the project wiki.
-> Last updated: 2026-04-23 | Total pages: 19
+> Last updated: 2026-04-24 | Total pages: 19
 
 ## Entities
 - [[gemma]] - Model family anchoring the project's local-first fine-tuning direction.

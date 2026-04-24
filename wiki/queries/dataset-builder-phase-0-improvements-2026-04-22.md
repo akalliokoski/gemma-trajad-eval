@@ -1,10 +1,10 @@
 ---
 title: Dataset-builder improvements after Phase 0
 created: 2026-04-22
-updated: 2026-04-23
+updated: 2026-04-24
 type: query
 tags: [dataset, workflow, decision, documentation, python, course-material]
-sources: [raw/transcripts/dataset-builder-phase-0-improvements-2026-04-22.md]
+sources: [raw/transcripts/dataset-builder-phase-0-improvements-2026-04-22.md, raw/transcripts/phase-0-learning-materials-status-2026-04-24.md]
 ---
 
 # Dataset-builder improvements after Phase 0
@@ -59,6 +59,15 @@ As of later on 2026-04-23, Task 6 is also complete:
 ## Home-lab fit
 
 This repository is now explicitly the first project in the user's home AI lab. That raises the bar for craft, but not for complexity: best practices should be applied in a practical, elegant, community-friendly way, with over-engineering treated as a failure mode rather than a mark of seriousness.
+
+## Learning-materials status
+
+As of 2026-04-24, the Phase 0 orientation materials are now packaged consistently enough to treat Phase 0 as fully documented at the artifact layer:
+- all three `0.1 domain background` topics have complete repo-local packages with answers, infographic source files, `infographic.png`, `podcast-transcript.txt`, and canonical `podcast-transcript.json`
+- the remaining two unchecked 0.1 items in the learning plan were linked and marked complete
+- the corresponding MP3s were verified both on disk and in Audiobookshelf ingestion under the `Gemma Podcasts` library
+
+That means the next most valuable learning-material step is probably Phase 1 hands-on pipeline work, unless implementation work creates a higher-priority teaching opportunity first.
 
 ## Related pages
 - [[hermes-filtered-traces-dataset-structure-2026-04-22]]
