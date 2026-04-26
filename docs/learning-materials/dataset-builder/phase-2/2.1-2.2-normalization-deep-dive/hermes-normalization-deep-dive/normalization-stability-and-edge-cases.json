@@ -1,0 +1,45 @@
+{
+  "stability": {
+    "checked_indices": [
+      0,
+      1,
+      2,
+      50,
+      1000,
+      2000,
+      3678
+    ],
+    "source_trace_ids": [
+      "0c699abf-bc77-454a-8197-d56a2294098a",
+      "8ffd06f9-f10f-4aeb-8ef2-57f8bb8f0f8e",
+      "41364111-63cd-4e4f-a068-9616907802c5",
+      "cd8c2584-2f9a-4b60-93a9-7a52eb192f85",
+      "50dab1ab-ac91-432d-9887-70bc039db040",
+      "53b15663-1d4e-4ad6-b484-275ecf41b0c1",
+      "3191cbf0-c82f-487b-8cff-ffa338c0d6e9"
+    ],
+    "stable_on_repeat": true
+  },
+  "edge_cases": {
+    "raw_roles": [
+      "gpt",
+      "human",
+      "system",
+      "tool"
+    ],
+    "normalized_roles": [
+      "assistant",
+      "system",
+      "tool",
+      "user"
+    ],
+    "missing_category_count": 0,
+    "missing_subcategory_count": 0,
+    "empty_metadata_count": 0,
+    "trajectory_length_stats": {
+      "min": 5,
+      "max": 54,
+      "avg": 32.09
+    }
+  }
+}

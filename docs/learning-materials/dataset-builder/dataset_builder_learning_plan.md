@@ -206,31 +206,31 @@ each design decision was made — by actually running it, breaking it, and exten
 
 ### 2.1 Run normalization and verify output (~60 min)
 
-- [ ] **Run `normalize_trajectory.py`** (~20 min)
-  - `python dataset_builder/normalize_trajectory.py data/raw/hermes_filtered.jsonl data/interim/hermes_normalized.jsonl`
-  - Check: row count preserved? Error count? Any skipped records?
+- [x] **Run `normalize_trajectory.py`** (~20 min)
+  - Verified with `uv run python dataset_builder/normalize_trajectory.py data/raw/hermes_filtered.jsonl data/interim/hermes_normalized_phase2.jsonl`.
+  - Result: `3,679` normalized records, `0` errors, row count preserved.
 
-- [ ] **Spot-check 10 normalized records** (~30 min)
-  - Compare a raw record to its normalized version side-by-side
-  - Verify: role names mapped correctly, `source_trace_id` assigned, `is_anomalous=false`,
-    `anomaly_type=null`, `bad_step=null`, `generation_rule=null`, `metadata` populated
-  - Find one record where metadata was partial or missing — what does the normalized output look like?
+- [x] **Spot-check 10 normalized records** (~30 min)
+  - Side-by-side sample saved to [raw-vs-normalized-sample.json](phase-2/2.1-2.2-normalization-deep-dive/hermes-normalization-deep-dive/raw-vs-normalized-sample.json).
+  - Verified: role names mapped correctly, `source_trace_id` assigned, clean-label defaults preserved, and metadata populated with structural fields.
+  - Combined artifact package: [README](phase-2/2.1-2.2-normalization-deep-dive/hermes-normalization-deep-dive/README.md) · [answers.md](phase-2/2.1-2.2-normalization-deep-dive/hermes-normalization-deep-dive/answers.md) · [PNG](phase-2/2.1-2.2-normalization-deep-dive/hermes-normalization-deep-dive/infographic.png) · [Podcast](file:///data/audiobookshelf/podcasts/profiles/gemma/projects/gemma-trajad-eval/dataset-builder/phase-2-understanding/2.1-2.2-normalization-deep-dive/hermes-normalization-deep-dive/phase-2_2.1-2.2-01_hermes-normalization-deep-dive.mp3)
+  - The current corpus did **not** produce a partial/missing-metadata sample; that absence is itself documented as a finding.
 
-- [ ] **Understand source_trace_id stability** (~20 min)
-  - Read the hash-based ID assignment in `normalize_record()`
-  - Understand why this matters: if you re-run normalization on the same input, all source_trace_ids must be stable. Why?
-  - *Key insight:* split assignment is by `source_trace_id`, so unstable IDs would cause non-reproducible splits
+- [x] **Understand source_trace_id stability** (~20 min)
+  - Stability audit saved to [normalization-stability-and-edge-cases.json](phase-2/2.1-2.2-normalization-deep-dive/hermes-normalization-deep-dive/normalization-stability-and-edge-cases.json).
+  - Repeated checks confirmed `stable_on_repeat: true`.
+  - Key insight confirmed: split assignment depends on stable trace-family identity, so deterministic `source_trace_id` is a data-leakage safeguard, not just a convenience.
 
 ### 2.2 Edge cases (~60 min)
 
-- [ ] **Find and examine records with non-standard role names** (~30 min)
-  - Grep the raw file for role values: `python -c "import json; roles=set(); [roles.update(m['from'] for m in json.loads(l).get('conversations',[])) for l in open('data/raw/hermes_filtered.jsonl')]; print(roles)"`
-  - Are all role names covered by `normalize_role()`? Any that fall through to the fallback?
+- [x] **Find and examine records with non-standard role names** (~30 min)
+  - Observed raw roles: `gpt`, `human`, `system`, `tool`.
+  - Observed normalized roles: `assistant`, `user`, `system`, `tool`.
+  - No non-standard role names were found in this corpus snapshot, so `normalize_role()` cleanly covers the observed role inventory.
 
-- [ ] **Find records that stress the metadata extraction** (~30 min)
-  - Look for records without a `category` field, or with category nested differently
-  - Understand how `extract_metadata()` handles these cases gracefully
-  - Consider: should there be a warning when metadata is absent vs. just defaulting to `None`?
+- [x] **Find records that stress the metadata extraction** (~30 min)
+  - Edge-case audit found `missing_category_count: 0`, `missing_subcategory_count: 0`, and `empty_metadata_count: 0`.
+  - Practical takeaway: the graceful metadata-extraction path still matters, but this specific filtered corpus is cleaner than the hypothetical missing-metadata edge case suggested.
 
 ---
 

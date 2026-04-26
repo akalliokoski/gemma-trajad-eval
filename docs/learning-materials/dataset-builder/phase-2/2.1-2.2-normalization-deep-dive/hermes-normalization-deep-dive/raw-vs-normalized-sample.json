@@ -1,0 +1,67 @@
+{
+  "raw_record": {
+    "id": "0c699abf-bc77-454a-8197-d56a2294098a",
+    "top_level_keys": [
+      "id",
+      "conversations",
+      "tools",
+      "category",
+      "subcategory",
+      "task"
+    ],
+    "first_messages": [
+      {
+        "from": "system",
+        "value_preview": "You are a function calling AI model. You are provided with function signatures within <tools> </tools> XML tags. You may call one or more functions to assist with the user query. If available tools are not relevant in as..."
+      },
+      {
+        "from": "human",
+        "value_preview": "Look through past sessions for the deployment config we created for the staging environment. I need it again."
+      },
+      {
+        "from": "gpt",
+        "value_preview": "<think>\n The user wants me to look through past sessions for a deployment config for a staging environment. I should use the session_search tool to find this. Let me search for relevant keywords like \"staging\", \"deployme..."
+      },
+      {
+        "from": "tool",
+        "value_preview": "<tool_response>\n{\"tool_call_id\": \"functions.session_search:0\", \"name\": \"session_search\", \"content\": {\"success\": false, \"error\": \"Session database not available.\"}}\n</tool_response>"
+      }
+    ]
+  },
+  "normalized_record": {
+    "id": "trace_000000_var_00",
+    "source_trace_id": "0c699abf-bc77-454a-8197-d56a2294098a",
+    "first_messages": [
+      {
+        "role": "system",
+        "content_preview": "You are a function calling AI model. You are provided with function signatures within <tools> </tools> XML tags. You may call one or more functions to assist with the user query. If available tools are not relevant in as..."
+      },
+      {
+        "role": "user",
+        "content_preview": "Look through past sessions for the deployment config we created for the staging environment. I need it again."
+      },
+      {
+        "role": "assistant",
+        "content_preview": "<think>\n The user wants me to look through past sessions for a deployment config for a staging environment. I should use the session_search tool to find this. Let me search for relevant keywords like \"staging\", \"deployme..."
+      },
+      {
+        "role": "tool",
+        "content_preview": "<tool_response>\n{\"tool_call_id\": \"functions.session_search:0\", \"name\": \"session_search\", \"content\": {\"success\": false, \"error\": \"Session database not available.\"}}\n</tool_response>"
+      }
+    ],
+    "flags": {
+      "is_anomalous": false,
+      "anomaly_type": null,
+      "bad_step": null,
+      "generation_rule": null
+    },
+    "metadata": {
+      "category": "Agent Tools",
+      "subcategory": "Memory & Context",
+      "trajectory_length": 13,
+      "tool_call_count": 11,
+      "tool_response_count": 10,
+      "has_think": true
+    }
+  }
+}

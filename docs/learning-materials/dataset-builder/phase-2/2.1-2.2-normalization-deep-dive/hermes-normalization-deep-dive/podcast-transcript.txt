@@ -1,0 +1,35 @@
+<Person1>[gasp] Phase 1 taught us what the raw corpus really is. Phase 2 is where the repo starts earning trust, because now we ask what happens when that raw trace crosses into the builder’s internal format.</Person1>
+
+<Person2>And the first result is reassuring. The normalization run wrote 3,679 records, exactly matching the raw corpus, with zero errors. That means the script is not quietly dropping bad rows or limping through partial failures on the real dataset.</Person2>
+
+<Person1>That sounds procedural, but it is actually a big deal. If normalization were lossy or flaky, every later claim about perturbations or labels would already be standing on a compromised base.</Person1>
+
+<Person2>Exactly. And the shape change is the next important thing to hammer home. Raw records carry conversations in Share G P T style from-value messages. Normalized records carry a trajectory of role-content messages. That sounds like a small rename, but it is really a contract change.</Person2>
+
+<Person1>[chuckle] Right, because human becomes user, gee pee tee becomes assistant, and suddenly the dataset is speaking the same schema language as the rest of the pipeline.</Person1>
+
+<Person2>Yes. The trajectory object gets simpler and more consistent, while the surrounding record becomes more useful. You get source_trace_id, clean default labels like is anomalous false and anomaly type null, and metadata that keeps structural signals such as trajectory length, tool-call count, tool-response count, and whether the trace contains think blocks.</Person2>
+
+<Person1>[gasp] And I think source underscore trace underscore i d is the hidden star of this whole stage.</Person1>
+
+<Person2>I agree. It looks boring until you realize later split assignment depends on trace families, not just row numbers. If the same logical trace got a different identity on different runs, clean and anomalous variants could drift across train, dev, and test boundaries.</Person2>
+
+<Person1>So normalization is not just cleaning strings. It is also preserving the family identity that makes leakage-safe splitting possible later.</Person1>
+
+<Person2>Exactly. And the practical check came back strong: repeated normalization of the same sample records kept the same source_trace_id values. Stable on repeat was true.</Person2>
+
+<Person1>What about the scary edge cases from the plan? Unknown role names, missing category fields, empty metadata?</Person1>
+
+<Person2>[chuckle] In this corpus snapshot, those edge cases mostly did not materialize. Raw roles were exactly system, human, gee pee tee, and tool. Missing category count was zero. Missing subcategory count was zero. Empty metadata count was zero.</Person2>
+
+<Person1>That is useful in its own right. It tells us the code is prepared for uglier inputs, but this particular filtered Hermes corpus is actually fairly clean at the metadata and role-inventory level.</Person1>
+
+<Person2>Yes, and that sharpens the lesson. The value of normalization here is not mainly emergency repair. It is contract enforcement. It takes a structurally rich but awkward raw format and turns it into a simple, stable, pipeline-friendly representation.</Person2>
+
+<Person1>So if Phase 1’s three words were agentic, tool-centric, serialized, then Phase 2’s three words might be consistent, stable, trustworthy.</Person1>
+
+<Person2>[gasp] That is a good summary. Consistent role schema, stable trace identity, trustworthy metadata signals. Those are exactly the guarantees that let Phase 3 become interesting instead of chaotic.</Person2>
+
+<Person1>And that means the right next step is the perturbation engine, because now we finally understand the contract that those perturbation rules are mutating.</Person1>
+
+<Person2>Exactly. Phase 2 is the bridge between observing the raw corpus and reasoning about synthetic anomalies. It is where the dataset becomes disciplined enough for the rest of the project to mean what it says.</Person2>

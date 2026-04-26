@@ -166,3 +166,15 @@
   - docs/learning-materials/dataset-builder/phase-1/1.1-1.3-raw-data-and-trace-eda/hermes-filtered-traces-phase-1-understanding/answers.md
 - Updated navigation:
   - index.md
+
+## [2026-04-26] query | Dataset-builder Phase-2 normalization deep dive recorded
+- Added raw research snapshot:
+  - raw/transcripts/dataset-builder-phase-2-normalization-2026-04-26.md
+- Added durable query page:
+  - queries/dataset-builder-phase-2-normalization-2026-04-26.md
+- Source documents updated:
+  - docs/learning-materials/dataset-builder/dataset_builder_learning_plan.md
+  - docs/learning-materials/dataset-builder/phase-2/2.1-2.2-normalization-deep-dive/hermes-normalization-deep-dive/README.md
+  - docs/learning-materials/dataset-builder/phase-2/2.1-2.2-normalization-deep-dive/hermes-normalization-deep-dive/answers.md
+- Updated navigation:
+  - index.md
