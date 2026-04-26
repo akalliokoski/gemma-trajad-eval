@@ -1,7 +1,7 @@
 # Wiki Index
 
 > Content catalog for the project wiki.
-> Last updated: 2026-04-26 | Total pages: 21
+> Last updated: 2026-04-26 | Total pages: 22
 
 ## Entities
 - [[gemma]] - Model family anchoring the project's local-first fine-tuning direction.
@@ -31,3 +31,4 @@
 - [[task-6-rule-aware-bad-step-validation-2026-04-23]] - Durable answer describing how the validator now checks rule-aware bad_step localization for P4, P5, and P7.
 - [[task-7-build-manifest-and-diagnostics-2026-04-23]] - Durable answer describing how each dataset build now writes build_manifest.json with reproducibility and diagnostics data.
 - [[phase-1-scope-boundary-2026-04-26]] - Durable answer describing why SFT and RL remain future goals while the active learning path stops at dataset-builder Phase 1.
+- [[dataset-builder-phase-1-understanding-2026-04-26]] - Durable answer describing what Phase 1 established about the real Hermes trace corpus and why normalization is the next honest learning step.

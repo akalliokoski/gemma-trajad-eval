@@ -161,49 +161,42 @@ each design decision was made — by actually running it, breaking it, and exten
 
 ### 1.1 Download (~30 min)
 
-- [ ] **Run `download_hermes.py --dataset filtered`** (~20 min)
-  - Observe the download progress and file size
-  - Confirm output: `data/raw/hermes_filtered.jsonl`, check row count matches expected ~3,679
+- [x] **Run `download_hermes.py --dataset filtered`** (~20 min)
+  - Verified with `uv run python dataset_builder/download_hermes.py --dataset filtered`.
+  - Output confirmed: `data/raw/hermes_filtered.jsonl` with `3,679` rows and about `368 MB` on disk.
 
-- [ ] **Open one raw JSONL record in a JSON viewer/pretty-printer** (~15 min)
-  - `python -c "import json; print(json.dumps(json.loads(open('data/raw/hermes_filtered.jsonl').readline()), indent=2))"` 
-  - Identify every field. Which fields are present? Which are missing vs. the spec?
-  - Note the exact role names used (`gpt` vs. `assistant`? `human` vs. `user`?)
+- [x] **Open one raw JSONL record in a JSON viewer/pretty-printer** (~15 min)
+  - A compact pretty-printed preview was saved to [sample-record.json](phase-1/1.1-1.3-raw-data-and-trace-eda/hermes-filtered-traces-phase-1-understanding/sample-record.json).
+  - Stable top-level fields observed: `id`, `conversations`, `tools`, `category`, `subcategory`, `task`.
+  - Raw messages use `{from, value}` and the exact raw roles are `system`, `human`, `gpt`, and `tool`.
 
 ### 1.2 EDA with `inspect_traces.py` (~60 min)
 
-- [ ] **Run the full summary** (~20 min)
-  - `python dataset_builder/inspect_traces.py data/raw/hermes_filtered.jsonl`
-  - Record: total records, trajectory length distribution (min/mean/max), role distribution,
-    % of traces with tool calls, % with `<think>` tokens, category distribution
+- [x] **Run the full summary** (~20 min)
+  - Verified with `uv run python dataset_builder/inspect_traces.py data/raw/hermes_filtered.jsonl --schema-report --tool-stats --eligibility-report`.
+  - Core results: `3,679` records, trajectory length min `5`, max `54`, average about `32.1`, plus category and role summaries.
+  - Combined artifact package: [README](phase-1/1.1-1.3-raw-data-and-trace-eda/hermes-filtered-traces-phase-1-understanding/README.md) · [answers.md](phase-1/1.1-1.3-raw-data-and-trace-eda/hermes-filtered-traces-phase-1-understanding/answers.md) · [PNG](phase-1/1.1-1.3-raw-data-and-trace-eda/hermes-filtered-traces-phase-1-understanding/infographic.png) · [Podcast](file:///data/audiobookshelf/podcasts/profiles/gemma/projects/gemma-trajad-eval/dataset-builder/phase-1-understanding/1.1-1.3-raw-data-and-trace-eda/hermes-filtered-traces-phase-1-understanding/phase-1_1.1-1.3-01_hermes-filtered-traces-phase-1-understanding.mp3)
 
-- [ ] **Study role distribution results** (~20 min)
-  - What percentage of records have at least one `tool` role message?
-  - What percentage have at least two `assistant` messages with `<tool_call>`?
-  - This directly affects which perturbation rules can fire:
-    - P3/P4/P8 require ≥1 tool call pair → traces without tool calls can't be perturbed by these
-    - P8 requires ≥2 tool call pairs
+- [x] **Study role distribution results** (~20 min)
+  - `100.0%` of traces have at least one tool call.
+  - `99.4%` have at least two assistant/tool-call pairs.
+  - This confirms that tool-interaction perturbations are aimed at the core structure of the corpus, not a fringe subset.
 
-- [ ] **Manually read 5 complete traces** (~30 min)
-  - `python dataset_builder/inspect_traces.py data/raw/hermes_filtered.jsonl --sample 5`
-  - For each trace: what task is being done? How many tool calls? Does it look like a clean expert trajectory?
-  - Note any structural patterns that could cause issues (e.g., nested tool calls, multiple system messages)
+- [x] **Manually read 5 complete traces** (~30 min)
+  - Verified with `uv run python dataset_builder/inspect_traces.py data/raw/hermes_filtered.jsonl --sample 5`.
+  - Representative tasks include config recovery, GraphQL endpoint creation, todo-driven project continuation, background service management, and API documentation work.
+  - Key pattern: traces are compound work loops that chain multiple tools rather than isolated one-shot tool calls.
 
 ### 1.3 Understand tool call structure (~60 min)
 
-- [ ] **Study how tool calls are embedded in assistant messages** (~30 min)
-  - Find examples of `<tool_call>...</tool_call>` blocks in raw traces
-  - What does the JSON inside a `<tool_call>` look like? Does it vary?
-  - Find examples of `<tool_response>...</tool_response>` in tool messages
-  - This is critical to understand before reading `perturbations.py`
+- [x] **Study how tool calls are embedded in assistant messages** (~30 min)
+  - Tool calls appear as serialized JSON inside `<tool_call>...</tool_call>` wrappers in assistant messages.
+  - Tool outputs appear as serialized JSON inside `<tool_response>...</tool_response>` wrappers in tool messages.
+  - Key takeaway: the structure is real but serialized inside text, which is why normalization is essential.
 
-- [ ] **Count traces eligible for each perturbation rule** (~30 min)
-  - Write a small script (10–20 lines) that reads all normalized records and counts:
-    - Records with ≥1 tool call pair (eligible for P3, P4, P5)
-    - Records with ≥2 tool call pairs (eligible for P8)
-    - Records where a known `NEARBY_TOOLS` mapping exists (eligible for P1)
-    - Records with ≥1 argument in a tool call (eligible for P2)
-  - Document these numbers — they predict the expected perturbation success rates
+- [x] **Count traces eligible for each perturbation rule** (~30 min)
+  - Inspector report snapshot: `P1 3679/3679`, `P2 3678/3679`, `P3/P4/P5 3679/3679`, `P8 3658/3679`.
+  - Practical conclusion: eligibility is broad across the corpus; the harder quality problem is perturbation realism, not missing tool structure.
 
 ---
 

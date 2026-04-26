@@ -154,3 +154,15 @@
   - docs/plans/2026-04-17-hermes-first-roadmap.md
 - Updated navigation:
   - index.md
+
+## [2026-04-26] query | Dataset-builder Phase-1 understanding stop line recorded
+- Added raw research snapshot:
+  - raw/transcripts/dataset-builder-phase-1-understanding-2026-04-26.md
+- Added durable query page:
+  - queries/dataset-builder-phase-1-understanding-2026-04-26.md
+- Source documents updated:
+  - docs/learning-materials/dataset-builder/dataset_builder_learning_plan.md
+  - docs/learning-materials/dataset-builder/phase-1/1.1-1.3-raw-data-and-trace-eda/hermes-filtered-traces-phase-1-understanding/README.md
+  - docs/learning-materials/dataset-builder/phase-1/1.1-1.3-raw-data-and-trace-eda/hermes-filtered-traces-phase-1-understanding/answers.md
+- Updated navigation:
+  - index.md
