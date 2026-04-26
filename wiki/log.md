@@ -136,9 +136,21 @@
   - index.md
 
 ## [2026-04-24] query | Dataset-builder Phase-1 readiness improvements recorded
-- Added raw source snapshot:
+- Added raw research snapshot:
   - raw/transcripts/dataset-builder-phase-1-readiness-2026-04-24.md
 - Added durable query page:
   - queries/dataset-builder-phase-1-readiness-2026-04-24.md
+- Updated navigation:
+  - index.md
+
+## [2026-04-26] query | Phase-1 scope boundary recorded
+- Added raw research snapshot:
+  - raw/transcripts/phase-1-scope-boundary-2026-04-26.md
+- Added durable query page:
+  - queries/phase-1-scope-boundary-2026-04-26.md
+- Source documents updated:
+  - docs/deferred-training-roadmap.md
+  - docs/learning-materials/dataset-builder/dataset_builder_learning_plan.md
+  - docs/plans/2026-04-17-hermes-first-roadmap.md
 - Updated navigation:
   - index.md

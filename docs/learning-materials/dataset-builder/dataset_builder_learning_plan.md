@@ -2,6 +2,8 @@
 
 **Scope:** `dataset_builder/` only (Subproject A). This is not a training plan for Subproject B.
 
+**Active scope note (2026-04-26):** for the current pass, this learning plan is intentionally narrowed to **Phase 0 + Phase 1 understanding work**. Fine-tuning, SFT execution, and RL/GRPO are being kept for later on purpose; see [`docs/deferred-training-roadmap.md`](../../deferred-training-roadmap.md), [`docs/binary-sft-handoff.md`](../../binary-sft-handoff.md), and [`docs/training-smoke-test-audit.md`](../../training-smoke-test-audit.md).
+
 **Format:** Hierarchical. Leaf tasks are sized for ~30 minutes each — enough to read,
 run, or implement one thing fully. Every task either teaches a concept, runs something,
 or produces a concrete artefact.
@@ -23,7 +25,13 @@ each design decision was made — by actually running it, breaking it, and exten
 - Learn schema validation patterns for ML datasets
 - Learn to measure and report dataset quality
 
-### Deliverable goals (the things to finish during this plan)
+### Active deliverable goals for the current pass
+- Raw Hermes filtered traces downloaded locally
+- `inspect_traces.py` used to produce empirical Phase 1 notes
+- Manual understanding of tool-call structure and perturbation eligibility
+- A clean handoff point where dataset understanding is ahead of model-training execution
+
+### Longer-horizon subproject goals (not all part of the current pass)
 - All 6 pipeline stages running end-to-end, validated
 - Perturbation diagnostics script (success rates per rule)
 - Stage A4 manual-review CLI (100–150 samples reviewed)
@@ -148,6 +156,8 @@ each design decision was made — by actually running it, breaking it, and exten
 ## Phase 1 — Data Acquisition & Exploration
 
 **Goal:** Get the raw data onto disk and understand its structure empirically, not just from the docs.
+
+**Stop line for the current pass:** once Phase 1.1–1.3 are complete and documented, pause here. Do not expand this learning-path run into model training; the later path is documented in [`docs/deferred-training-roadmap.md`](../../deferred-training-roadmap.md).
 
 ### 1.1 Download (~30 min)
 

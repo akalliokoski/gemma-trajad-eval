@@ -106,6 +106,8 @@ Expected: reproducible success on a sample slice.
 
 **Objective:** Convert the dataset output into training-ready examples and execute one local-first Gemma experiment path.
 
+**Status note (2026-04-26):** this task remains part of the broader roadmap, but it is intentionally **not** the active learning-path scope right now. The current pass is narrowed to dataset-builder Phase 0/1 understanding. When training work resumes, start with `docs/deferred-training-roadmap.md`, `docs/binary-sft-handoff.md`, and `docs/training-smoke-test-audit.md`.
+
 **Files:**
 - Inspect/modify as needed: `training/prepare_sft_data.py`
 - Inspect/modify as needed: `training/train_e2b.py`
@@ -202,12 +204,18 @@ Confirm that the workflow is understandable and safe, including approval gates f
 
 ## Recommended execution order
 
+### Current active order
+
 1. Task 2 — codebase baseline
 2. Task 3 — tiny end-to-end data pipeline
-3. Task 4 — local training prep and smoke test
-4. Task 5 — first demo evidence
-5. Task 6 — tutorial/skill consolidation
-6. Task 7 — distributed-execution workflow hardening
+3. pause after the dataset-builder Phase 0/1 learning-path handoff is clean
+
+### Later order after training work is reactivated
+
+4. Task 4 — local training prep and smoke test
+5. Task 5 — first demo evidence
+6. Task 6 — tutorial/skill consolidation
+7. Task 7 — distributed-execution workflow hardening
 
 ## Verification checklist
 
@@ -215,6 +223,8 @@ Confirm that the workflow is understandable and safe, including approval gates f
 - [ ] Wiki exists and is navigable
 - [ ] At least one codebase-baseline document exists
 - [ ] At least one tiny data pipeline run is documented
-- [ ] At least one local training experiment path is documented
-- [ ] At least one demo/report exists
+- [ ] Current Phase 1 learning-path stop line is documented clearly
+- [ ] Deferred training roadmap exists and points to the existing SFT preflight docs
+- [ ] Local training experiment path is documented when training work is intentionally resumed
+- [ ] Demo/report exists when the project reaches that stage
 - [ ] New durable workflows are saved as skills when warranted
