@@ -1,0 +1,27 @@
+HOST_A: [gasp] We finally reached the first real rule walkthrough, and P1 turned out to be more interesting than it looked on paper.
+
+HOST_B: P1 is the replace tool choice rule. The idea is simple: keep the tool call structurally valid, but swap the tool name so the agent takes the wrong action. That creates a wrong-tool-choice anomaly without breaking the JSON format.
+
+HOST_A: And on a good mapped example, that actually works pretty well. A real sample changed read_file into list_directory while preserving the same path argument. That still looks like a nearby operational mistake instead of random corruption.
+
+HOST_B: Exactly. That is the strong version of P1. The weak version shows up when the tool is not in the nearby mapping. Then the fallback just appends underscore v two. In the real corpus we saw search_files become search_files_v2 and terminal become terminal_v2. Those pass validation, but they feel synthetic.
+
+HOST_A: [chuckle] So the plan's question was right on target. Search web v two style fallbacks are convenient for code, but not very believable as real operator mistakes.
+
+HOST_B: And then the walkthrough found a real implementation bug. Some assistant messages contain multiple tool calls in one message. The helper that rewrote a tool call used a regex replacement that changed every tool-call block, not just the intended one.
+
+HOST_A: [gasp] Which means P1 could silently mutate unrelated tool calls in the same assistant message and make the anomaly much more synthetic than intended.
+
+HOST_B: Right. That is exactly what happened in a real sample with three read_file calls bundled together. Before the fix, all three were overwritten. After the fix, only the first one changed and the later tool calls stayed intact.
+
+HOST_A: And the fix itself was nicely bounded. The helper now replaces only the first match using count equals one.
+
+HOST_B: Yes, and that small change matters a lot. It brings the implementation back into alignment with the conceptual goal of a single wrong-tool-choice perturbation.
+
+HOST_A: Verification was solid too. A new regression test was written first, it failed before the fix, then passed afterward, and the full perturbations test file finished with seven passed.
+
+HOST_B: So P1 taught two lessons at once. First, realism depends on whether your replacement map is believable. Second, realism also depends on mutation granularity. Even a tiny regex helper can quietly turn a bounded anomaly into a much broader synthetic rewrite.
+
+HOST_A: That makes the next likely improvement pretty clear: expand nearby tool mappings from the real corpus, or skip unmapped tools instead of inventing v two names.
+
+HOST_B: Exactly. The first rule walkthrough did not just document the system. It improved the perturbation engine in a way that makes later anomaly examples easier to trust.

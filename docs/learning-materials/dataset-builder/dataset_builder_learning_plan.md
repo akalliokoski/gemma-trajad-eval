@@ -263,10 +263,13 @@ For each rule, do all three steps in one session:
 2. Run `apply_perturbation()` on 3 manually selected records
 3. Read both the input and output trajectories to verify the change is correct
 
-- [ ] **P1: `replace_tool_choice`** — wrong_tool_choice (~30 min)
-  - Find a trace that has a tool in `NEARBY_TOOLS`. Apply P1. Verify the tool was replaced.
-  - What happens if the trace has a tool NOT in `NEARBY_TOOLS`? (Fallback to `_v2` suffix)
-  - *Question to answer:* Is `search_web_v2` a realistic wrong-tool choice? What might be better?
+- [x] **P1: `replace_tool_choice`** — wrong_tool_choice (~30 min)
+  - Real corpus walkthrough saved to [README](phase-3/3.2-rule-walkthroughs/p1-replace-tool-choice-walkthrough/README.md) and [answers.md](phase-3/3.2-rule-walkthroughs/p1-replace-tool-choice-walkthrough/answers.md); sampled before/after cases are in [p1-sample-comparisons.json](phase-3/3.2-rule-walkthroughs/p1-replace-tool-choice-walkthrough/p1-sample-comparisons.json).
+  - Mapped example: `read_file -> list_directory` preserved arguments and produced the clearest believable wrong-tool choice; unmapped examples like `search_files -> search_files_v2` and `terminal -> terminal_v2` stayed structurally valid but looked synthetic.
+  - Implementation fix discovered during the walkthrough: multi-tool assistant messages were being over-mutated because `replace_tool_call()` rewrote every `<tool_call>` block. The helper now replaces only the first match (`count=1`), with regression coverage in `tests/test_perturbations.py`.
+  - Verified with `uv run pytest tests/test_perturbations.py::test_replace_tool_call_only_replaces_first_tool_call_in_message -v` and `uv run pytest tests/test_perturbations.py -v` (`7 passed`).
+  - Infographic: [PNG](phase-3/3.2-rule-walkthroughs/p1-replace-tool-choice-walkthrough/infographic.png)
+  - Podcast: [local MP3](file:///data/audiobookshelf/podcasts/profiles/gemma/projects/gemma-trajad-eval/dataset-builder/phase-3-perturbation-engine/3.2-rule-walkthroughs/p1-replace-tool-choice-walkthrough/phase-3_3.2-01_p1-replace-tool-choice-walkthrough.mp3) · [Audiobookshelf UI](https://vps.taild96651.ts.net:13378/)
 
 - [ ] **P2: `mutate_argument_value`** — bad_tool_arguments (~30 min)
   - Apply P2 to a trace with a string argument. How does `_CORRUPTED` suffix change the semantics?

@@ -1,0 +1,59 @@
+{
+  "normalized_file": "data/interim/hermes_normalized_phase2.jsonl",
+  "rule": "P1 replace_tool_choice",
+  "notes": [
+    "After the regression fix, replace_tool_call only rewrites the first tool_call block inside a multi-tool assistant message.",
+    "This keeps the number of tool_call blocks unchanged and prevents unrelated tool calls in the same assistant message from being overwritten."
+  ],
+  "selected_samples": [
+    {
+      "kind": "nearby-mapped",
+      "record_id": "trace_000001_var_00",
+      "seed": 7,
+      "bad_step": 6,
+      "before_tool": "read_file",
+      "after_tool": "list_directory",
+      "arguments": {
+        "path": "gateway/graphql_endpoint.py"
+      },
+      "validation_errors": [],
+      "tool_call_count_before": 3,
+      "tool_call_count_after": 3,
+      "before_content": "<think>\n The search results are too long, but I can see there's a `gateway/` directory with GraphQL-related files like `graphql_endpoint.py` and `pagination.py`. Let me examine these files to understand the existing GraphQL convention and then create a new endpoint.\n</think>\n<tool_call>\n{\"name\": \"read_file\", \"arguments\": {\"path\": \"gateway/graphql_endpoint.py\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"read_file\", \"arguments\": {\"path\": \"gateway/pagination.py\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"read_file\", \"arguments\": {\"path\": \"gateway/models.py\"}}\n</tool_call>",
+      "after_content": "<think>\n The search results are too long, but I can see there's a `gateway/` directory with GraphQL-related files like `graphql_endpoint.py` and `pagination.py`. Let me examine these files to understand the existing GraphQL convention and then create a new endpoint.\n</think>\n<tool_call>{\"name\": \"list_directory\", \"arguments\": {\"path\": \"gateway/graphql_endpoint.py\"}}</tool_call>\n<tool_call>\n{\"name\": \"read_file\", \"arguments\": {\"path\": \"gateway/pagination.py\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"read_file\", \"arguments\": {\"path\": \"gateway/models.py\"}}\n</tool_call>"
+    },
+    {
+      "kind": "fallback-v2",
+      "record_id": "trace_000000_var_00",
+      "seed": 7,
+      "bad_step": 6,
+      "before_tool": "search_files",
+      "after_tool": "search_files_v2",
+      "arguments": {
+        "target": "files",
+        "pattern": "*staging*"
+      },
+      "validation_errors": [],
+      "tool_call_count_before": 4,
+      "tool_call_count_after": 4,
+      "before_content": "<think>\n Unfortunately, the session search database is currently unavailable. I cannot retrieve past conversation history at the moment. \n\nI should let the user know that I can't access past sessions right now, and offer alternatives:\n\n1. Check if the deployment config files might still be in the current working directory\n2. Ask them to provide the config details again or upload the file\n3. Recreate the deployment config from scratch if they can remind me of the basics\n\nLet me offer to look for files in the workspace that might contain the staging deployment config.\n</think>\n The session database isn't available right now, so I can't search through our past conversations. \n\nLet me check if the staging deployment config file might still be in your workspace:\n<tool_call>\n{\"name\": \"search_files\", \"arguments\": {\"target\": \"files\", \"pattern\": \"*staging*\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"search_files\", \"arguments\": {\"target\": \"files\", \"pattern\": \"*deploy*\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"search_files\", \"arguments\": {\"target\": \"files\", \"pattern\": \"*.yaml\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"search_files\", \"arguments\": {\"target\": \"files\", \"pattern\": \"*.yml\"}}\n</tool_call>",
+      "after_content": "<think>\n Unfortunately, the session search database is currently unavailable. I cannot retrieve past conversation history at the moment. \n\nI should let the user know that I can't access past sessions right now, and offer alternatives:\n\n1. Check if the deployment config files might still be in the current working directory\n2. Ask them to provide the config details again or upload the file\n3. Recreate the deployment config from scratch if they can remind me of the basics\n\nLet me offer to look for files in the workspace that might contain the staging deployment config.\n</think>\n The session database isn't available right now, so I can't search through our past conversations. \n\nLet me check if the staging deployment config file might still be in your workspace:\n<tool_call>{\"name\": \"search_files_v2\", \"arguments\": {\"target\": \"files\", \"pattern\": \"*staging*\"}}</tool_call>\n<tool_call>\n{\"name\": \"search_files\", \"arguments\": {\"target\": \"files\", \"pattern\": \"*deploy*\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"search_files\", \"arguments\": {\"target\": \"files\", \"pattern\": \"*.yaml\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"search_files\", \"arguments\": {\"target\": \"files\", \"pattern\": \"*.yml\"}}\n</tool_call>"
+    },
+    {
+      "kind": "fallback-v2",
+      "record_id": "trace_000000_var_00",
+      "seed": 5,
+      "bad_step": 10,
+      "before_tool": "terminal",
+      "after_tool": "terminal_v2",
+      "arguments": {
+        "command": "find . -maxdepth 3 -name \"*staging*\" -o -name \"*config*\" 2>/dev/null | head -50"
+      },
+      "validation_errors": [],
+      "tool_call_count_before": 1,
+      "tool_call_count_after": 1,
+      "before_content": "<think>\n Let me search for any config directories or staging-related files more broadly in this project.\n</think>\n<tool_call>\n{\"name\": \"terminal\", \"arguments\": {\"command\": \"find . -maxdepth 3 -name \\\"*staging*\\\" -o -name \\\"*config*\\\" 2>/dev/null | head -50\"}}\n</tool_call>",
+      "after_content": "<think>\n Let me search for any config directories or staging-related files more broadly in this project.\n</think>\n<tool_call>{\"name\": \"terminal_v2\", \"arguments\": {\"command\": \"find . -maxdepth 3 -name \\\"*staging*\\\" -o -name \\\"*config*\\\" 2>/dev/null | head -50\"}}</tool_call>"
+    }
+  ]
+}

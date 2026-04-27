@@ -1,0 +1,108 @@
+{
+  "duration_hint": "6 minutes",
+  "episode_slug": "phase-3_3.2-01_p1-replace-tool-choice-walkthrough",
+  "generation_mode": "manual-canonical",
+  "hosts": {
+    "HOST_A": {
+      "default_emotion": 0.92,
+      "name": "Ava",
+      "podcastfy_speaker": "Person1",
+      "role": "curious guide"
+    },
+    "HOST_B": {
+      "default_emotion": 0.82,
+      "name": "Noah",
+      "podcastfy_speaker": "Person2",
+      "role": "technical explainer"
+    }
+  },
+  "show_slug": "projects/gemma-trajad-eval/dataset-builder/phase-3-perturbation-engine/3.2-rule-walkthroughs/p1-replace-tool-choice-walkthrough",
+  "title": "P1 replace_tool_choice walkthrough",
+  "turns": [
+    {
+      "speaker": "HOST_A",
+      "emotion": 1.0,
+      "tags": ["gasp"],
+      "text": "[gasp] We finally reached the first real rule walkthrough, and P1 turned out to be more interesting than it looked on paper."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.88,
+      "tags": [],
+      "text": "P1 is the replace tool choice rule. The idea is simple: keep the tool call structurally valid, but swap the tool name so the agent takes the wrong action. That creates a wrong-tool-choice anomaly without breaking the JSON format."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.98,
+      "tags": [],
+      "text": "And on a good mapped example, that actually works pretty well. A real sample changed read_file into list_directory while preserving the same path argument. That still looks like a nearby operational mistake instead of random corruption."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "Exactly. That is the strong version of P1. The weak version shows up when the tool is not in the nearby mapping. Then the fallback just appends underscore v two. In the real corpus we saw search_files become search_files_v2 and terminal become terminal_v2. Those pass validation, but they feel synthetic."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 1.02,
+      "tags": ["chuckle"],
+      "text": "[chuckle] So the plan's question was right on target. Search web v two style fallbacks are convenient for code, but not very believable as real operator mistakes."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.89,
+      "tags": [],
+      "text": "And then the walkthrough found a real implementation bug. Some assistant messages contain multiple tool calls in one message. The helper that rewrote a tool call used a regex replacement that changed every tool-call block, not just the intended one."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 1.05,
+      "tags": ["gasp"],
+      "text": "[gasp] Which means P1 could silently mutate unrelated tool calls in the same assistant message and make the anomaly much more synthetic than intended."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "Right. That is exactly what happened in a real sample with three read_file calls bundled together. Before the fix, all three were overwritten. After the fix, only the first one changed and the later tool calls stayed intact."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.97,
+      "tags": [],
+      "text": "And the fix itself was nicely bounded. The helper now replaces only the first match using count equals one."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.88,
+      "tags": [],
+      "text": "Yes, and that small change matters a lot. It brings the implementation back into alignment with the conceptual goal of a single wrong-tool-choice perturbation."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 1.01,
+      "tags": [],
+      "text": "Verification was solid too. A new regression test was written first, it failed before the fix, then passed afterward, and the full perturbations test file finished with seven passed."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "So P1 taught two lessons at once. First, realism depends on whether your replacement map is believable. Second, realism also depends on mutation granularity. Even a tiny regex helper can quietly turn a bounded anomaly into a much broader synthetic rewrite."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.99,
+      "tags": [],
+      "text": "That makes the next likely improvement pretty clear: expand nearby tool mappings from the real corpus, or skip unmapped tools instead of inventing v two names."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.87,
+      "tags": [],
+      "text": "Exactly. The first rule walkthrough did not just document the system. It improved the perturbation engine in a way that makes later anomaly examples easier to trust."
+    }
+  ],
+  "version": 1
+}

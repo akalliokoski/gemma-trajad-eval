@@ -33,6 +33,24 @@ def test_replace_tool_call_handles_unicode_escapes_in_json() -> None:
     assert parse_tool_call(replaced) == new_call
 
 
+def test_replace_tool_call_only_replaces_first_tool_call_in_message() -> None:
+    first_call = {"name": "read_file", "arguments": {"path": "a.txt"}}
+    second_call = {"name": "write_file", "arguments": {"path": "b.txt", "content": "x"}}
+    content = (
+        f'<tool_call>{json.dumps(first_call)}</tool_call>'
+        f'\n<tool_call>{json.dumps(second_call)}</tool_call>'
+    )
+
+    new_call = {"name": "list_directory", "arguments": {"path": "a.txt"}}
+
+    replaced = replace_tool_call(content, new_call)
+
+    assert replaced.count("<tool_call>") == 2
+    assert parse_tool_call(replaced) == new_call
+    assert '"name": "write_file"' in replaced
+    assert '"name": "list_directory"' in replaced
+
+
 BASE_RECORD = {
     "id": "trace-1",
     "source_trace_id": "trace-1",

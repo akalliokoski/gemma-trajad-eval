@@ -103,12 +103,12 @@ def has_malformed_tool_call_json(content: str) -> bool:
 
 def replace_tool_call(content: str, new_call: dict) -> str:
     replacement = f"<tool_call>{json.dumps(new_call)}</tool_call>"
-    return TOOL_CALL_RE.sub(lambda _match: replacement, content)
+    return TOOL_CALL_RE.sub(lambda _match: replacement, content, count=1)
 
 
 def replace_tool_call_raw(content: str, raw_tool_call_json: str) -> str:
     replacement = f"<tool_call>{raw_tool_call_json}</tool_call>"
-    return TOOL_CALL_RE.sub(lambda _match: replacement, content)
+    return TOOL_CALL_RE.sub(lambda _match: replacement, content, count=1)
 
 
 def extract_tool_response_text(content: str) -> str:

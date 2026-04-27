@@ -190,3 +190,17 @@
   - docs/learning-materials/dataset-builder/phase-3/3.1-domain-context/trajad-perturbation-context/answers.md
 - Updated navigation:
   - index.md
+
+## [2026-04-27] query | Dataset-builder P1 replace_tool_choice walkthrough recorded
+- Added raw research snapshot:
+  - raw/transcripts/dataset-builder-p1-replace-tool-choice-2026-04-27.md
+- Added durable query page:
+  - queries/dataset-builder-p1-replace-tool-choice-2026-04-27.md
+- Source documents updated:
+  - docs/learning-materials/dataset-builder/dataset_builder_learning_plan.md
+  - docs/learning-materials/dataset-builder/phase-3/3.2-rule-walkthroughs/p1-replace-tool-choice-walkthrough/README.md
+  - docs/learning-materials/dataset-builder/phase-3/3.2-rule-walkthroughs/p1-replace-tool-choice-walkthrough/answers.md
+  - dataset_builder/perturbations.py
+  - tests/test_perturbations.py
+- Updated navigation:
+  - index.md
