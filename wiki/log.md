@@ -204,3 +204,19 @@
   - tests/test_perturbations.py
 - Updated navigation:
   - index.md
+
+## [2026-04-27] query | Dataset-builder P1 realism and NEARBY_TOOLS coverage recorded
+- Added raw research snapshot:
+  - raw/transcripts/dataset-builder-p1-realism-coverage-2026-04-27.md
+- Added durable query page:
+  - queries/dataset-builder-p1-realism-coverage-2026-04-27.md
+- Source documents updated:
+  - dataset_builder/perturbations.py
+  - tests/test_perturbations.py
+  - docs/learning-materials/dataset-builder/dataset_builder_learning_plan.md
+  - docs/learning-materials/dataset-builder/phase-3/3.2-rule-walkthroughs/p1-replace-tool-choice-walkthrough/README.md
+  - docs/learning-materials/dataset-builder/phase-3/3.2-rule-walkthroughs/p1-replace-tool-choice-walkthrough/answers.md
+  - docs/learning-materials/dataset-builder/phase-3/3.3-perturbation-diagnostics/p1-realism-and-nearby-tools-coverage/README.md
+  - docs/learning-materials/dataset-builder/phase-3/3.3-perturbation-diagnostics/p1-realism-and-nearby-tools-coverage/answers.md
+- Updated navigation:
+  - index.md

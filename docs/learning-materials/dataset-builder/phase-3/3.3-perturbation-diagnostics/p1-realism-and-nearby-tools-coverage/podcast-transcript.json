@@ -1,0 +1,100 @@
+{
+  "duration_hint": "5 minutes",
+  "episode_slug": "phase-3_3.3-01_p1-realism-and-nearby-tools-coverage",
+  "generation_mode": "manual-canonical",
+  "hosts": {
+    "HOST_A": {
+      "default_emotion": 0.92,
+      "name": "Ava",
+      "podcastfy_speaker": "Person1",
+      "role": "curious guide"
+    },
+    "HOST_B": {
+      "default_emotion": 0.82,
+      "name": "Noah",
+      "podcastfy_speaker": "Person2",
+      "role": "technical explainer"
+    }
+  },
+  "show_slug": "projects/gemma-trajad-eval/dataset-builder/phase-3-perturbation-engine/3.3-perturbation-diagnostics/p1-realism-and-nearby-tools-coverage",
+  "title": "P1 realism and NEARBY_TOOLS coverage",
+  "turns": [
+    {
+      "speaker": "HOST_A",
+      "emotion": 1.0,
+      "tags": [
+        "gasp"
+      ],
+      "text": "[gasp] The follow-up to the first P1 walkthrough made one big policy decision: stop inventing fake fallback names like search files underscore v two."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.88,
+      "tags": [],
+      "text": "That sounds small, but it is actually a dataset quality decision. The old fallback guaranteed a mutation, but many of those mutations looked synthetic instead of believable."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.97,
+      "tags": [],
+      "text": "And the corpus comparison made that visible. On all three thousand six hundred seventy nine normalized records, the old version succeeded everywhere, but five hundred nine of those successes were fake v two names."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "After the change, P1 succeeds on three thousand one hundred seventy records and the fake v two count drops to zero. So the yield drop is exactly the removal of the weakest examples, not collateral damage to the curated cases."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.99,
+      "tags": [],
+      "text": "That is the important judgment: precision over recall. Fewer rows is acceptable if the rows we keep teach a more faithful failure boundary."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.89,
+      "tags": [],
+      "text": "There is also a more concrete implementation improvement. Search files now maps to terminal with an adapted shell command, and terminal now maps to execute code with an adapted Python code snippet. The wrong calls look more like real tool confusion and less like broken API names."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 1.02,
+      "tags": [
+        "chuckle"
+      ],
+      "text": "[chuckle] So we did not just delete bad cases. We also upgraded two high-volume cases to look more believable."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "Exactly. Terminal keeps coverage on one thousand eight hundred sixty nine records, and search files keeps coverage on three hundred fourteen records, but now with arguments that fit the replacement tool better."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.96,
+      "tags": [],
+      "text": "The nice side effect is that the remaining coverage gaps are now explicit. Browser navigate, patch, browser click, process, and browser vision still need curated replacements."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.87,
+      "tags": [],
+      "text": "Which is better than hiding them behind browser navigate underscore v two and patch underscore v two. The project now has a cleaner roadmap for the next realism pass."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.98,
+      "tags": [],
+      "text": "Verification stayed disciplined too. New tests failed first, then passed after the code change, and the full perturbations test file finished with ten passed."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.86,
+      "tags": [],
+      "text": "So this slice did exactly what the project needs: better quality discipline, clearer diagnostics, and documentation that explains why the lower P1 success rate is actually an improvement."
+    }
+  ],
+  "version": 1
+}

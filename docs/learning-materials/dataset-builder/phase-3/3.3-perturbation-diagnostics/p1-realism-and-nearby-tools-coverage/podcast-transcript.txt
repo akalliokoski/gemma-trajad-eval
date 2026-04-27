@@ -1,0 +1,11 @@
+HOST_A: Today we tightened P1, the wrong tool choice perturbation. The key change is simple: stop inventing fake fallback names like search underscore files underscore vee two.
+
+HOST_B: That sounds like a yield reduction, but it is really a quality filter. On the 3,679 record normalized corpus, the old version succeeded everywhere, but 509 of those successes were synthetic fallback cases.
+
+HOST_A: After the change, P1 succeeds on 3,170 records and the fake vee two count drops to zero. So the drop is exactly the removal of the weakest examples, not damage to the curated cases.
+
+HOST_B: The other nice improvement is argument adaptation. Terminal to execute code now wraps the shell command into Python code, and search files to terminal now turns search style arguments into a shell command. That makes the wrong tool choice look more like believable confusion between nearby actions.
+
+HOST_A: And the remaining gaps are now explicit instead of hidden. Browser navigate, patch, browser click, process, and browser vision still need curated replacements. That is better because it gives us a clean roadmap for the next realism pass.
+
+HOST_B: So the lesson is precision over recall. In this project, fewer anomalous rows is acceptable if the rows we keep teach a more faithful failure boundary.

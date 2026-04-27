@@ -1,0 +1,289 @@
+{
+  "source_file": "data/interim/hermes_normalized_phase2.jsonl",
+  "record_count": 3679,
+  "before": {
+    "success": 3679,
+    "fake_v2": 509,
+    "top_source_tools": [
+      [
+        "terminal",
+        1869
+      ],
+      [
+        "write_file",
+        438
+      ],
+      [
+        "read_file",
+        317
+      ],
+      [
+        "search_files",
+        314
+      ],
+      [
+        "browser_snapshot",
+        146
+      ],
+      [
+        "browser_navigate",
+        126
+      ],
+      [
+        "patch",
+        114
+      ],
+      [
+        "browser_scroll",
+        84
+      ],
+      [
+        "browser_click",
+        70
+      ],
+      [
+        "process",
+        32
+      ],
+      [
+        "browser_vision",
+        29
+      ],
+      [
+        "execute_code",
+        24
+      ]
+    ],
+    "top_replacement_tools": [
+      [
+        "execute_code",
+        1869
+      ],
+      [
+        "terminal",
+        314
+      ],
+      [
+        "create_file",
+        220
+      ],
+      [
+        "append_file",
+        218
+      ],
+      [
+        "browser_navigate_v2",
+        126
+      ],
+      [
+        "list_directory",
+        114
+      ],
+      [
+        "patch_v2",
+        114
+      ],
+      [
+        "browser_console",
+        108
+      ],
+      [
+        "read_csv",
+        104
+      ],
+      [
+        "read_json",
+        99
+      ],
+      [
+        "browser_get_images",
+        78
+      ],
+      [
+        "browser_click_v2",
+        70
+      ]
+    ]
+  },
+  "after": {
+    "success": 3170,
+    "fake_v2": 0,
+    "top_source_tools": [
+      [
+        "terminal",
+        1869
+      ],
+      [
+        "write_file",
+        438
+      ],
+      [
+        "read_file",
+        317
+      ],
+      [
+        "search_files",
+        314
+      ],
+      [
+        "browser_snapshot",
+        146
+      ],
+      [
+        "browser_scroll",
+        84
+      ],
+      [
+        "browser_console",
+        2
+      ]
+    ],
+    "top_replacement_tools": [
+      [
+        "execute_code",
+        1869
+      ],
+      [
+        "terminal",
+        314
+      ],
+      [
+        "create_file",
+        220
+      ],
+      [
+        "append_file",
+        218
+      ],
+      [
+        "list_directory",
+        114
+      ],
+      [
+        "browser_console",
+        108
+      ],
+      [
+        "read_csv",
+        104
+      ],
+      [
+        "read_json",
+        99
+      ],
+      [
+        "browser_get_images",
+        78
+      ],
+      [
+        "browser_snapshot",
+        46
+      ]
+    ]
+  },
+  "tool_comparison": {
+    "terminal": {
+      "before_success": 1869,
+      "after_success": 1869,
+      "before_fake_v2": 0,
+      "after_fake_v2": 0
+    },
+    "write_file": {
+      "before_success": 438,
+      "after_success": 438,
+      "before_fake_v2": 0,
+      "after_fake_v2": 0
+    },
+    "read_file": {
+      "before_success": 317,
+      "after_success": 317,
+      "before_fake_v2": 0,
+      "after_fake_v2": 0
+    },
+    "search_files": {
+      "before_success": 314,
+      "after_success": 314,
+      "before_fake_v2": 0,
+      "after_fake_v2": 0
+    },
+    "browser_snapshot": {
+      "before_success": 146,
+      "after_success": 146,
+      "before_fake_v2": 0,
+      "after_fake_v2": 0
+    },
+    "browser_navigate": {
+      "before_success": 126,
+      "after_success": 0,
+      "before_fake_v2": 126,
+      "after_fake_v2": 0
+    },
+    "patch": {
+      "before_success": 114,
+      "after_success": 0,
+      "before_fake_v2": 114,
+      "after_fake_v2": 0
+    },
+    "browser_scroll": {
+      "before_success": 84,
+      "after_success": 84,
+      "before_fake_v2": 0,
+      "after_fake_v2": 0
+    },
+    "browser_click": {
+      "before_success": 70,
+      "after_success": 0,
+      "before_fake_v2": 70,
+      "after_fake_v2": 0
+    },
+    "process": {
+      "before_success": 32,
+      "after_success": 0,
+      "before_fake_v2": 32,
+      "after_fake_v2": 0
+    }
+  },
+  "examples": {
+    "terminal_before_after": {
+      "record_id": "trace_000000_var_00",
+      "before": {
+        "source_tool": "terminal",
+        "replacement_tool": "execute_code",
+        "bad_step": 8
+      },
+      "after": {
+        "source_tool": "terminal",
+        "replacement_tool": "execute_code",
+        "replacement_arguments": {
+          "code": "import subprocess\nsubprocess.run(\"ls -la\", shell=True, check=False)"
+        },
+        "bad_step": 8
+      }
+    },
+    "search_files_before_after": {
+      "record_id": "trace_000001_var_00",
+      "before": {
+        "source_tool": "search_files",
+        "replacement_tool": "terminal",
+        "bad_step": 4
+      },
+      "after": {
+        "source_tool": "search_files",
+        "replacement_tool": "terminal",
+        "replacement_arguments": {
+          "command": "find . -name '*' 2>/dev/null | head -50"
+        },
+        "bad_step": 4
+      }
+    },
+    "unmapped_skip_after": {
+      "record_id": "trace_000063_var_00",
+      "before": {
+        "source_tool": "patch",
+        "replacement_tool": "patch_v2",
+        "bad_step": 16
+      },
+      "after": null
+    }
+  }
+}

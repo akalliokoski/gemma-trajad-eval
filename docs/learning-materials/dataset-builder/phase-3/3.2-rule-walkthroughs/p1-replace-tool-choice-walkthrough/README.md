@@ -19,4 +19,5 @@ This folder contains the Phase 3.2 walkthrough package for the first perturbatio
 ## Notes
 - No video explainer was created for this topic.
 - This package includes a real implementation fix discovered during the walkthrough: multi-tool assistant messages were being over-mutated because `replace_tool_call()` replaced every `<tool_call>` block instead of only the intended one.
+- Follow-up realism work now lives in `../../3.3-perturbation-diagnostics/p1-realism-and-nearby-tools-coverage/`, where the generic `_v2` fallback was removed and curated argument-adapting replacements were added for common corpus tools.
 - The infographic is usable as a concept-level visual summary, but text rendering is still not fully clean even after a retry with the newer Ideogram configuration.

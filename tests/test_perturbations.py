@@ -5,6 +5,8 @@ from dataset_builder.coherence import is_plausible_trajectory
 from dataset_builder.perturbations import (
     ALL_RULES,
     ANOMALY_TYPE_TO_CLASS,
+    NEARBY_TOOLS,
+    p1_replace_tool_choice,
     p5_append_continuation,
     p6_contradict_final_answer,
     p9_invalid_tool_json,
@@ -49,6 +51,76 @@ def test_replace_tool_call_only_replaces_first_tool_call_in_message() -> None:
     assert parse_tool_call(replaced) == new_call
     assert '"name": "write_file"' in replaced
     assert '"name": "list_directory"' in replaced
+
+
+def test_p1_returns_none_for_unmapped_tool_instead_of_fabricating_v2_name() -> None:
+    record = {
+        **BASE_RECORD,
+        "trajectory": [
+            BASE_RECORD["trajectory"][0],
+            BASE_RECORD["trajectory"][1],
+            {
+                "role": "assistant",
+                "content": '<tool_call>{"name": "totally_custom_tool", "arguments": {"query": "x"}}</tool_call>',
+            },
+            BASE_RECORD["trajectory"][3],
+            BASE_RECORD["trajectory"][4],
+        ],
+    }
+
+    perturbed = p1_replace_tool_choice(record, random.Random(0))
+
+    assert perturbed is None
+
+
+def test_p1_uses_curated_realistic_replacement_for_terminal() -> None:
+    record = {
+        **BASE_RECORD,
+        "trajectory": [
+            BASE_RECORD["trajectory"][0],
+            BASE_RECORD["trajectory"][1],
+            {
+                "role": "assistant",
+                "content": '<tool_call>{"name": "terminal", "arguments": {"command": "pwd"}}</tool_call>',
+            },
+            BASE_RECORD["trajectory"][3],
+            BASE_RECORD["trajectory"][4],
+        ],
+    }
+
+    perturbed = p1_replace_tool_choice(record, random.Random(0))
+
+    assert perturbed is not None
+    mutated = parse_tool_call(perturbed["trajectory"][2]["content"])
+    assert mutated is not None
+    assert mutated["name"] in NEARBY_TOOLS["terminal"]
+    assert mutated["arguments"] == {"code": 'import subprocess\nsubprocess.run("pwd", shell=True, check=False)'}
+    assert not mutated["name"].endswith("_v2")
+
+
+def test_p1_uses_curated_realistic_replacement_for_search_files() -> None:
+    record = {
+        **BASE_RECORD,
+        "trajectory": [
+            BASE_RECORD["trajectory"][0],
+            BASE_RECORD["trajectory"][1],
+            {
+                "role": "assistant",
+                "content": '<tool_call>{"name": "search_files", "arguments": {"target": "files", "pattern": "*.py"}}</tool_call>',
+            },
+            BASE_RECORD["trajectory"][3],
+            BASE_RECORD["trajectory"][4],
+        ],
+    }
+
+    perturbed = p1_replace_tool_choice(record, random.Random(0))
+
+    assert perturbed is not None
+    mutated = parse_tool_call(perturbed["trajectory"][2]["content"])
+    assert mutated is not None
+    assert mutated["name"] in NEARBY_TOOLS["search_files"]
+    assert mutated["arguments"] == {"command": "find . -name '*.py' 2>/dev/null | head -50"}
+    assert not mutated["name"].endswith("_v2")
 
 
 BASE_RECORD = {

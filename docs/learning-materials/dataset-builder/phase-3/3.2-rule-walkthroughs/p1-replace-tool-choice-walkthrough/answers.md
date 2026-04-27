@@ -6,6 +6,8 @@ Source topic: Phase 3 -> Perturbation Engine -> 3.2 Walk through each perturbati
 
 This package studies the first perturbation rule on the real normalized corpus, using actual sample trajectories and a small regression fix discovered during inspection.
 
+Update note: this walkthrough captures the state before the later Phase 3.3 realism cleanup removed the generic `_v2` fallback. See `../../3.3-perturbation-diagnostics/p1-realism-and-nearby-tools-coverage/` for the follow-up implementation and corpus-level before/after comparison.
+
 ## Questions and answers
 
 ### 1) What is P1 supposed to do?

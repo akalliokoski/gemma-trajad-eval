@@ -316,10 +316,12 @@ For each rule, do all three steps in one session:
   - Save to `data/processed/perturbation_diagnostics.json`
   - *Expected finding:* P1 will fail for many records because their tools aren't in `NEARBY_TOOLS`
 
-- [ ] **Analyze low-success rules and improve NEARBY_TOOLS coverage** (~30 min)
-  - Find the top-10 most common tool names in the dataset (from your Phase 1 EDA)
-  - Add the missing tools to `NEARBY_TOOLS` in `perturbations.py`
-  - Re-run diagnostics and compare before/after success rates
+- [x] **Analyze low-success rules and improve NEARBY_TOOLS coverage** (~30 min)
+  - Completed in `phase-3/3.3-perturbation-diagnostics/p1-realism-and-nearby-tools-coverage/` with corpus-wide before/after diagnostics in `p1-realism-coverage-comparison.json`.
+  - Added curated Hermes-corpus mappings for `search_files`, `terminal`, `browser_snapshot`, `browser_console`, `browser_get_images`, and `browser_scroll`.
+  - Removed the generic `_v2` fallback entirely; unmapped tools now skip P1 instead of fabricating fake API names.
+  - Added argument adaptation for `search_files -> terminal` and `terminal -> execute_code` so replacement calls better match the target tool.
+  - Before/after on 3,679 normalized records: `P1 success 3679 -> 3170`, `fake _v2 outputs 509 -> 0`.
 
 ### 3.4 Implement missing anomaly type: P9 invalid_tool_json (~60 min)
 

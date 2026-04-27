@@ -19,6 +19,7 @@ import copy
 import json
 import random
 import re
+import shlex
 from typing import Any
 
 # ---------------------------------------------------------------------------
@@ -38,6 +39,13 @@ NEARBY_TOOLS: dict[str, list[str]] = {
     "list_directory": ["read_file", "find_files"],
     "http_get": ["http_post", "fetch_url"],
     "sql_query": ["nosql_query", "read_csv"],
+    # Hermes corpus tool coverage added from Phase 3.3 diagnostics work.
+    "search_files": ["terminal"],
+    "terminal": ["execute_code"],
+    "browser_snapshot": ["browser_console", "browser_get_images"],
+    "browser_console": ["browser_snapshot", "browser_get_images"],
+    "browser_get_images": ["browser_snapshot", "browser_console"],
+    "browser_scroll": ["browser_snapshot", "browser_console"],
 }
 
 VALID_ANOMALY_CLASSES = {
@@ -111,6 +119,58 @@ def replace_tool_call_raw(content: str, raw_tool_call_json: str) -> str:
     return TOOL_CALL_RE.sub(lambda _match: replacement, content, count=1)
 
 
+def _get_call_args(call: dict) -> dict[str, Any]:
+    args = call.get("arguments", call.get("parameters", {}))
+    if isinstance(args, dict):
+        return dict(args)
+    return {}
+
+
+def _build_search_files_terminal_args(args: dict[str, Any]) -> dict[str, Any]:
+    path = str(args.get("path") or ".")
+    target = str(args.get("target") or "content")
+    pattern = str(args.get("pattern") or "")
+    file_glob = args.get("file_glob")
+
+    if target == "files" and pattern:
+        command = f"find {shlex.quote(path)} -name {shlex.quote(pattern)} 2>/dev/null | head -50"
+        return {"command": command}
+
+    rg_parts = ["rg", "-n"]
+    if file_glob:
+        rg_parts.extend(["--glob", str(file_glob)])
+    rg_parts.append(pattern or ".")
+    rg_parts.append(path)
+    command = " ".join(shlex.quote(part) for part in rg_parts) + " | head -50"
+    return {"command": command}
+
+
+def _build_terminal_execute_code_args(args: dict[str, Any]) -> dict[str, Any]:
+    command = str(args.get("command") or "echo missing-command")
+    code = f"import subprocess\nsubprocess.run({json.dumps(command)}, shell=True, check=False)"
+    return {"code": code}
+
+
+def build_replacement_call(call: dict, replacement_name: str) -> dict:
+    new_call = dict(call)
+    args = _get_call_args(call)
+
+    if call.get("name") == "search_files" and replacement_name == "terminal":
+        new_call["arguments"] = _build_search_files_terminal_args(args)
+        new_call.pop("parameters", None)
+    elif call.get("name") == "terminal" and replacement_name == "execute_code":
+        new_call["arguments"] = _build_terminal_execute_code_args(args)
+        new_call.pop("parameters", None)
+    else:
+        if "arguments" in call:
+            new_call["arguments"] = args
+        elif "parameters" in call:
+            new_call["parameters"] = args
+
+    new_call["name"] = replacement_name
+    return new_call
+
+
 def extract_tool_response_text(content: str) -> str:
     match = TOOL_RESP_RE.search(content or "")
     if match is None:
@@ -156,11 +216,10 @@ def p1_replace_tool_choice(record: dict, rng: random.Random) -> dict | None:
     tool_name = call.get("name", "")
     replacements = NEARBY_TOOLS.get(tool_name)
     if not replacements:
-        # Generic fallback: append "_v2" suffix
-        replacements = [tool_name + "_v2"]
+        return None
 
-    new_call = dict(call)
-    new_call["name"] = rng.choice(replacements)
+    replacement_name = rng.choice(replacements)
+    new_call = build_replacement_call(call, replacement_name)
 
     out = copy.deepcopy(record)
     out["trajectory"][step_idx]["content"] = replace_tool_call(msg["content"], new_call)
