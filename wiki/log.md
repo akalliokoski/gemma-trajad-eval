@@ -178,3 +178,15 @@
   - docs/learning-materials/dataset-builder/phase-2/2.1-2.2-normalization-deep-dive/hermes-normalization-deep-dive/answers.md
 - Updated navigation:
   - index.md
+
+## [2026-04-27] query | Dataset-builder Phase-3 perturbation context recorded
+- Added raw research snapshot:
+  - raw/transcripts/dataset-builder-phase-3-perturbation-context-2026-04-27.md
+- Added durable query page:
+  - queries/dataset-builder-phase-3-perturbation-context-2026-04-27.md
+- Source documents updated:
+  - docs/learning-materials/dataset-builder/dataset_builder_learning_plan.md
+  - docs/learning-materials/dataset-builder/phase-3/3.1-domain-context/trajad-perturbation-context/README.md
+  - docs/learning-materials/dataset-builder/phase-3/3.1-domain-context/trajad-perturbation-context/answers.md
+- Updated navigation:
+  - index.md

@@ -1,7 +1,7 @@
 # Wiki Index
 
 > Content catalog for the project wiki.
-> Last updated: 2026-04-26 | Total pages: 23
+> Last updated: 2026-04-27 | Total pages: 24
 
 ## Entities
 - [[gemma]] - Model family anchoring the project's local-first fine-tuning direction.
@@ -33,3 +33,4 @@
 - [[phase-1-scope-boundary-2026-04-26]] - Durable answer describing why SFT and RL remain future goals while the active learning path stops at dataset-builder Phase 1.
 - [[dataset-builder-phase-1-understanding-2026-04-26]] - Durable answer describing what Phase 1 established about the real Hermes trace corpus and why normalization is the next honest learning step.
 - [[dataset-builder-phase-2-normalization-2026-04-26]] - Durable answer describing how normalization preserves rows, stabilizes trace identity, and turns raw traces into the internal trajectory contract.
+- [[dataset-builder-phase-3-perturbation-context-2026-04-27]] - Durable answer describing why anomaly taxonomy and generation strategy must be judged together before the rule-by-rule Phase 3 walkthrough.

@@ -1,0 +1,126 @@
+{
+  "duration_hint": "7 minutes",
+  "episode_slug": "phase-3_3.1-01_trajad-perturbation-context",
+  "generation_mode": "manual-canonical",
+  "hosts": {
+    "HOST_A": {
+      "default_emotion": 0.92,
+      "name": "Ava",
+      "podcastfy_speaker": "Person1",
+      "role": "curious guide"
+    },
+    "HOST_B": {
+      "default_emotion": 0.82,
+      "name": "Noah",
+      "podcastfy_speaker": "Person2",
+      "role": "technical explainer"
+    }
+  },
+  "show_slug": "projects/gemma-trajad-eval/dataset-builder/phase-3-perturbation-engine/3.1-domain-context/trajad-perturbation-context",
+  "title": "TrajAD perturbation context",
+  "turns": [
+    {
+      "speaker": "HOST_A",
+      "emotion": 1.0,
+      "tags": ["gasp"],
+      "text": "[gasp] Phase 2 taught us what the normalized trajectory contract is. Phase 3 asks a harder question: when we inject anomalies, are we creating believable bad agent behavior or just obvious local edits?"
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.88,
+      "tags": [],
+      "text": "That is exactly why this domain-context stop matters. TrajAD does not just corrupt one step and stop there. It uses perturb-and-complete, which means it injects an error at step K and then continues the rest of the trajectory as if that error were really part of the agent's world state."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.98,
+      "tags": [],
+      "text": "So the later reasoning, actions, and observations are regenerated from the mistake itself, not borrowed from the original clean run."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "Exactly. That is the realism advantage. The bad trajectory keeps unfolding naturally after the first error. In contrast, this repo mostly uses direct perturbation: one rule edits one step inside an existing normalized trace and later steps stay mostly unchanged."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 1.02,
+      "tags": ["chuckle"],
+      "text": "[chuckle] Which is wonderfully cheap and inspectable, but also a little suspicious once you start asking whether the later trace still believes the old clean world is true."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.86,
+      "tags": [],
+      "text": "That is the core tradeoff. Direct perturbation is deterministic, easy to test, and easy to reason about rule by rule. But it can create internal contradictions because downstream behavior was not regenerated from the corrupted state."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 1.03,
+      "tags": ["gasp"],
+      "text": "[gasp] And two of the best examples are already sitting in the current rule inventory."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "Right. P6 contradicted tool result changes the final answer, but the earlier evidence path is still the clean one. P7 premature final answer chops the trajectory early and inserts a fake conclusion, which is useful as a label but still not the same as watching an agent continue from a mistaken belief state for several more turns."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.97,
+      "tags": [],
+      "text": "So Phase 3 is really about realism discipline. Not just can we name anomaly types, but do the corrupted traces look like something a real agent might actually do?"
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.88,
+      "tags": [],
+      "text": "Yes, and the taxonomy helps anchor that judgment. TrajAD uses three top-level classes: Task Failure, Process Inefficiency, and Unwarranted Continuation. Those are much more informative than a bag of perturbation names because they describe what went wrong at the process level."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.99,
+      "tags": [],
+      "text": "And the repo now maps ten anomaly subtypes into those three classes, correct?"
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "Correct. The current implementation has nine perturbation rules because P9 invalid tool JSON has already been added. Task Failure is the heaviest class by far: bad tool arguments, skipped required step, premature final answer, contradicted tool result, invalid tool JSON, and the still-stubbed hallucinated tool."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.96,
+      "tags": [],
+      "text": "Process Inefficiency has wrong tool choice and repeated step implemented, but unnecessary replanning is still a stub. And Unwarranted Continuation is basically represented by one implemented family right now: continued after sufficient evidence."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.87,
+      "tags": ["gasp"],
+      "text": "[gasp] Which tells us something important. The builder is currently strongest on obvious task-failure cases and thinner on richer variants of wasteful or should-have-stopped behavior."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 1.01,
+      "tags": [],
+      "text": "That also makes the remaining stubs more meaningful than they look. Hallucinated tool would capture a very realistic agent failure mode. Unnecessary replanning would capture a very realistic efficiency failure mode."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.89,
+      "tags": [],
+      "text": "Exactly. So the practical lesson for the next stage is simple: when we walk through each rule, we need two questions in our head at all times. First, is the anomaly label correct? Second, is the generated trajectory actually believable as an agent trace?"
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 1.0,
+      "tags": [],
+      "text": "That is a great bridge. Phase 2 gave us the contract. Phase 3.1 gives us the realism lens. Phase 3.2 is where we start judging P1 through P9 one by one with both taxonomy fit and trajectory believability in view."
+    }
+  ],
+  "version": 1
+}

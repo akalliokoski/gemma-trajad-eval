@@ -245,17 +245,16 @@ each design decision was made — by actually running it, breaking it, and exten
 
 ### 3.1 Domain context (~60 min)
 
-- [ ] **Re-read TrajAD perturbation strategy vs. this project** (~30 min)
-  - TrajAD uses "perturb-and-complete": inject an error at step K, then use an LLM to
-    generate steps K+1..N as if the error were real. This makes anomalies more realistic.
-  - This project uses "direct perturbation": modify step K, leave subsequent steps unchanged.
-  - What are the tradeoffs? When does the simpler approach fail? (Hint: P7 truncation,
-    P6 contradiction — these create internal contradictions in the trajectory)
+- [x] **Re-read TrajAD perturbation strategy vs. this project** (~30 min)
+  - TrajAD's `perturb-and-complete` strategy regenerates steps `K+1..N` after the injected error, while this repo's direct perturbation edits step `K` and usually leaves later steps unchanged.
+  - Main tradeoff: direct perturbation is deterministic and easy to inspect, but it is weaker on downstream realism because later steps may still assume the clean world state.
+  - Key failure-mode examples: P6 `contradicted_tool_result` and P7 `premature_final_answer` are useful anomalies, but they also expose the realism limit of one-step editing.
 
-- [ ] **Study the TrajAD anomaly taxonomy and compare to this project** (~30 min)
-  - TrajAD has 3 top-level classes: Task Failure, Process Inefficiency, Unwarranted Continuation
-  - This project has 10 subtypes. Map each subtype to the TrajAD class.
-  - Which subtypes are well-covered by perturbation rules? Which are stubs? Why are they stubs?
+- [x] **Study the TrajAD anomaly taxonomy and compare to this project** (~30 min)
+  - TrajAD's top-level classes remain Task Failure, Process Inefficiency, and Unwarranted Continuation.
+  - This repo currently maps `10` anomaly subtypes into those three classes, with `9` implemented perturbation rules after the addition of P9 `invalid_tool_json`.
+  - Current stub subtypes are `hallucinated_tool` and `unnecessary_replanning`, which means Task Failure is best covered while continuation/replanning realism is still thinner.
+  - Combined artifact package: [README](phase-3/3.1-domain-context/trajad-perturbation-context/README.md) · [answers.md](phase-3/3.1-domain-context/trajad-perturbation-context/answers.md) · [PNG](phase-3/3.1-domain-context/trajad-perturbation-context/infographic.png) · [Podcast](file:///data/audiobookshelf/podcasts/profiles/gemma/projects/gemma-trajad-eval/dataset-builder/phase-3-perturbation-engine/3.1-domain-context/trajad-perturbation-context/phase-3_3.1-01_trajad-perturbation-context.mp3)
 
 ### 3.2 Walk through each perturbation rule (~4 hours total, 8 × 30 min)
 
