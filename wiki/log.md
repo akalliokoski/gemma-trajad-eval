@@ -220,3 +220,18 @@
   - docs/learning-materials/dataset-builder/phase-3/3.3-perturbation-diagnostics/p1-realism-and-nearby-tools-coverage/answers.md
 - Updated navigation:
   - index.md
+
+## [2026-04-27] query | Dataset-builder perturbation diagnostics script recorded
+- Added raw research snapshot:
+  - raw/transcripts/dataset-builder-perturbation-diagnostics-script-2026-04-27.md
+- Added durable query page:
+  - queries/dataset-builder-perturbation-diagnostics-script-2026-04-27.md
+- Source documents updated:
+  - dataset_builder/perturbation_diagnostics.py
+  - tests/test_perturbation_diagnostics.py
+  - data/processed/perturbation_diagnostics.json
+  - docs/learning-materials/dataset-builder/dataset_builder_learning_plan.md
+  - docs/learning-materials/dataset-builder/phase-3/3.3-perturbation-diagnostics/rule-diagnostics-script/README.md
+  - docs/learning-materials/dataset-builder/phase-3/3.3-perturbation-diagnostics/rule-diagnostics-script/answers.md
+- Updated navigation:
+  - index.md

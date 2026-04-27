@@ -1,0 +1,74 @@
+{
+  "duration_hint": "5 minutes",
+  "episode_slug": "phase-3_3.3-02_perturbation-diagnostics-script",
+  "generation_mode": "manual-canonical",
+  "hosts": {
+    "HOST_A": {
+      "default_emotion": 0.92,
+      "name": "Ava",
+      "podcastfy_speaker": "Person1",
+      "role": "curious guide"
+    },
+    "HOST_B": {
+      "default_emotion": 0.82,
+      "name": "Noah",
+      "podcastfy_speaker": "Person2",
+      "role": "technical explainer"
+    }
+  },
+  "show_slug": "projects/gemma-trajad-eval/dataset-builder/phase-3-perturbation-engine/3.3-perturbation-diagnostics/rule-diagnostics-script",
+  "title": "Perturbation diagnostics script",
+  "turns": [
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.98,
+      "tags": [],
+      "text": "This slice added something the perturbation engine was missing: a real diagnostics dashboard instead of intuition and spot checks."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.88,
+      "tags": [],
+      "text": "The new script reads the normalized corpus, runs every perturbation rule across it, and counts eligible, succeeded, failed, and ineligible records. That gives us a repeatable measurement artifact at data slash processed slash perturbation diagnostics dot json."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 1.0,
+      "tags": [
+        "gasp"
+      ],
+      "text": "[gasp] And the first real run made the next bottleneck obvious. P1 is now the standout rule with five hundred nine failures and an eighty six point two percent success rate."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "That is exactly what we should want after the realism cleanup. Those failures used to be hidden behind fake vee two names. Now they show up as measurable coverage gaps instead of synthetic successes."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.96,
+      "tags": [],
+      "text": "Meanwhile P2 is ninety nine point one percent, and the other rules are effectively one hundred percent on eligible records. So the diagnostics script turned a vague feeling into a very clear priority ranking."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.89,
+      "tags": [],
+      "text": "The other nice design choice is separating ineligible from failed. If a record does not structurally fit a rule, that is different from a record that looks suitable but still fails to perturb. Mixing those together would blur the signal."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.97,
+      "tags": [],
+      "text": "So the script is not just reporting counts. It is teaching us how to reason about rule coverage with cleaner semantics."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.86,
+      "tags": [],
+      "text": "And now every future realism pass can be judged against the same artifact. Expand a mapping, rerun diagnostics, compare the row, and decide whether the change improved the dataset honestly."
+    }
+  ],
+  "version": 1
+}

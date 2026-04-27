@@ -310,11 +310,11 @@ For each rule, do all three steps in one session:
 
 ### 3.3 Perturbation diagnostics (~60 min)
 
-- [ ] **Write a perturbation diagnostics script** (~30 min)
-  - Read all normalized records; apply each rule to every record; count successes and failures
-  - Print a table: `Rule | Eligible | Succeeded | Failed | Success Rate`
-  - Save to `data/processed/perturbation_diagnostics.json`
-  - *Expected finding:* P1 will fail for many records because their tools aren't in `NEARBY_TOOLS`
+- [x] **Write a perturbation diagnostics script** (~30 min)
+  - Implemented `dataset_builder/perturbation_diagnostics.py` and generated `data/processed/perturbation_diagnostics.json`.
+  - Learning package saved in `phase-3/3.3-perturbation-diagnostics/rule-diagnostics-script/` with answer doc, infographic, podcast, and diagnostics snapshot.
+  - Verification: `uv run pytest tests/test_perturbation_diagnostics.py -v`; `uv run pytest tests/test_perturbation_diagnostics.py tests/test_perturbations.py -v`; `uv run python dataset_builder/perturbation_diagnostics.py --input data/interim/hermes_normalized_phase2.jsonl --output data/processed/perturbation_diagnostics.json`.
+  - First corpus result on 3,679 records: `P1 86.2% (509 failures)`, `P2 99.1% (32 failures)`, all other rules `100.0%` on eligible records.
 
 - [x] **Analyze low-success rules and improve NEARBY_TOOLS coverage** (~30 min)
   - Completed in `phase-3/3.3-perturbation-diagnostics/p1-realism-and-nearby-tools-coverage/` with corpus-wide before/after diagnostics in `p1-realism-coverage-comparison.json`.
