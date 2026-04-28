@@ -288,10 +288,14 @@ For each rule, do all three steps in one session:
   - Infographic: [PNG](phase-3/3.2-rule-walkthroughs/p3-remove-step-pair-walkthrough/infographic.png)
   - Podcast: [local MP3](file:///data/audiobookshelf/podcasts/profiles/gemma/projects/gemma-trajad-eval/dataset-builder/phase-3-perturbation-engine/3.2-rule-walkthroughs/p3-remove-step-pair-walkthrough/phase-3_3.2-03_p3-remove-step-pair-walkthrough.mp3) · [Audiobookshelf UI](https://vps.taild96651.ts.net:13378/)
 
-- [ ] **P4: `duplicate_tool_step`** — repeated_step (~30 min)
-  - Apply P4. Verify the duplicated pair appears at the expected index.
-  - Is `bad_step` set to the first occurrence or the second (the duplicate)?
-  - *Verify:* the duplicate should have identical content — not a paraphrase, exactly the same bytes
+- [x] **P4: `duplicate_tool_step`** — repeated_step (~30 min)
+  - Real corpus walkthrough saved to [README](phase-3/3.2-rule-walkthroughs/p4-duplicate-tool-step-walkthrough/README.md) and [answers.md](phase-3/3.2-rule-walkthroughs/p4-duplicate-tool-step-walkthrough/answers.md); sampled before/after cases are in [p4-sample-comparisons.json](phase-3/3.2-rule-walkthroughs/p4-duplicate-tool-step-walkthrough/p4-sample-comparisons.json).
+  - Real corpus evidence: P4 applied to `3679` eligible records in `data/interim/hermes_normalized_phase2.jsonl`; the minimum valid source trajectory length was `5`.
+  - `bad_step` is set to the duplicate assistant step, not the original occurrence, so it marks the first unnecessary repeated action.
+  - Implementation fix discovered during the walkthrough: when a trace mixes compound and simple assistant/tool pairs, P4 now prefers duplicating a simple one-call/one-response pair instead of a broader multi-call bundle.
+  - Verified with `uv run --with pytest --no-project pytest tests/test_perturbations.py::test_p4_duplicates_pair_with_exact_content_and_marks_duplicate_step tests/test_perturbations.py::test_p4_prefers_single_call_pair_when_mixed_with_compound_pairs -v`, `uv run --with pytest --no-project pytest tests/test_perturbations.py -v`, and `uv run --with pytest --no-project pytest tests/test_coherence.py::test_accepts_repeated_step_perturbation_as_plausible tests/test_validate_labels.py::test_validate_record_rejects_repeated_step_when_bad_step_is_not_duplicate_start -v`.
+  - Infographic: [PNG](phase-3/3.2-rule-walkthroughs/p4-duplicate-tool-step-walkthrough/infographic.png)
+  - Podcast: [local MP3](file:///data/audiobookshelf/podcasts/profiles/gemma/projects/gemma-trajad-eval/dataset-builder/phase-3-perturbation-engine/3.2-rule-walkthroughs/p4-duplicate-tool-step-walkthrough/phase-3_3.2-04_p4-duplicate-tool-step-walkthrough.mp3) · [Audiobookshelf UI](https://vps.taild96651.ts.net:13378/)
 
 - [ ] **P5: `append_continuation`** — continued_after_sufficient_evidence (~30 min)
   - Apply P5. What fake tool call gets appended?
@@ -540,10 +544,10 @@ Create a `@pytest.fixture` called `sample_trajectory` that has:
   - Test: trajectory length is reduced by 2
   - Test: record with no tool calls returns None
 
-- [ ] **Test P4 (`duplicate_tool_step`)** (~30 min)
-  - Test: output trajectory length is original + 2
-  - Test: duplicated step has identical content to original
-  - Test: `bad_step` points to the duplicate (not the original)
+- [x] **Test P4 (`duplicate_tool_step`)** (~30 min)
+  - Added regression coverage in `tests/test_perturbations.py` for trajectory length `+2`, exact byte-for-byte duplication, and `bad_step` pointing to the duplicate assistant step.
+  - Added a realism regression asserting that P4 prefers a simple one-call/one-response pair when a trace mixes simple and compound candidates.
+  - Verified with `uv run --with pytest --no-project pytest tests/test_perturbations.py::test_p4_duplicates_pair_with_exact_content_and_marks_duplicate_step tests/test_perturbations.py::test_p4_prefers_single_call_pair_when_mixed_with_compound_pairs -v` and `uv run --with pytest --no-project pytest tests/test_perturbations.py -v`.
 
 - [ ] **Test P5 (`append_continuation`)** (~30 min)
   - Test: output trajectory is longer than input by 2 steps

@@ -1,0 +1,96 @@
+{
+  "duration_hint": "6 minutes",
+  "episode_slug": "phase-3_3.2-04_p4-duplicate-tool-step-walkthrough",
+  "generation_mode": "manual-canonical",
+  "hosts": {
+    "HOST_A": {
+      "default_emotion": 0.92,
+      "name": "Ava",
+      "podcastfy_speaker": "Person1",
+      "role": "curious guide"
+    },
+    "HOST_B": {
+      "default_emotion": 0.82,
+      "name": "Noah",
+      "podcastfy_speaker": "Person2",
+      "role": "technical explainer"
+    }
+  },
+  "show_slug": "projects/gemma-trajad-eval/dataset-builder/phase-3-perturbation-engine/3.2-rule-walkthroughs/p4-duplicate-tool-step-walkthrough",
+  "title": "P4 duplicate_tool_step walkthrough",
+  "turns": [
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.98,
+      "tags": ["gasp"],
+      "text": "[gasp] The fourth perturbation rule looks simple at first, but the walkthrough exposed a surprisingly useful realism question: what exactly counts as one repeated step?"
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.89,
+      "tags": [],
+      "text": "P4 duplicates one assistant tool-call step and its following tool response, then inserts the copy immediately after the original pair. The anomaly type is repeated step, and bad_step points to the duplicate assistant step, not the original clean one."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.96,
+      "tags": [],
+      "text": "So if the original pair starts at index i, the duplicate begins at i plus two. That makes the first wrong step very crisp. The original action was fine. The mistake starts when the model does it again."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "Exactly. The new regression test locks in three things at once: the output trajectory is longer by two messages, the duplicate content is byte for byte identical to the original assistant and tool messages, and bad_step lands on the duplicate assistant turn."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.97,
+      "tags": [],
+      "text": "The real corpus evidence was also clean. P4 applied to 3679 eligible records, and the minimum valid source trajectory length was only five steps: system, user, assistant tool call, tool response, assistant answer."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "But the key finding was not applicability. It was granularity. Across the corpus there were 53191 eligible assistant and tool pairs. About 17.4 percent of them were compound pairs containing multiple tool calls or multiple tool responses inside one message pair."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 1.01,
+      "tags": ["gasp"],
+      "text": "[gasp] So the old random selection policy could duplicate an entire bundled mini workflow even when the same trace also had a simple one-call one-response pair available."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "Right. That is still structurally valid, but it weakens the teaching signal. Duplicate tool step should usually mean a narrow repeated action, not a repeated bundle of several tool invocations packed into one assistant turn."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.95,
+      "tags": [],
+      "text": "And the bounded fix was elegant: keep the rule deterministic, keep the duplicated bytes exact, but prefer simple one-call and one-response pairs whenever the trace offers them."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.89,
+      "tags": [],
+      "text": "Yes. The fallback still matters, because seventy six records only contain compound pairs. So the generator now chooses the narrowest plausible repeated step when possible, and falls back to any eligible pair only when it has to."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.97,
+      "tags": [],
+      "text": "Verification stayed tight too. The two focused P4 tests passed, the whole perturbations suite finished with sixteen passed, and the related coherence and validator checks also passed."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "That gives us the main lesson from P4: realism in synthetic trajectory anomalies is often about choosing the right unit of corruption. If the generator repeats the narrowest plausible step, the anomaly is easier to trust and easier for a model to learn from."
+    }
+  ],
+  "version": 1
+}

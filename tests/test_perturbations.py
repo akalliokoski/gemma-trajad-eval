@@ -9,6 +9,7 @@ from dataset_builder.perturbations import (
     p1_replace_tool_choice,
     p2_mutate_argument_value,
     p3_remove_step_pair,
+    p4_duplicate_tool_step,
     p5_append_continuation,
     p6_contradict_final_answer,
     p9_invalid_tool_json,
@@ -257,6 +258,63 @@ def test_validate_record_allows_missing_step_index_at_trajectory_end() -> None:
     }
 
     assert validate_record(record, 0) == []
+
+
+def test_p4_duplicates_pair_with_exact_content_and_marks_duplicate_step() -> None:
+    perturbed = p4_duplicate_tool_step(BASE_RECORD, random.Random(0))
+
+    assert perturbed is not None
+    assert len(perturbed["trajectory"]) == len(BASE_RECORD["trajectory"]) + 2
+    assert perturbed["bad_step"] == 4
+    assert perturbed["trajectory"][perturbed["bad_step"]]["content"] == BASE_RECORD["trajectory"][2]["content"]
+    assert perturbed["trajectory"][perturbed["bad_step"] + 1]["content"] == BASE_RECORD["trajectory"][3]["content"]
+    assert perturbed["trajectory"][2]["content"] == BASE_RECORD["trajectory"][2]["content"]
+    assert perturbed["trajectory"][3]["content"] == BASE_RECORD["trajectory"][3]["content"]
+    perturbed["anomaly_class"] = ANOMALY_TYPE_TO_CLASS[perturbed["anomaly_type"]]
+    assert validate_record(perturbed, 0) == []
+    assert is_plausible_trajectory(perturbed) == (True, None)
+
+
+def test_p4_prefers_single_call_pair_when_mixed_with_compound_pairs() -> None:
+    record = {
+        **BASE_RECORD,
+        "trajectory": [
+            {"role": "system", "content": "system"},
+            {"role": "user", "content": "find x"},
+            {
+                "role": "assistant",
+                "content": (
+                    '<tool_call>{"name": "search_web", "arguments": {"query": "x"}}</tool_call>'
+                    '\n<tool_call>{"name": "read_file", "arguments": {"path": "report.md"}}</tool_call>'
+                ),
+            },
+            {
+                "role": "tool",
+                "content": (
+                    '<tool_response>{"results": [{"title": "X found"}], "count": 1}</tool_response>'
+                    '\n<tool_response>{"content": "report details"}</tool_response>'
+                ),
+            },
+            {
+                "role": "assistant",
+                "content": '<tool_call>{"name": "terminal", "arguments": {"command": "pwd"}}</tool_call>',
+            },
+            {
+                "role": "tool",
+                "content": '<tool_response>{"output": "/tmp"}</tool_response>',
+            },
+            {"role": "assistant", "content": "Final answer based on both checks."},
+        ],
+    }
+
+    perturbed = p4_duplicate_tool_step(record, random.Random(0))
+
+    assert perturbed is not None
+    assert perturbed["bad_step"] == 6
+    assert perturbed["trajectory"][6]["content"] == record["trajectory"][4]["content"]
+    assert perturbed["trajectory"][7]["content"] == record["trajectory"][5]["content"]
+    assert perturbed["trajectory"][2]["content"] == record["trajectory"][2]["content"]
+    assert perturbed["trajectory"][3]["content"] == record["trajectory"][3]["content"]
 
 
 def test_p5_appends_structurally_complete_extra_continuation() -> None:

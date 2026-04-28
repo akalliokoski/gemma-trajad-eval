@@ -1,0 +1,25 @@
+Title: P4 duplicate_tool_step walkthrough
+
+Ava: [gasp] The fourth perturbation rule looks simple at first, but the walkthrough exposed a surprisingly useful realism question: what exactly counts as one repeated step?
+
+Noah: P4 duplicates one assistant tool-call step and its following tool response, then inserts the copy immediately after the original pair. The anomaly type is repeated step, and bad_step points to the duplicate assistant step, not the original clean one.
+
+Ava: So if the original pair starts at index i, the duplicate begins at i plus two. That makes the first wrong step very crisp. The original action was fine. The mistake starts when the model does it again.
+
+Noah: Exactly. The new regression test locks in three things at once: the output trajectory is longer by two messages, the duplicate content is byte for byte identical to the original assistant and tool messages, and bad_step lands on the duplicate assistant turn.
+
+Ava: The real corpus evidence was also clean. P4 applied to 3679 eligible records, and the minimum valid source trajectory length was only five steps: system, user, assistant tool call, tool response, assistant answer.
+
+Noah: But the key finding was not applicability. It was granularity. Across the corpus there were 53191 eligible assistant and tool pairs. About 17.4 percent of them were compound pairs containing multiple tool calls or multiple tool responses inside one message pair.
+
+Ava: [gasp] So the old random selection policy could duplicate an entire bundled mini workflow even when the same trace also had a simple one-call one-response pair available.
+
+Noah: Right. That is still structurally valid, but it weakens the teaching signal. Duplicate tool step should usually mean a narrow repeated action, not a repeated bundle of several tool invocations packed into one assistant turn.
+
+Ava: And the bounded fix was elegant: keep the rule deterministic, keep the duplicated bytes exact, but prefer simple one-call and one-response pairs whenever the trace offers them.
+
+Noah: Yes. The fallback still matters, because seventy six records only contain compound pairs. So the generator now chooses the narrowest plausible repeated step when possible, and falls back to any eligible pair only when it has to.
+
+Ava: Verification stayed tight too. The two focused P4 tests passed, the whole perturbations suite finished with sixteen passed, and the related coherence and validator checks also passed.
+
+Noah: That gives us the main lesson from P4: realism in synthetic trajectory anomalies is often about choosing the right unit of corruption. If the generator repeats the narrowest plausible step, the anomaly is easier to trust and easier for a model to learn from.

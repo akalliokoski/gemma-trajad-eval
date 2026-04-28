@@ -364,6 +364,7 @@ def p4_duplicate_tool_step(record: dict, rng: random.Random) -> dict | None:
     """P4: Duplicate a (assistant[tool_call], tool) pair."""
     traj = record["trajectory"]
     pairs = []
+    simple_pairs = []
     for i in range(len(traj) - 1):
         if (
             traj[i]["role"] == "assistant"
@@ -371,11 +372,19 @@ def p4_duplicate_tool_step(record: dict, rng: random.Random) -> dict | None:
             and traj[i + 1]["role"] == "tool"
         ):
             pairs.append(i)
+            tool_call_count = (traj[i].get("content") or "").count("<tool_call>")
+            tool_response_count = (traj[i + 1].get("content") or "").count("<tool_response>")
+            if tool_call_count == 1 and tool_response_count == 1:
+                simple_pairs.append(i)
 
     if not pairs:
         return None
 
-    step_idx = rng.choice(pairs)
+    # Prefer a single-call/single-response pair when available so the anomaly is
+    # a focused repeated step rather than a duplicated bundle of multiple tool
+    # calls packed into one assistant turn.
+    candidate_pairs = simple_pairs or pairs
+    step_idx = rng.choice(candidate_pairs)
     dup_assistant = copy.deepcopy(traj[step_idx])
     dup_tool = copy.deepcopy(traj[step_idx + 1])
 
