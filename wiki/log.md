@@ -241,3 +241,31 @@
   - queries/interactive-trajectory-explorer-first-slice-2026-04-27.md
 - Updated navigation:
   - index.md
+
+## [2026-04-28] query | Dataset-builder P2 mutate_argument_value walkthrough recorded
+- Added raw research snapshot:
+  - raw/transcripts/dataset-builder-p2-mutate-argument-value-2026-04-28.md
+- Added durable query page:
+  - queries/dataset-builder-p2-mutate-argument-value-2026-04-28.md
+- Source documents updated:
+  - dataset_builder/perturbations.py
+  - tests/test_perturbations.py
+  - docs/learning-materials/dataset-builder/dataset_builder_learning_plan.md
+  - docs/learning-materials/dataset-builder/phase-3/3.2-rule-walkthroughs/p2-mutate-argument-value-walkthrough/README.md
+  - docs/learning-materials/dataset-builder/phase-3/3.2-rule-walkthroughs/p2-mutate-argument-value-walkthrough/answers.md
+- Updated navigation:
+  - index.md
+
+## [2026-04-28] query | Dataset-builder P3 remove_step_pair walkthrough recorded
+- Added raw research snapshot:
+  - raw/transcripts/dataset-builder-p3-remove-step-pair-2026-04-28.md
+- Added durable query page:
+  - queries/dataset-builder-p3-remove-step-pair-2026-04-28.md
+- Source documents updated:
+  - dataset_builder/perturbations.py
+  - tests/test_perturbations.py
+  - docs/learning-materials/dataset-builder/dataset_builder_learning_plan.md
+  - docs/learning-materials/dataset-builder/phase-3/3.2-rule-walkthroughs/p3-remove-step-pair-walkthrough/README.md
+  - docs/learning-materials/dataset-builder/phase-3/3.2-rule-walkthroughs/p3-remove-step-pair-walkthrough/answers.md
+- Updated navigation:
+  - index.md

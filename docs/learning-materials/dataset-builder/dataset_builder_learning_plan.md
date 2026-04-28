@@ -271,15 +271,22 @@ For each rule, do all three steps in one session:
   - Infographic: [PNG](phase-3/3.2-rule-walkthroughs/p1-replace-tool-choice-walkthrough/infographic.png)
   - Podcast: [local MP3](file:///data/audiobookshelf/podcasts/profiles/gemma/projects/gemma-trajad-eval/dataset-builder/phase-3-perturbation-engine/3.2-rule-walkthroughs/p1-replace-tool-choice-walkthrough/phase-3_3.2-01_p1-replace-tool-choice-walkthrough.mp3) · [Audiobookshelf UI](https://vps.taild96651.ts.net:13378/)
 
-- [ ] **P2: `mutate_argument_value`** — bad_tool_arguments (~30 min)
-  - Apply P2 to a trace with a string argument. How does `_CORRUPTED` suffix change the semantics?
-  - Apply to a trace with an integer argument. How does `±999` change the semantics?
-  - *Question to answer:* Is corrupting by adding `_CORRUPTED` too obvious for the model? What would be subtler?
+- [x] **P2: `mutate_argument_value`** — bad_tool_arguments (~30 min)
+  - Real corpus walkthrough saved to [README](phase-3/3.2-rule-walkthroughs/p2-mutate-argument-value-walkthrough/README.md) and [answers.md](phase-3/3.2-rule-walkthroughs/p2-mutate-argument-value-walkthrough/answers.md); sampled before/after cases are in [p2-sample-comparisons.json](phase-3/3.2-rule-walkthroughs/p2-mutate-argument-value-walkthrough/p2-sample-comparisons.json).
+  - Real string sample: `terminal.command` changed from `ls -la` to `sl -la`, which is much subtler than the earlier `_CORRUPTED` suffix style; real integer sample: `read_file.offset` changed from `501` to `-498` while preserving numeric type.
+  - Implementation fix discovered during the walkthrough: boolean arguments were being treated as integers because Python `bool` is a subclass of `int` and the old branch order checked `int` first. P2 now flips booleans logically and uses typo/path-like string corruption instead of explicit corruption markers.
+  - Verified with `uv run pytest tests/test_perturbations.py::test_p2_mutates_path_like_strings_without_corrupted_suffix tests/test_perturbations.py::test_p2_toggles_boolean_arguments_instead_of_treating_them_as_ints -v` and `uv run pytest tests/test_perturbations.py -v` (`12 passed`).
+  - Infographic: [PNG](phase-3/3.2-rule-walkthroughs/p2-mutate-argument-value-walkthrough/infographic.png)
+  - Podcast: [local MP3](file:///data/audiobookshelf/podcasts/profiles/gemma/projects/gemma-trajad-eval/dataset-builder/phase-3-perturbation-engine/3.2-rule-walkthroughs/p2-mutate-argument-value-walkthrough/phase-3_3.2-02_p2-mutate-argument-value-walkthrough.mp3) · [Audiobookshelf UI](https://vps.taild96651.ts.net:13378/)
 
-- [ ] **P3: `remove_step_pair`** — skipped_required_step (~30 min)
-  - Apply P3 to a trace. Verify the `(assistant_tool_call, tool_response)` pair is gone.
-  - What is the minimum trajectory length for P3 to succeed? What is `bad_step` set to?
-  - Does the resulting trajectory still "make sense" narratively? (It won't — that's the point)
+- [x] **P3: `remove_step_pair`** — skipped_required_step (~30 min)
+  - Real corpus walkthrough saved to [README](phase-3/3.2-rule-walkthroughs/p3-remove-step-pair-walkthrough/README.md) and [answers.md](phase-3/3.2-rule-walkthroughs/p3-remove-step-pair-walkthrough/answers.md); sampled before/after cases are in [p3-sample-comparisons.json](phase-3/3.2-rule-walkthroughs/p3-remove-step-pair-walkthrough/p3-sample-comparisons.json).
+  - Real corpus evidence: P3 applied to `3679` records in `data/interim/hermes_normalized_phase2.jsonl`; the minimum valid source trajectory length was `5`.
+  - `bad_step` is the index where the removed assistant tool-call step used to begin, so it marks a missing location rather than a surviving corrupted message.
+  - Implementation fix discovered during the walkthrough: when multiple candidate pairs exist, P3 now prefers removing a non-terminal assistant+tool pair so the anomalous trajectory keeps an assistant ending when possible instead of looking like a generic truncation.
+  - Verified with `uv run pytest tests/test_perturbations.py::test_p3_prefers_removing_non_terminal_pair_when_available tests/test_perturbations.py::test_p3_returns_shortest_valid_skip_when_only_one_pair_exists -v` and `uv run pytest tests/test_perturbations.py -v` (`14 passed`).
+  - Infographic: [PNG](phase-3/3.2-rule-walkthroughs/p3-remove-step-pair-walkthrough/infographic.png)
+  - Podcast: [local MP3](file:///data/audiobookshelf/podcasts/profiles/gemma/projects/gemma-trajad-eval/dataset-builder/phase-3-perturbation-engine/3.2-rule-walkthroughs/p3-remove-step-pair-walkthrough/phase-3_3.2-03_p3-remove-step-pair-walkthrough.mp3) · [Audiobookshelf UI](https://vps.taild96651.ts.net:13378/)
 
 - [ ] **P4: `duplicate_tool_step`** — repeated_step (~30 min)
   - Apply P4. Verify the duplicated pair appears at the expected index.

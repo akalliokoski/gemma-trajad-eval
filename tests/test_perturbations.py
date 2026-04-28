@@ -7,6 +7,8 @@ from dataset_builder.perturbations import (
     ANOMALY_TYPE_TO_CLASS,
     NEARBY_TOOLS,
     p1_replace_tool_choice,
+    p2_mutate_argument_value,
+    p3_remove_step_pair,
     p5_append_continuation,
     p6_contradict_final_answer,
     p9_invalid_tool_json,
@@ -123,6 +125,53 @@ def test_p1_uses_curated_realistic_replacement_for_search_files() -> None:
     assert not mutated["name"].endswith("_v2")
 
 
+def test_p2_mutates_path_like_strings_without_corrupted_suffix() -> None:
+    record = {
+        **BASE_RECORD,
+        "trajectory": [
+            BASE_RECORD["trajectory"][0],
+            BASE_RECORD["trajectory"][1],
+            {
+                "role": "assistant",
+                "content": '<tool_call>{"name": "read_file", "arguments": {"path": "config/settings.py"}}</tool_call>',
+            },
+            BASE_RECORD["trajectory"][3],
+            BASE_RECORD["trajectory"][4],
+        ],
+    }
+
+    perturbed = p2_mutate_argument_value(record, random.Random(0))
+
+    assert perturbed is not None
+    mutated = parse_tool_call(perturbed["trajectory"][2]["content"])
+    assert mutated is not None
+    assert mutated["arguments"]["path"] == "config/settings-old.py"
+    assert "_CORRUPTED" not in perturbed["trajectory"][2]["content"]
+
+
+def test_p2_toggles_boolean_arguments_instead_of_treating_them_as_ints() -> None:
+    record = {
+        **BASE_RECORD,
+        "trajectory": [
+            BASE_RECORD["trajectory"][0],
+            BASE_RECORD["trajectory"][1],
+            {
+                "role": "assistant",
+                "content": '<tool_call>{"name": "terminal", "arguments": {"background": true}}</tool_call>',
+            },
+            BASE_RECORD["trajectory"][3],
+            BASE_RECORD["trajectory"][4],
+        ],
+    }
+
+    perturbed = p2_mutate_argument_value(record, random.Random(0))
+
+    assert perturbed is not None
+    mutated = parse_tool_call(perturbed["trajectory"][2]["content"])
+    assert mutated is not None
+    assert mutated["arguments"]["background"] is False
+
+
 BASE_RECORD = {
     "id": "trace-1",
     "source_trace_id": "trace-1",
@@ -144,6 +193,51 @@ BASE_RECORD = {
     "anomaly_class": None,
     "bad_step": None,
 }
+
+
+def test_p3_prefers_removing_non_terminal_pair_when_available() -> None:
+    record = {
+        **BASE_RECORD,
+        "trajectory": [
+            {"role": "system", "content": "system"},
+            {"role": "user", "content": "find x"},
+            {
+                "role": "assistant",
+                "content": '<tool_call>{"name": "search_web", "arguments": {"query": "x"}}</tool_call>',
+            },
+            {
+                "role": "tool",
+                "content": '<tool_response>{"results": [{"title": "X found"}], "count": 1}</tool_response>',
+            },
+            {
+                "role": "assistant",
+                "content": '<tool_call>{"name": "read_file", "arguments": {"path": "report.md"}}</tool_call>',
+            },
+            {
+                "role": "tool",
+                "content": '<tool_response>{"content": "report details"}</tool_response>',
+            },
+            {"role": "assistant", "content": "Final answer based on both checks."},
+        ],
+    }
+
+    perturbed = p3_remove_step_pair(record, random.Random(0))
+
+    assert perturbed is not None
+    assert perturbed["bad_step"] == 2
+    assert perturbed["trajectory"][-1]["role"] == "assistant"
+    assert '<tool_call>{"name": "read_file"' in perturbed["trajectory"][2]["content"]
+
+
+def test_p3_returns_shortest_valid_skip_when_only_one_pair_exists() -> None:
+    perturbed = p3_remove_step_pair(BASE_RECORD, random.Random(0))
+
+    assert perturbed is not None
+    assert len(BASE_RECORD["trajectory"]) == 5
+    assert len(perturbed["trajectory"]) == 3
+    assert perturbed["bad_step"] == 2
+    assert [step["role"] for step in perturbed["trajectory"]] == ["system", "user", "assistant"]
+    assert perturbed["trajectory"][-1]["content"] == "I found one matching result for x."
 
 
 def test_validate_record_allows_missing_step_index_at_trajectory_end() -> None:

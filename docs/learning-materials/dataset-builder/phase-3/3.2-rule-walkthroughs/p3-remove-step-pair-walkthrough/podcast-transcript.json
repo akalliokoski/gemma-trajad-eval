@@ -1,0 +1,90 @@
+{
+  "duration_hint": "6 minutes",
+  "episode_slug": "phase-3_3.2-03_p3-remove-step-pair-walkthrough",
+  "generation_mode": "manual-canonical",
+  "hosts": {
+    "HOST_A": {
+      "default_emotion": 0.92,
+      "name": "Ava",
+      "podcastfy_speaker": "Person1",
+      "role": "curious guide"
+    },
+    "HOST_B": {
+      "default_emotion": 0.82,
+      "name": "Noah",
+      "podcastfy_speaker": "Person2",
+      "role": "technical explainer"
+    }
+  },
+  "show_slug": "projects/gemma-trajad-eval/dataset-builder/phase-3-perturbation-engine/3.2-rule-walkthroughs/p3-remove-step-pair-walkthrough",
+  "title": "P3 remove_step_pair walkthrough",
+  "turns": [
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.97,
+      "tags": [],
+      "text": "P3 looks simple at first glance. Just delete one assistant tool-call step and its tool response. But the walkthrough showed that the realism question is really about which pair you delete."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.89,
+      "tags": [],
+      "text": "Exactly. P3 is the remove step pair rule. It creates the skipped required step anomaly by removing one consecutive assistant tool call plus tool response pair from an otherwise normal trajectory."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.96,
+      "tags": [],
+      "text": "So unlike P1 or P2, nothing inside the surviving messages is mutated. The damage comes from a missing workflow dependency."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "Right. And the corpus pass put concrete numbers on that behavior. On the normalized Phase 2 snapshot, P3 applied to three thousand six hundred seventy nine records, and the minimum successful source trajectory length was five."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.99,
+      "tags": ["gasp"],
+      "text": "[gasp] That minimum case is neat because it is just system, user, assistant tool call, tool response, assistant answer. Remove the pair and you are left with the user followed by an answer that skipped the evidence step."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "And that also explains bad step. In P3, bad step points to where the removed assistant step used to begin. It marks a missing location, not a surviving corrupted message."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.98,
+      "tags": [],
+      "text": "The interesting implementation lesson came from longer traces, though. The old rule could delete a terminal pair even when earlier interior pairs were available."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.91,
+      "tags": [],
+      "text": "Yes, and that could leave the trajectory ending on a raw tool response, which looks more like a generic truncation artifact than a clean skipped-step anomaly. So the rule was tightened to prefer non-terminal pair removal when possible and only fall back to the single available pair when necessary."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.95,
+      "tags": [],
+      "text": "That is a subtle but important realism upgrade. The trajectory is still broken, but it is broken for the right reason: a dependency inside the workflow disappeared."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.89,
+      "tags": [],
+      "text": "Verification stayed tight. Two focused regression tests were added for the non-terminal preference and the shortest valid fallback case, and the full perturbations test file finished with fourteen passed."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.97,
+      "tags": [],
+      "text": "So the main lesson from P3 is this: for missing-step anomalies, realism depends less on whether you can delete a pair and more on whether you delete the pair that preserves the intended failure shape."
+    }
+  ],
+  "version": 1
+}

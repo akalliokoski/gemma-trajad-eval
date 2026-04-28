@@ -151,6 +151,51 @@ def _build_terminal_execute_code_args(args: dict[str, Any]) -> dict[str, Any]:
     return {"code": code}
 
 
+def _mutate_filename_like_value(value: str) -> str:
+    separators = ["/", "\\"]
+    split_at = max(value.rfind(sep) for sep in separators)
+    prefix = value[: split_at + 1] if split_at >= 0 else ""
+    leaf = value[split_at + 1 :] if split_at >= 0 else value
+
+    if not leaf:
+        return value + "-old"
+
+    if "." in leaf and not leaf.startswith("."):
+        stem, ext = leaf.rsplit(".", 1)
+        if stem:
+            return f"{prefix}{stem}-old.{ext}"
+
+    return f"{prefix}{leaf}-old"
+
+
+def _mutate_typo_like_string(value: str, rng: random.Random) -> str:
+    chars = list(value)
+    letter_indexes = [idx for idx, ch in enumerate(chars) if ch.isalpha()]
+    if len(letter_indexes) >= 2:
+        swap_start = rng.choice(letter_indexes[:-1])
+        for idx in range(swap_start, len(chars) - 1):
+            if chars[idx].isalpha() and chars[idx + 1].isalpha():
+                chars[idx], chars[idx + 1] = chars[idx + 1], chars[idx]
+                return "".join(chars)
+
+    if letter_indexes:
+        idx = letter_indexes[0]
+        chars[idx] = chars[idx] + "x"
+        return "".join(chars)
+
+    return value + "-old"
+
+
+def _mutate_string_argument_value(value: str, rng: random.Random) -> str:
+    if not value:
+        return "missing"
+
+    if any(marker in value for marker in ("/", "\\", ".", "*")):
+        return _mutate_filename_like_value(value)
+
+    return _mutate_typo_like_string(value, rng)
+
+
 def build_replacement_call(call: dict, replacement_name: str) -> dict:
     new_call = dict(call)
     args = _get_call_args(call)
@@ -251,13 +296,13 @@ def p2_mutate_argument_value(record: dict, rng: random.Random) -> dict | None:
     original = args[key]
 
     if isinstance(original, str):
-        mutated: Any = original + "_CORRUPTED"
+        mutated = _mutate_string_argument_value(original, rng)
+    elif isinstance(original, bool):
+        mutated = not original
     elif isinstance(original, int):
         mutated = original + rng.choice([-999, 999, -1, 1])
     elif isinstance(original, float):
         mutated = original * -1.0
-    elif isinstance(original, bool):
-        mutated = not original
     elif isinstance(original, list):
         mutated = []
     else:
@@ -296,7 +341,14 @@ def p3_remove_step_pair(record: dict, rng: random.Random) -> dict | None:
     if not pairs:
         return None
 
-    step_idx = rng.choice(pairs)
+    # Prefer removing a non-terminal tool step when possible so the anomalous
+    # trajectory still ends with an assistant message instead of a dangling tool
+    # response. That keeps the failure focused on the skipped step rather than on
+    # an obviously truncated ending.
+    non_terminal_pairs = [i for i in pairs if i + 2 < len(traj) - 1]
+    candidate_pairs = non_terminal_pairs or pairs
+
+    step_idx = rng.choice(candidate_pairs)
     out = copy.deepcopy(record)
     del out["trajectory"][step_idx : step_idx + 2]
 

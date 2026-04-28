@@ -1,0 +1,21 @@
+Ava: P3 looks simple at first glance. Just delete one assistant tool-call step and its tool response. But the walkthrough showed that the realism question is really about which pair you delete.
+
+Noah: Exactly. P3 is the remove step pair rule. It creates the skipped required step anomaly by removing one consecutive assistant tool call plus tool response pair from an otherwise normal trajectory.
+
+Ava: So unlike P1 or P2, nothing inside the surviving messages is mutated. The damage comes from a missing workflow dependency.
+
+Noah: Right. And the corpus pass put concrete numbers on that behavior. On the normalized Phase 2 snapshot, P3 applied to three thousand six hundred seventy nine records, and the minimum successful source trajectory length was five.
+
+Ava: [gasp] That minimum case is neat because it is just system, user, assistant tool call, tool response, assistant answer. Remove the pair and you are left with the user followed by an answer that skipped the evidence step.
+
+Noah: And that also explains bad step. In P3, bad step points to where the removed assistant step used to begin. It marks a missing location, not a surviving corrupted message.
+
+Ava: The interesting implementation lesson came from longer traces, though. The old rule could delete a terminal pair even when earlier interior pairs were available.
+
+Noah: Yes, and that could leave the trajectory ending on a raw tool response, which looks more like a generic truncation artifact than a clean skipped-step anomaly. So the rule was tightened to prefer non-terminal pair removal when possible and only fall back to the single available pair when necessary.
+
+Ava: That is a subtle but important realism upgrade. The trajectory is still broken, but it is broken for the right reason: a dependency inside the workflow disappeared.
+
+Noah: Verification stayed tight. Two focused regression tests were added for the non-terminal preference and the shortest valid fallback case, and the full perturbations test file finished with fourteen passed.
+
+Ava: So the main lesson from P3 is this: for missing-step anomalies, realism depends less on whether you can delete a pair and more on whether you delete the pair that preserves the intended failure shape.

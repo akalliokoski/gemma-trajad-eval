@@ -1,0 +1,23 @@
+Person1: [gasp] The second perturbation rule turned out to be a nice lesson in how realism can fail at the level of a single argument value.
+
+Person2: P2 is mutate argument value. Unlike P1, it keeps the same tool name and corrupts one argument inside the call. So the anomaly is narrower: same action category, wrong parameter.
+
+Person1: And the real string sample makes the design question obvious. A terminal command changed from ls -la to sl -la. That still looks like shell text, but it is now the wrong command.
+
+Person2: Exactly. That is much better than the old literal _CORRUPTED suffix. The old marker practically shouted that the data was synthetic. The new typo style still breaks behavior, but it looks like a plausible mistake.
+
+Person1: The integer sample was also clean. A read_file call that wanted offset 501 got mutated to -498. Same tool, same field, clearly wrong retrieval behavior.
+
+Person2: That is the good side of P2. But the walkthrough also found a real implementation bug. In Python, bool is a subclass of int, and the old code checked int before bool.
+
+Person1: [gasp] So a flag like background=true was not flipping to false. It was being mutated numerically into -998.
+
+Person2: Right, and that is a perfect example of a small branch-order detail creating a much more synthetic anomaly than intended. After the fix, the same kind of flag now mutates from true to false, which is exactly the failure mode that field should express.
+
+Person1: So the implementation cleanup was really two changes: handle bool before int, and replace explicit corrupted suffixes with type-aware string mutations.
+
+Person2: Yes. Path-like strings can become nearby wrong filenames, generic strings can become typo-like variants, booleans flip, and integers stay numeric but become bad values. The rule contract stays the same, but the outputs are easier to believe.
+
+Person1: Verification stayed tight too. Two focused regression tests were added for the string and boolean cases, and the full perturbations test file finished with 12 passed.
+
+Person2: That is the main lesson to keep from P2: if you want realistic bad tool arguments, you need to corrupt values in the way the field itself fails. Otherwise your synthetic dataset teaches the model to spot your generator instead of the anomaly.

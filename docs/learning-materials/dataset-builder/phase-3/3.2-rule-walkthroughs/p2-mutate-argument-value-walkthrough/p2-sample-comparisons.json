@@ -1,0 +1,70 @@
+{
+  "source_file": "data/interim/hermes_normalized_phase2.jsonl",
+  "selection_policy": "first seed=0 real-corpus example found for each mutated argument type after applying P2",
+  "samples": [
+    {
+      "mutation_type": "str",
+      "record_id": "trace_000000_var_00",
+      "tool": "terminal",
+      "bad_step": 8,
+      "arg_key": "command",
+      "before": "ls -la",
+      "after": "sl -la",
+      "validation_errors": [],
+      "assistant_before": "<think>\n I don't see any staging-specific deployment config files in the workspace. The user is asking about a deployment config we created in a past session, but I can't access the session database. Let me check if there might be config files elsewhere or ask the user for more details.\n\nLet me also check what's in the working directory more broadly.\n</think>\n<tool_call>\n{\"name\": \"terminal\", \"arguments\": {\"command\": \"ls -la\"}}\n</tool_call>",
+      "assistant_after": "<think>\n I don't see any staging-specific deployment config files in the workspace. The user is asking about a deployment config we created in a past session, but I can't access the session database. Let me check if there might be config files elsewhere or ask the user for more details.\n\nLet me also check what's in the working directory more broadly.\n</think>\n<tool_call>{\"name\": \"terminal\", \"arguments\": {\"command\": \"sl -la\"}}</tool_call>"
+    },
+    {
+      "mutation_type": "int",
+      "record_id": "trace_000001_var_00",
+      "tool": "read_file",
+      "bad_step": 8,
+      "arg_key": "offset",
+      "before": 501,
+      "after": -498,
+      "validation_errors": [],
+      "assistant_before": "<think>\n I can see the architecture now. Let me continue reading the graphql_endpoint.py file to see the full pattern, and also look at the existing data models to understand the structure better.\n</think>\n<tool_call>\n{\"name\": \"read_file\", \"arguments\": {\"path\": \"gateway/graphql_endpoint.py\", \"offset\": 501}}\n</tool_call>\n<tool_call>\n{\"name\": \"read_file\", \"arguments\": {\"path\": \"app/models.py\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"read_file\", \"arguments\": {\"path\": \"gateway/pagination_example.py\"}}\n</tool_call>",
+      "assistant_after": "<think>\n I can see the architecture now. Let me continue reading the graphql_endpoint.py file to see the full pattern, and also look at the existing data models to understand the structure better.\n</think>\n<tool_call>{\"name\": \"read_file\", \"arguments\": {\"path\": \"gateway/graphql_endpoint.py\", \"offset\": -498}}</tool_call>\n<tool_call>\n{\"name\": \"read_file\", \"arguments\": {\"path\": \"app/models.py\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"read_file\", \"arguments\": {\"path\": \"gateway/pagination_example.py\"}}\n</tool_call>"
+    },
+    {
+      "mutation_type": "list",
+      "record_id": "trace_000017_var_00",
+      "tool": "todo",
+      "bad_step": 14,
+      "arg_key": "todos",
+      "before": [
+        {
+          "id": "1",
+          "content": "Start build process in background using Makefile",
+          "status": "completed"
+        },
+        {
+          "id": "2",
+          "content": "Set up deployment configuration while build runs",
+          "status": "completed"
+        },
+        {
+          "id": "3",
+          "content": "Verify build output after completion",
+          "status": "in_progress"
+        }
+      ],
+      "after": [],
+      "validation_errors": [],
+      "assistant_before": "<think>\n The Docker build has completed successfully in the background. Now let me update the todo list and verify the build output. I should:\n1. Update the todo to show build is completed\n2. Verify the build output (check Docker images)\n3. Check the full build log for any issues\n\nLet me do that now.\n</think>\n  The Docker build completed successfully in the background. Now let me update the todo list and verify the build output:\n<tool_call>\n{\"name\": \"todo\", \"arguments\": {\"todos\": [{\"id\": \"1\", \"content\": \"Start build process in background using Makefile\", \"status\": \"completed\"}, {\"id\": \"2\", \"content\": \"Set up deployment configuration while build runs\", \"status\": \"completed\"}, {\"id\": \"3\", \"content\": \"Verify build output after completion\", \"status\": \"in_progress\"}]}}\n</tool_call>\n<tool_call>\n{\"name\": \"process\", \"arguments\": {\"action\": \"log\", \"session_id\": \"proc_1f82504f618e\"}}\n</tool_call>",
+      "assistant_after": "<think>\n The Docker build has completed successfully in the background. Now let me update the todo list and verify the build output. I should:\n1. Update the todo to show build is completed\n2. Verify the build output (check Docker images)\n3. Check the full build log for any issues\n\nLet me do that now.\n</think>\n  The Docker build completed successfully in the background. Now let me update the todo list and verify the build output:\n<tool_call>{\"name\": \"todo\", \"arguments\": {\"todos\": []}}</tool_call>\n<tool_call>\n{\"name\": \"process\", \"arguments\": {\"action\": \"log\", \"session_id\": \"proc_1f82504f618e\"}}\n</tool_call>"
+    },
+    {
+      "mutation_type": "bool",
+      "record_id": "trace_000060_var_00",
+      "tool": "terminal",
+      "bad_step": 8,
+      "arg_key": "background",
+      "before": true,
+      "after": false,
+      "validation_errors": [],
+      "assistant_before": "<think>\n Docker is available. Now I need to start the Docker build in the background. The Dockerfile expects a build step that runs `npm run build`, but I don't see a build script in the package.json. This might fail, but let me proceed with the demo and let the user know about this.\n\nActually, looking at the package.json, there's no \"build\" script defined. The Dockerfile will likely fail when it tries to run `npm run build`. Let me still start the build as a background process and let it run while I write documentation - that way we can see what happens and check the results.\n\nLet me start the Docker build in the background now.\n</think>\n  Docker is available. Now I'll start the Docker build as a **background process**, then write documentation while it runs.\n<tool_call>\n{\"name\": \"terminal\", \"arguments\": {\"command\": \"docker build -t hermes-agent:demo-build . 2>&1 & echo \\\"Background build started with PID: $!\\\"\", \"background\": true, \"check_interval\": 30}}\n</tool_call>",
+      "assistant_after": "<think>\n Docker is available. Now I need to start the Docker build in the background. The Dockerfile expects a build step that runs `npm run build`, but I don't see a build script in the package.json. This might fail, but let me proceed with the demo and let the user know about this.\n\nActually, looking at the package.json, there's no \"build\" script defined. The Dockerfile will likely fail when it tries to run `npm run build`. Let me still start the build as a background process and let it run while I write documentation - that way we can see what happens and check the results.\n\nLet me start the Docker build in the background now.\n</think>\n  Docker is available. Now I'll start the Docker build as a **background process**, then write documentation while it runs.\n<tool_call>{\"name\": \"terminal\", \"arguments\": {\"command\": \"docker build -t hermes-agent:demo-build . 2>&1 & echo \\\"Background build started with PID: $!\\\"\", \"background\": false, \"check_interval\": 30}}</tool_call>"
+    }
+  ]
+}

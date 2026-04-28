@@ -1,0 +1,96 @@
+{
+  "duration_hint": "6 minutes",
+  "episode_slug": "phase-3_3.2-02_p2-mutate-argument-value-walkthrough",
+  "generation_mode": "manual-canonical",
+  "hosts": {
+    "HOST_A": {
+      "default_emotion": 0.92,
+      "name": "Ava",
+      "podcastfy_speaker": "Person1",
+      "role": "curious guide"
+    },
+    "HOST_B": {
+      "default_emotion": 0.82,
+      "name": "Noah",
+      "podcastfy_speaker": "Person2",
+      "role": "technical explainer"
+    }
+  },
+  "show_slug": "projects/gemma-trajad-eval/dataset-builder/phase-3-perturbation-engine/3.2-rule-walkthroughs/p2-mutate-argument-value-walkthrough",
+  "title": "P2 mutate_argument_value walkthrough",
+  "turns": [
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.98,
+      "tags": ["gasp"],
+      "text": "[gasp] The second perturbation rule turned out to be a nice lesson in how realism can fail at the level of a single argument value."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.88,
+      "tags": [],
+      "text": "P2 is mutate argument value. Unlike P1, it keeps the same tool name and corrupts one argument inside the call. So the anomaly is narrower: same action category, wrong parameter." 
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.97,
+      "tags": [],
+      "text": "And the real string sample makes the design question obvious. A terminal command changed from ls dash l a to sl dash l a. That still looks like shell text, but it is now the wrong command." 
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "Exactly. That is much better than the old literal underscore corrupted suffix. The old marker practically shouted that the data was synthetic. The new typo style still breaks behavior, but it looks like a plausible mistake." 
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.95,
+      "tags": [],
+      "text": "The integer sample was also clean. A read file call that wanted offset five hundred one got mutated to negative four hundred ninety eight. Same tool, same field, clearly wrong retrieval behavior." 
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "That is the good side of P2. But the walkthrough also found a real implementation bug. In Python, bool is a subclass of int, and the old code checked int before bool." 
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 1.02,
+      "tags": ["gasp"],
+      "text": "[gasp] So a flag like background equals true was not flipping to false. It was being mutated numerically into negative nine hundred ninety eight." 
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "Right, and that is a perfect example of a small branch-order detail creating a much more synthetic anomaly than intended. After the fix, the same kind of flag now mutates from true to false, which is exactly the failure mode that field should express." 
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.96,
+      "tags": [],
+      "text": "So the implementation cleanup was really two changes: handle bool before int, and replace explicit corrupted suffixes with type-aware string mutations." 
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.88,
+      "tags": [],
+      "text": "Yes. Path-like strings can become nearby wrong filenames, generic strings can become typo-like variants, booleans flip, and integers stay numeric but become bad values. The rule contract stays the same, but the outputs are easier to believe." 
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.99,
+      "tags": [],
+      "text": "Verification stayed tight too. Two focused regression tests were added for the string and boolean cases, and the full perturbations test file finished with twelve passed." 
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.89,
+      "tags": [],
+      "text": "That is the main lesson to keep from P2: if you want realistic bad tool arguments, you need to corrupt values in the way the field itself fails. Otherwise your synthetic dataset teaches the model to spot your generator instead of the anomaly." 
+    }
+  ],
+  "version": 1
+}
