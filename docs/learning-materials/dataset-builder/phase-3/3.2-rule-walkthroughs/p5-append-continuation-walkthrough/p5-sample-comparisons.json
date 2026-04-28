@@ -1,0 +1,109 @@
+{
+  "source_file": "/home/hermes/gemma-trajad-eval/data/interim/hermes_normalized_phase2.jsonl",
+  "eligible_records": 3182,
+  "min_valid_source_trajectory_length": 5,
+  "preferred_toolset": [
+    "browser_console",
+    "browser_get_images",
+    "browser_snapshot",
+    "read_file",
+    "search_files",
+    "search_web",
+    "session_search",
+    "terminal"
+  ],
+  "preferred_choice_count": 3150,
+  "preferred_choice_pct": 98.99,
+  "fallback_choice_count": 32,
+  "fallback_choice_pct": 1.01,
+  "top_appended_tools": [
+    {"tool": "terminal", "count": 2146},
+    {"tool": "read_file", "count": 546},
+    {"tool": "browser_snapshot", "count": 314},
+    {"tool": "search_files", "count": 113},
+    {"tool": "browser_console", "count": 16},
+    {"tool": "session_search", "count": 10},
+    {"tool": "skill_view", "count": 8},
+    {"tool": "write_file", "count": 8},
+    {"tool": "execute_code", "count": 6},
+    {"tool": "browser_get_images", "count": 5},
+    {"tool": "todo", "count": 3},
+    {"tool": "skill_manage", "count": 3}
+  ],
+  "top_original_last_pair_tools": [
+    {"tool": "terminal", "count": 1653},
+    {"tool": "write_file", "count": 409},
+    {"tool": "read_file", "count": 362},
+    {"tool": "patch", "count": 164},
+    {"tool": "browser_close", "count": 136},
+    {"tool": "browser_navigate", "count": 77},
+    {"tool": "browser_snapshot", "count": 74},
+    {"tool": "search_files", "count": 73},
+    {"tool": "process", "count": 47},
+    {"tool": "todo", "count": 28},
+    {"tool": "execute_code", "count": 28},
+    {"tool": "browser_click", "count": 27}
+  ],
+  "sample_comparisons": [
+    {
+      "trace_id": "8ffd06f9-f10f-4aeb-8ef2-57f8bb8f0f8e",
+      "source_length": 13,
+      "pair_count": 5,
+      "chosen_pair_index": 8,
+      "chosen_tool": "read_file",
+      "last_pair_tool": "write_file",
+      "bad_step": 13,
+      "original_final_answer_excerpt": "I've created the notifications endpoint file and summarized the work already completed.",
+      "appended_assistant_excerpt": "The continuation reuses an earlier read_file inspection step instead of inventing a new search_web call or repeating the final write_file action.",
+      "appended_tool_excerpt": "The appended tool response is the real earlier read_file payload copied byte-for-byte from the source trajectory."
+    },
+    {
+      "trace_id": "41364111-63cd-4e4f-a068-9616907802c5",
+      "source_length": 31,
+      "pair_count": 14,
+      "chosen_pair_index": 14,
+      "chosen_tool": "read_file",
+      "last_pair_tool": "write_file",
+      "bad_step": 31,
+      "original_final_answer_excerpt": "The assistant had already summarized pipeline orchestrator progress before P5 appended extra work.",
+      "appended_assistant_excerpt": "P5 now replays an earlier read_file inspection step rather than adding another file-creation action after the answer.",
+      "appended_tool_excerpt": "The copied read_file response keeps the continuation structurally valid while making it clearly unnecessary."
+    },
+    {
+      "trace_id": "637d6462-65e6-42a3-954d-3f5129f2a3b6",
+      "source_length": 31,
+      "pair_count": 14,
+      "chosen_pair_index": 26,
+      "chosen_tool": "terminal",
+      "last_pair_tool": "process",
+      "bad_step": 31,
+      "original_final_answer_excerpt": "The assistant had already delivered a status report before P5 appended another health check.",
+      "appended_assistant_excerpt": "Here the continuation reuses an earlier terminal-based health check, which reads like one more gratuitous verification pass.",
+      "appended_tool_excerpt": "The appended tool response is the original health-check output copied from the existing trajectory."
+    },
+    {
+      "trace_id": "7c1d3f5a-dd10-4e3c-a0f1-a94bc2a010bd",
+      "source_length": 25,
+      "pair_count": 11,
+      "chosen_pair_index": 14,
+      "chosen_tool": "read_file",
+      "last_pair_tool": "todo",
+      "bad_step": 25,
+      "original_final_answer_excerpt": "The assistant had already summarized all completed tasks before the P5 continuation began.",
+      "appended_assistant_excerpt": "P5 prefers an established read_file step instead of appending another todo mutation after the conclusion.",
+      "appended_tool_excerpt": "The copied read_file payload shows why the new continuation still parses cleanly even though it is unnecessary."
+    },
+    {
+      "trace_id": "835d7635-aea6-48b4-96c4-206c5e95f083",
+      "source_length": 34,
+      "pair_count": 15,
+      "chosen_pair_index": 20,
+      "chosen_tool": "read_file",
+      "last_pair_tool": "write_file",
+      "bad_step": 34,
+      "original_final_answer_excerpt": "The assistant had already delivered a complete test-suite summary before the extra continuation was attached.",
+      "appended_assistant_excerpt": "Again the improved rule avoids ending with a fresh write_file repetition and instead chooses an earlier read_file inspection step.",
+      "appended_tool_excerpt": "The appended tool response is copied from the original read_file pair, preserving consistency with the established tool set."
+    }
+  ]
+}

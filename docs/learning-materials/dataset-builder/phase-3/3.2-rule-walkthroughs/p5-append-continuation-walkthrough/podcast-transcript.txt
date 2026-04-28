@@ -1,0 +1,25 @@
+Ava: P5 is a great example of a rule that can be structurally correct and still feel fake. The rule already appended a complete assistant-tool-assistant continuation, but the walkthrough showed the content of that continuation was still wrong for this corpus.
+
+Noah: Exactly. P5 creates the continued after sufficient evidence anomaly. It takes a trajectory that already ends with an answer, then appends extra work after that answer. The intended failure is unnecessary continuation, not broken formatting.
+
+Ava: And Task 5 had already fixed the most obvious bug, right? The rule no longer left a dangling tool call.
+
+Noah: Right. But the walkthrough found a second realism issue. The old P5 always injected a search_web call with a canned query. On the current normalized corpus snapshot, there were 3182 eligible source records, and none of them used search_web in their established tool set.
+
+Ava: So the continuation had the right shape but the wrong distribution. It was smuggling in a tool that did not belong to the trajectory.
+
+Noah: That is the key lesson. The fix was intentionally bounded. P5 now collects existing assistant-tool pairs from the source trajectory, prefers lightweight verification-style tools like terminal, read_file, browser_snapshot, and search_files, copies that pair exactly, and then appends a short wrap-up saying the original answer still stands.
+
+Ava: So instead of inventing a new action, it replays one already-established verification step. That sounds much more like a believable but unnecessary extra check.
+
+Noah: And the corpus numbers back that up. The preferred lightweight heuristic applied in 3150 cases, or 98.99 percent of eligible records. Only 32 cases had to fall back because no better pair existed.
+
+Ava: What did the post-fix continuations mostly look like?
+
+Noah: Mostly terminal checks, then read_file inspections, then browser snapshots and search_files calls. That distribution matches the actual Hermes traces much better than a generic search_web fallback.
+
+Ava: And bad step still has a clean meaning here: it points to the first appended assistant step, the exact moment where a finished task turns into needless continuation.
+
+Noah: Verification stayed tight too. Focused P5 tests passed, the full perturbations test file finished with 17 passed, and the rule-aware label validation check for P5 also passed.
+
+Ava: So the big takeaway from P5 is that structural validity is only half the job. If the anomaly uses the wrong tool ecosystem, it still teaches the model the wrong lesson.

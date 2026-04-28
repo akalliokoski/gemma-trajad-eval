@@ -297,10 +297,15 @@ For each rule, do all three steps in one session:
   - Infographic: [PNG](phase-3/3.2-rule-walkthroughs/p4-duplicate-tool-step-walkthrough/infographic.png)
   - Podcast: [local MP3](file:///data/audiobookshelf/podcasts/profiles/gemma/projects/gemma-trajad-eval/dataset-builder/phase-3-perturbation-engine/3.2-rule-walkthroughs/p4-duplicate-tool-step-walkthrough/phase-3_3.2-04_p4-duplicate-tool-step-walkthrough.mp3) · [Audiobookshelf UI](https://vps.taild96651.ts.net:13378/)
 
-- [ ] **P5: `append_continuation`** — continued_after_sufficient_evidence (~30 min)
-  - Apply P5. What fake tool call gets appended?
-  - Is the appended step realistic? Does the tool name exist in the trace's established tool set?
-  - What is `bad_step` set to? Verify it points to the correct step index.
+- [x] **P5: `append_continuation`** — continued_after_sufficient_evidence (~30 min)
+  - Real corpus walkthrough saved to [README](phase-3/3.2-rule-walkthroughs/p5-append-continuation-walkthrough/README.md) and [answers.md](phase-3/3.2-rule-walkthroughs/p5-append-continuation-walkthrough/answers.md); sampled before/after cases are in [p5-sample-comparisons.json](phase-3/3.2-rule-walkthroughs/p5-append-continuation-walkthrough/p5-sample-comparisons.json).
+  - Real corpus evidence: P5 applied to `3182` eligible records in `data/interim/hermes_normalized_phase2.jsonl`; the minimum valid source trajectory length was `5`.
+  - The old hard-coded `search_web` continuation was distributionally wrong for this corpus, because `3182 / 3182` eligible traces lacked prior `search_web` usage.
+  - Implementation fix discovered during the walkthrough: P5 now copies an established assistant/tool pair from the source trajectory and prefers lightweight verification-style tools such as `terminal`, `read_file`, `browser_snapshot`, and `search_files`; this preference applied in `3150 / 3182` cases (`98.99%`).
+  - `bad_step` is set to the first appended assistant step, so it marks the exact point where a complete answer turns into unnecessary continuation.
+  - Verified with `uv run --with pytest --no-project pytest tests/test_perturbations.py::test_p5_appends_existing_final_tool_pair_as_unnecessary_continuation tests/test_perturbations.py::test_p5_prefers_established_lightweight_verification_pair_when_mixed -v`, `uv run --with pytest --no-project pytest tests/test_perturbations.py -v`, and `uv run --with pytest --no-project pytest tests/test_validate_labels.py::test_validate_record_rejects_continuation_when_bad_step_skips_first_extra_step -v`.
+  - Infographic: [PNG](phase-3/3.2-rule-walkthroughs/p5-append-continuation-walkthrough/infographic.png)
+  - Podcast: [local MP3](file:///data/audiobookshelf/podcasts/profiles/gemma/projects/gemma-trajad-eval/dataset-builder/phase-3-perturbation-engine/3.2-rule-walkthroughs/p5-append-continuation-walkthrough/phase-3_3.2-05_p5-append-continuation-walkthrough.mp3) · [Audiobookshelf UI](https://vps.taild96651.ts.net:13378/)
 
 - [ ] **P6: `contradict_final_answer`** — contradicted_tool_result (~30 min)
   - Apply P6. How does it modify the final assistant message?
@@ -549,10 +554,10 @@ Create a `@pytest.fixture` called `sample_trajectory` that has:
   - Added a realism regression asserting that P4 prefers a simple one-call/one-response pair when a trace mixes simple and compound candidates.
   - Verified with `uv run --with pytest --no-project pytest tests/test_perturbations.py::test_p4_duplicates_pair_with_exact_content_and_marks_duplicate_step tests/test_perturbations.py::test_p4_prefers_single_call_pair_when_mixed_with_compound_pairs -v` and `uv run --with pytest --no-project pytest tests/test_perturbations.py -v`.
 
-- [ ] **Test P5 (`append_continuation`)** (~30 min)
-  - Test: output trajectory is longer than input by 2 steps
-  - Test: new last-2 steps contain a `<tool_call>` block
-  - Test: `bad_step` is len(original_trajectory)
+- [x] **Test P5 (`append_continuation`)** (~30 min)
+  - Added regression coverage in `tests/test_perturbations.py` proving that P5 appends an existing assistant/tool pair plus a wrap-up, preserves `bad_step = len(original_trajectory)`, and no longer invents an out-of-distribution continuation tool.
+  - Added a realism regression asserting that when a trace mixes a lightweight verification pair with a later side-effect-heavy pair, P5 prefers the established lightweight pair.
+  - Verified with `uv run --with pytest --no-project pytest tests/test_perturbations.py::test_p5_appends_existing_final_tool_pair_as_unnecessary_continuation tests/test_perturbations.py::test_p5_prefers_established_lightweight_verification_pair_when_mixed -v`, `uv run --with pytest --no-project pytest tests/test_perturbations.py -v`, and `uv run --with pytest --no-project pytest tests/test_validate_labels.py::test_validate_record_rejects_continuation_when_bad_step_skips_first_extra_step -v`.
 
 - [ ] **Test P6 (`contradict_final_answer`)** (~30 min)
   - Test: final assistant message is modified

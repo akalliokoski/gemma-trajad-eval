@@ -283,3 +283,17 @@
   - docs/learning-materials/dataset-builder/phase-3/3.2-rule-walkthroughs/p4-duplicate-tool-step-walkthrough/answers.md
 - Updated navigation:
   - index.md
+
+## [2026-04-28] query | Dataset-builder P5 append_continuation walkthrough recorded
+- Added raw research snapshot:
+  - raw/transcripts/p5-append-continuation-walkthrough-2026-04-28.md
+- Added durable query page:
+  - queries/dataset-builder-p5-append-continuation-2026-04-28.md
+- Source documents updated:
+  - dataset_builder/perturbations.py
+  - tests/test_perturbations.py
+  - docs/learning-materials/dataset-builder/dataset_builder_learning_plan.md
+  - docs/learning-materials/dataset-builder/phase-3/3.2-rule-walkthroughs/p5-append-continuation-walkthrough/README.md
+  - docs/learning-materials/dataset-builder/phase-3/3.2-rule-walkthroughs/p5-append-continuation-walkthrough/answers.md
+- Updated navigation:
+  - index.md

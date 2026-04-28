@@ -1,0 +1,102 @@
+{
+  "duration_hint": "6 minutes",
+  "episode_slug": "phase-3_3.2-05_p5-append-continuation-walkthrough",
+  "generation_mode": "manual-canonical",
+  "hosts": {
+    "HOST_A": {
+      "default_emotion": 0.92,
+      "name": "Ava",
+      "podcastfy_speaker": "Person1",
+      "role": "curious guide"
+    },
+    "HOST_B": {
+      "default_emotion": 0.82,
+      "name": "Noah",
+      "podcastfy_speaker": "Person2",
+      "role": "technical explainer"
+    }
+  },
+  "show_slug": "projects/gemma-trajad-eval/dataset-builder/phase-3-perturbation-engine/3.2-rule-walkthroughs/p5-append-continuation-walkthrough",
+  "title": "P5 append_continuation walkthrough",
+  "turns": [
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.97,
+      "tags": [],
+      "text": "P5 is a great example of a rule that can be structurally correct and still feel fake. The rule already appended a complete assistant-tool-assistant continuation, but the walkthrough showed the content of that continuation was still wrong for this corpus."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "Exactly. P5 creates the continued after sufficient evidence anomaly. It takes a trajectory that already ends with an answer, then appends extra work after that answer. The intended failure is unnecessary continuation, not broken formatting."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.96,
+      "tags": [],
+      "text": "And Task 5 had already fixed the most obvious bug, right? The rule no longer left a dangling tool call."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "Right. But the walkthrough found a second realism issue. The old P5 always injected a search_web call with a canned query. On the current normalized corpus snapshot, there were three thousand one hundred eighty two eligible source records, and none of them used search_web in their established tool set."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.98,
+      "tags": ["gasp"],
+      "text": "[gasp] So the continuation had the right shape but the wrong distribution. It was smuggling in a tool that did not belong to the trajectory."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.91,
+      "tags": [],
+      "text": "That is the key lesson. The fix was intentionally bounded. P5 now collects existing assistant-tool pairs from the source trajectory, prefers lightweight verification-style tools like terminal, read_file, browser_snapshot, and search_files, copies that pair exactly, and then appends a short wrap-up saying the original answer still stands."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.96,
+      "tags": [],
+      "text": "So instead of inventing a new action, it replays one already-established verification step. That sounds much more like a believable but unnecessary extra check."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "And the corpus numbers back that up. The preferred lightweight heuristic applied in three thousand one hundred fifty cases, or ninety eight point nine nine percent of eligible records. Only thirty two cases had to fall back because no better pair existed."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.95,
+      "tags": [],
+      "text": "What did the post-fix continuations mostly look like?"
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.89,
+      "tags": [],
+      "text": "Mostly terminal checks, then read_file inspections, then browser snapshots and search_files calls. That distribution matches the actual Hermes traces much better than a generic search_web fallback."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.97,
+      "tags": [],
+      "text": "And bad step still has a clean meaning here: it points to the first appended assistant step, the exact moment where a finished task turns into needless continuation."
+    },
+    {
+      "speaker": "HOST_B",
+      "emotion": 0.9,
+      "tags": [],
+      "text": "Verification stayed tight too. Focused P5 tests passed, the full perturbations test file finished with seventeen passed, and the rule-aware label validation check for P5 also passed."
+    },
+    {
+      "speaker": "HOST_A",
+      "emotion": 0.98,
+      "tags": [],
+      "text": "So the big takeaway from P5 is that structural validity is only half the job. If the anomaly uses the wrong tool ecosystem, it still teaches the model the wrong lesson."
+    }
+  ],
+  "version": 1
+}

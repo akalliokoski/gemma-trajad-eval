@@ -317,7 +317,7 @@ def test_p4_prefers_single_call_pair_when_mixed_with_compound_pairs() -> None:
     assert perturbed["trajectory"][3]["content"] == record["trajectory"][3]["content"]
 
 
-def test_p5_appends_structurally_complete_extra_continuation() -> None:
+def test_p5_appends_existing_final_tool_pair_as_unnecessary_continuation() -> None:
     perturbed = p5_append_continuation(BASE_RECORD, random.Random(0))
 
     assert perturbed is not None
@@ -325,12 +325,48 @@ def test_p5_appends_structurally_complete_extra_continuation() -> None:
     assert perturbed["bad_step"] == len(BASE_RECORD["trajectory"])
     extra_steps = perturbed["trajectory"][-3:]
     assert [step["role"] for step in extra_steps] == ["assistant", "tool", "assistant"]
-    assert "<tool_call>" in extra_steps[0]["content"]
-    assert "<tool_response>" in extra_steps[1]["content"]
-    assert "<tool_call>" not in extra_steps[2]["content"]
+    assert extra_steps[0]["content"] == BASE_RECORD["trajectory"][2]["content"]
+    assert extra_steps[1]["content"] == BASE_RECORD["trajectory"][3]["content"]
+    assert "previous answer stands" in extra_steps[2]["content"].lower()
     perturbed["anomaly_class"] = ANOMALY_TYPE_TO_CLASS[perturbed["anomaly_type"]]
     assert validate_record(perturbed, 0) == []
     assert is_plausible_trajectory(perturbed) == (True, None)
+
+
+def test_p5_prefers_established_lightweight_verification_pair_when_mixed() -> None:
+    record = {
+        **BASE_RECORD,
+        "trajectory": [
+            {"role": "system", "content": "system"},
+            {"role": "user", "content": "inspect repo"},
+            {
+                "role": "assistant",
+                "content": '<tool_call>{"name": "terminal", "arguments": {"command": "git status --short"}}</tool_call>',
+            },
+            {
+                "role": "tool",
+                "content": '<tool_response>{"output": ""}</tool_response>',
+            },
+            {
+                "role": "assistant",
+                "content": '<tool_call>{"name": "write_file", "arguments": {"path": "notes.md", "content": "saved"}}</tool_call>',
+            },
+            {
+                "role": "tool",
+                "content": '<tool_response>{"bytes_written": 5}</tool_response>',
+            },
+            {"role": "assistant", "content": "Everything needed for the answer is already clear."},
+        ],
+    }
+
+    perturbed = p5_append_continuation(record, random.Random(0))
+
+    assert perturbed is not None
+    extra_steps = perturbed["trajectory"][-3:]
+    assert extra_steps[0]["content"] == record["trajectory"][2]["content"]
+    assert extra_steps[1]["content"] == record["trajectory"][3]["content"]
+    assert '"name": "write_file"' not in extra_steps[0]["content"]
+    assert '"name": "search_web"' not in extra_steps[0]["content"]
 
 
 def test_p6_contradicts_tool_result_without_bracketed_marker() -> None:

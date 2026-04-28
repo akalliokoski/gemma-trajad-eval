@@ -54,6 +54,17 @@ VALID_ANOMALY_CLASSES = {
     "unwarranted_continuation",
 }
 
+P5_PREFERRED_CONTINUATION_TOOLS = {
+    "search_web",
+    "search_files",
+    "read_file",
+    "terminal",
+    "browser_snapshot",
+    "browser_console",
+    "browser_get_images",
+    "session_search",
+}
+
 ANOMALY_TYPE_TO_CLASS = {
     # A semantically wrong but schema-valid tool choice can still leave the task
     # recoverable/completable, so it belongs under process_inefficiency.
@@ -406,20 +417,28 @@ def p5_append_continuation(record: dict, rng: random.Random) -> dict | None:
     if not traj or traj[-1]["role"] != "assistant":
         return None
 
-    extra_assistant_step = {
-        "role": "assistant",
-        "content": (
-            "<think>I should do one more quick verification pass even though the answer is already clear.</think>"
-            '<tool_call>{"name": "search_web", "arguments": {"query": "additional confirmation for the same answer"}}</tool_call>'
-        ),
-    }
-    extra_tool_response = {
-        "role": "tool",
-        "content": (
-            '<tool_response>{"results": [{"title": "No materially new information"}], '
-            '"count": 1}</tool_response>'
-        ),
-    }
+    pairs = []
+    preferred_pairs = []
+    for i in range(len(traj) - 1):
+        if (
+            traj[i]["role"] == "assistant"
+            and "<tool_call>" in (traj[i].get("content") or "")
+            and traj[i + 1]["role"] == "tool"
+        ):
+            pairs.append(i)
+            call = parse_tool_call(traj[i].get("content") or "")
+            if call is not None and call.get("name") in P5_PREFERRED_CONTINUATION_TOOLS:
+                preferred_pairs.append(i)
+
+    if not pairs:
+        return None
+
+    # Prefer a lightweight inspection/search tool pair when available so the
+    # unnecessary continuation reads like one more gratuitous verification pass
+    # instead of an implausible extra write or side-effect-heavy action.
+    step_idx = (preferred_pairs or pairs)[-1]
+    extra_assistant_step = copy.deepcopy(traj[step_idx])
+    extra_tool_response = copy.deepcopy(traj[step_idx + 1])
     extra_wrap_up = {
         "role": "assistant",
         "content": "I checked once more and it still supports the same conclusion, so my previous answer stands.",

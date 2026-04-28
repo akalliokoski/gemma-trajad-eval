@@ -1,7 +1,7 @@
 # Wiki Index
 
 > Content catalog for the project wiki.
-> Last updated: 2026-04-28 | Total pages: 31
+> Last updated: 2026-04-28 | Total pages: 32
 
 ## Entities
 - [[gemma]] - Model family anchoring the project's local-first fine-tuning direction.
@@ -39,5 +39,6 @@
 - [[dataset-builder-p2-mutate-argument-value-2026-04-28]] - Durable answer describing why type-aware value corruption and the bool-before-int fix both matter for believable P2 bad-tool-arguments anomalies.
 - [[dataset-builder-p3-remove-step-pair-2026-04-28]] - Durable answer describing why P3 now prefers non-terminal pair removal so skipped-step anomalies look like missing workflow dependencies instead of generic truncations.
 - [[dataset-builder-p4-duplicate-tool-step-2026-04-28]] - Durable answer describing why P4 now prefers simple one-call/one-response duplication when a trace mixes simple and compound repeated-step candidates.
+- [[dataset-builder-p5-append-continuation-2026-04-28]] - Durable answer describing why P5 now reuses an established lightweight verification pair instead of inventing a hard-coded out-of-distribution continuation tool.
 - [[dataset-builder-perturbation-diagnostics-script-2026-04-27]] - Durable answer describing how the new rule-by-rule diagnostics script established P1 as the clear remaining coverage bottleneck in the normalized corpus.
 - [[interactive-trajectory-explorer-first-slice-2026-04-27]] - Durable answer describing the first static visualization slice, its payload exporter, and how it connects trajectories to later training and evaluation work.
