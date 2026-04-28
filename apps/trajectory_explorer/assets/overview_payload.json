@@ -1,0 +1,114 @@
+{
+  "generated_at": "2026-04-27T10:14:10.336168Z",
+  "project": {
+    "name": "gemma-trajad-eval",
+    "tagline": "Hermes-first trajectory anomaly engineering lab",
+    "reference_visualization": {
+      "github": "https://github.com/ArkAung/interactive-turboquant",
+      "live_demo": "https://arkaung.github.io/interactive-turboquant/"
+    }
+  },
+  "counts": {
+    "raw_traces": 3679,
+    "processed_examples": 71429,
+    "normal_examples": 7358,
+    "anomalous_examples": 64071,
+    "train": 53557,
+    "dev": 7154,
+    "test": 10718
+  },
+  "anomaly_class_distribution": [
+    {
+      "id": "process_inefficiency",
+      "count": 14716
+    },
+    {
+      "id": "task_failure",
+      "count": 42991
+    },
+    {
+      "id": "unwarranted_continuation",
+      "count": 6364
+    }
+  ],
+  "taxonomy": [
+    {
+      "id": "wrong_tool_choice",
+      "label": "Wrong Tool Choice",
+      "anomaly_class": "process_inefficiency",
+      "count": 7358
+    },
+    {
+      "id": "bad_tool_arguments",
+      "label": "Bad Tool Arguments",
+      "anomaly_class": "task_failure",
+      "count": 7279
+    },
+    {
+      "id": "skipped_required_step",
+      "label": "Skipped Required Step",
+      "anomaly_class": "task_failure",
+      "count": 14674
+    },
+    {
+      "id": "repeated_step",
+      "label": "Repeated Step",
+      "anomaly_class": "process_inefficiency",
+      "count": 7358
+    },
+    {
+      "id": "premature_final_answer",
+      "label": "Premature Final Answer",
+      "anomaly_class": "task_failure",
+      "count": 7316
+    },
+    {
+      "id": "continued_after_sufficient_evidence",
+      "label": "Continued After Sufficient Evidence",
+      "anomaly_class": "unwarranted_continuation",
+      "count": 6364
+    },
+    {
+      "id": "contradicted_tool_result",
+      "label": "Contradicted Tool Result",
+      "anomaly_class": "task_failure",
+      "count": 6364
+    },
+    {
+      "id": "hallucinated_tool",
+      "label": "Hallucinated Tool",
+      "anomaly_class": "task_failure",
+      "count": 0
+    },
+    {
+      "id": "invalid_tool_json",
+      "label": "Invalid Tool JSON",
+      "anomaly_class": "task_failure",
+      "count": 7358
+    },
+    {
+      "id": "unnecessary_replanning",
+      "label": "Unnecessary Replanning",
+      "anomaly_class": "process_inefficiency",
+      "count": 0
+    }
+  ],
+  "taxonomy_mode": "observed-from-processed-all-jsonl",
+  "execution_topology": [
+    {
+      "node": "vps",
+      "role": "control-plane",
+      "summary": "Hermes planning, docs, orchestration, and lightweight automation"
+    },
+    {
+      "node": "apple-silicon-mac",
+      "role": "bounded-compute-worker",
+      "summary": "Preferred small/medium fine-tuning and local validation tier"
+    },
+    {
+      "node": "modal",
+      "role": "future-heavy-gpu-tier",
+      "summary": "Deferred destination for truly heavy training or inference jobs"
+    }
+  ]
+}

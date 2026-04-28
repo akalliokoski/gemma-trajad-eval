@@ -1,0 +1,212 @@
+{
+  "split_counts": {
+    "train": 53557,
+    "dev": 7154,
+    "test": 10718
+  },
+  "normal_examples": 7358,
+  "anomalous_examples": 64071,
+  "anomaly_type_distribution": [
+    {
+      "id": "wrong_tool_choice",
+      "label": "Wrong Tool Choice",
+      "anomaly_class": "process_inefficiency",
+      "count": 7358
+    },
+    {
+      "id": "bad_tool_arguments",
+      "label": "Bad Tool Arguments",
+      "anomaly_class": "task_failure",
+      "count": 7279
+    },
+    {
+      "id": "skipped_required_step",
+      "label": "Skipped Required Step",
+      "anomaly_class": "task_failure",
+      "count": 14674
+    },
+    {
+      "id": "repeated_step",
+      "label": "Repeated Step",
+      "anomaly_class": "process_inefficiency",
+      "count": 7358
+    },
+    {
+      "id": "premature_final_answer",
+      "label": "Premature Final Answer",
+      "anomaly_class": "task_failure",
+      "count": 7316
+    },
+    {
+      "id": "continued_after_sufficient_evidence",
+      "label": "Continued After Sufficient Evidence",
+      "anomaly_class": "unwarranted_continuation",
+      "count": 6364
+    },
+    {
+      "id": "contradicted_tool_result",
+      "label": "Contradicted Tool Result",
+      "anomaly_class": "task_failure",
+      "count": 6364
+    },
+    {
+      "id": "hallucinated_tool",
+      "label": "Hallucinated Tool",
+      "anomaly_class": "task_failure",
+      "count": 0
+    },
+    {
+      "id": "invalid_tool_json",
+      "label": "Invalid Tool JSON",
+      "anomaly_class": "task_failure",
+      "count": 7358
+    },
+    {
+      "id": "unnecessary_replanning",
+      "label": "Unnecessary Replanning",
+      "anomaly_class": "process_inefficiency",
+      "count": 0
+    }
+  ],
+  "anomaly_type_distribution_mode": "observed-from-processed-all-jsonl",
+  "perturbation_rules": [
+    {
+      "eligible": 3679,
+      "failed": 509,
+      "failure_examples": [
+        {
+          "id": "trace_000007_var_00",
+          "source_trace_id": "930977e3-cb4e-4bcd-8218-c717389c4c14",
+          "tool_name": "clarify"
+        },
+        {
+          "id": "trace_000008_var_00",
+          "source_trace_id": "e0faf24b-e135-412f-b89d-c90b263e677b",
+          "tool_name": "session_search"
+        },
+        {
+          "id": "trace_000009_var_00",
+          "source_trace_id": "66890ddc-faa5-4ca2-9f80-f751e2f8eed3",
+          "tool_name": "terminal"
+        },
+        {
+          "id": "trace_000011_var_00",
+          "source_trace_id": "19be0b4f-b8d3-48f9-af88-6d22eda39812",
+          "tool_name": "skills_list"
+        },
+        {
+          "id": "trace_000016_var_00",
+          "source_trace_id": "268a8715-aca4-4edd-908c-60feff040be7",
+          "tool_name": "execute_code"
+        }
+      ],
+      "ineligible": 0,
+      "rule_name": "p1_replace_tool_choice",
+      "succeeded": 3170,
+      "success_rate": 0.8616
+    },
+    {
+      "eligible": 3678,
+      "failed": 32,
+      "failure_examples": [
+        {
+          "id": "trace_000069_var_00",
+          "source_trace_id": "ad251fb7-3f10-442e-b23d-5053d0668786",
+          "tool_name": "todo"
+        },
+        {
+          "id": "trace_000102_var_00",
+          "source_trace_id": "b6097761-c1fb-4954-b269-8e29037d73fb",
+          "tool_name": "skills_list"
+        },
+        {
+          "id": "trace_000107_var_00",
+          "source_trace_id": "deca8b65-9862-4948-a034-cd9ded553977",
+          "tool_name": "skills_list"
+        },
+        {
+          "id": "trace_000163_var_00",
+          "source_trace_id": "c4915afa-ef10-4ea0-bcd1-378f89f436ec",
+          "tool_name": "session_search"
+        },
+        {
+          "id": "trace_000166_var_00",
+          "source_trace_id": "f0b0a404-bc8b-4c89-ae77-31ecb67c8cc5",
+          "tool_name": "todo"
+        }
+      ],
+      "ineligible": 1,
+      "rule_name": "p2_mutate_argument_value",
+      "succeeded": 3646,
+      "success_rate": 0.9913
+    },
+    {
+      "eligible": 3679,
+      "failed": 0,
+      "failure_examples": [],
+      "ineligible": 0,
+      "rule_name": "p3_remove_step_pair",
+      "succeeded": 3679,
+      "success_rate": 1.0
+    },
+    {
+      "eligible": 3679,
+      "failed": 0,
+      "failure_examples": [],
+      "ineligible": 0,
+      "rule_name": "p4_duplicate_tool_step",
+      "succeeded": 3679,
+      "success_rate": 1.0
+    },
+    {
+      "eligible": 3182,
+      "failed": 0,
+      "failure_examples": [],
+      "ineligible": 497,
+      "rule_name": "p5_append_continuation",
+      "succeeded": 3182,
+      "success_rate": 1.0
+    },
+    {
+      "eligible": 3182,
+      "failed": 0,
+      "failure_examples": [],
+      "ineligible": 497,
+      "rule_name": "p6_contradict_final_answer",
+      "succeeded": 3182,
+      "success_rate": 1.0
+    },
+    {
+      "eligible": 3658,
+      "failed": 0,
+      "failure_examples": [],
+      "ineligible": 21,
+      "rule_name": "p7_truncate_before_decision",
+      "succeeded": 3658,
+      "success_rate": 1.0
+    },
+    {
+      "eligible": 3658,
+      "failed": 0,
+      "failure_examples": [],
+      "ineligible": 21,
+      "rule_name": "p8_swap_dependent_steps",
+      "succeeded": 3658,
+      "success_rate": 1.0
+    },
+    {
+      "eligible": 3679,
+      "failed": 0,
+      "failure_examples": [],
+      "ineligible": 0,
+      "rule_name": "p9_invalid_tool_json",
+      "succeeded": 3679,
+      "success_rate": 1.0
+    }
+  ],
+  "reported_runs": [],
+  "notes": [
+    "Anomaly-type counts are measured from data/processed/all.jsonl and cover the full currently exported taxonomy.",
+    "No evaluation report JSON artifacts are committed yet, so this panel emphasizes measured dataset distributions and rule coverage rather than model metrics."
+  ]
+}

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trajectory Explorer — gemma-trajad-eval</title>
+  <style>
+    :root {
+      --bg: #020617;
+      --panel: rgba(15, 23, 42, 0.94);
+      --panel-soft: rgba(15, 23, 42, 0.72);
+      --border: #1e293b;
+      --text: #e5eefb;
+      --muted: #94a3b8;
+      --accent: #22d3ee;
+      --accent-2: #34d399;
+      --accent-3: #a78bfa;
+      --warn: #fbbf24;
+      --danger: #fb7185;
+      --grid: rgba(51, 65, 85, 0.45);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(34,211,238,.08), transparent 35%),
+        linear-gradient(rgba(2,6,23,.96), rgba(2,6,23,.98)),
+        linear-gradient(to right, var(--grid) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+      background-size: auto, auto, 40px 40px, 40px 40px;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(148, 163, 184, 0.03) 0,
+        rgba(148, 163, 184, 0.03) 1px,
+        transparent 1px,
+        transparent 4px
+      );
+      opacity: 0.18;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: 24px;
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 12px 0;
+      align-self: start;
+    }
+
+    .sidebar-card,
+    .card {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      border-radius: 18px;
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sidebar-card {
+      padding: 18px;
+    }
+
+    .sidebar-card::before,
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border: 1px solid rgba(34, 211, 238, 0.08);
+      pointer-events: none;
+      border-radius: inherit;
+    }
+
+    .sidebar h1 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      line-height: 1.2;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 16px rgba(34, 211, 238, 0.8);
+    }
+
+    .sidebar p,
+    .card p,
+    .card li,
+    .meta,
+    .empty-state {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    nav a {
+      display: block;
+      color: var(--text);
+      text-decoration: none;
+      padding: 10px 12px;
+      border-radius: 12px;
+      margin-top: 8px;
+      border: 1px solid transparent;
+      background: transparent;
+      font-size: 14px;
+    }
+
+    nav a:hover {
+      border-color: var(--border);
+      background: rgba(15, 23, 42, 0.72);
+    }
+
+    .main {
+      display: grid;
+      gap: 18px;
+      padding-bottom: 40px;
+    }
+
+    .hero {
+      padding: 26px;
+    }
+
+    .hero h2 {
+      margin: 0;
+      font-size: 42px;
+      line-height: 1.05;
+    }
+
+    .hero-subtitle {
+      max-width: 900px;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.55;
+    }
+
+    .pill-row,
+    .stats-grid,
+    .mini-grid,
+    .stack,
+    .task-mode-grid,
+    .rule-grid,
+    .message-grid,
+    .detail-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .pill-row {
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      margin-top: 18px;
+    }
+
+    .pill,
+    .stat,
+    .mini,
+    .message-card,
+    .detail-card,
+    .rule-card,
+    .note-card,
+    .task-card {
+      border: 1px solid var(--border);
+      background: var(--panel-soft);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .stats-grid {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      margin-top: 18px;
+    }
+
+    .stat strong,
+    .metric-value,
+    .message-index,
+    .stage-title,
+    .task-title {
+      display: block;
+      color: var(--accent);
+      font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+
+    .section {
+      padding: 22px;
+    }
+
+    .section h3 {
+      margin: 0 0 12px;
+      font-size: 22px;
+    }
+
+    .two-col,
+    .three-col {
+      display: grid;
+      gap: 14px;
+    }
+
+    .two-col { grid-template-columns: 1.2fr 0.8fr; }
+    .three-col { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .stage {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      background: var(--panel-soft);
+      min-height: 130px;
+    }
+
+    .stage small,
+    .label,
+    .message-meta,
+    .stage pre,
+    .task-card code,
+    .note-card code,
+    .detail-card code {
+      font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+    }
+
+    .stage pre,
+    .detail-card pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: var(--text);
+      font-size: 12px;
+      margin: 8px 0 0;
+    }
+
+    .label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--muted);
+      background: rgba(15, 23, 42, 0.7);
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+
+    .trajectory-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    button.selector {
+      cursor: pointer;
+      color: var(--text);
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 13px;
+    }
+
+    button.selector.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.18) inset;
+      color: var(--accent);
+    }
+
+    canvas {
+      width: 100%;
+      display: block;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(2, 6, 23, 0.92);
+    }
+
+    .message-grid,
+    .detail-grid,
+    .task-mode-grid,
+    .rule-grid {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .message-card.active,
+    .detail-card.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.18) inset;
+    }
+
+    .message-index {
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .message-meta {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    .role-system { color: var(--warn); }
+    .role-user { color: var(--accent); }
+    .role-assistant { color: var(--accent-2); }
+    .role-tool { color: var(--accent-3); }
+
+    .footer-note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 12px;
+    }
+
+    a.inline-link {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    @media (max-width: 1180px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        position: relative;
+        height: auto;
+      }
+      .two-col,
+      .three-col,
+      .pipeline {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <div class="eyebrow">Visualization slice</div>
+        <h1>Trajectory Explorer</h1>
+        <p>TurboQuant-style static explainer for the gemma-trajad-eval project.</p>
+        <nav>
+          <a href="#overview">Overview</a>
+          <a href="#trajectory-explorer">Trajectory explorer</a>
+          <a href="#dataset-summary">Dataset summary</a>
+          <a href="#training-lifecycle">Training lifecycle</a>
+          <a href="#evaluation-summary">Evaluation summary</a>
+        </nav>
+      </div>
+    </aside>
+
+    <main class="main">
+      <section id="overview" class="card hero">
+        <div class="eyebrow">Hermes-first visual system</div>
+        <h2>gemma-trajad-eval trajectory explorer</h2>
+        <p class="hero-subtitle">
+          A first visualization slice inspired by
+          <a class="inline-link" href="https://github.com/ArkAung/interactive-turboquant">interactive-turboquant</a>.
+          It explains the path from Hermes traces to perturbation-driven datasets, SFT formatting, future fine-tuning, and evaluation.
+        </p>
+        <div id="hero-pills" class="pill-row"></div>
+        <div id="hero-stats" class="stats-grid"></div>
+      </section>
+
+      <section class="card section">
+        <h3>Project pipeline</h3>
+        <p class="meta">The repo behaves like a pipeline, not just a script collection. This first slice keeps the flow visible even before heavy training artifacts are committed.</p>
+        <div class="pipeline" id="pipeline-overview"></div>
+      </section>
+
+      <section id="trajectory-explorer" class="card section">
+        <h3>Trajectory explorer</h3>
+        <p class="meta">Switch between one normal and one anomalous sample. The canvas highlights the exported message window and the anomalous sample's `bad_step`.</p>
+        <div id="trajectory-controls" class="trajectory-controls"></div>
+        <div class="two-col">
+          <div class="stack">
+            <canvas id="trajectory-canvas" width="1100" height="240"></canvas>
+            <div id="trajectory-badges"></div>
+            <div id="localization-summary" class="detail-card"></div>
+            <div id="localization-strip" class="message-grid"></div>
+            <div id="trajectory-messages" class="message-grid"></div>
+          </div>
+          <div class="stack">
+            <div id="trajectory-detail" class="detail-card"></div>
+            <div id="source-pair-detail" class="detail-card"></div>
+            <div id="source-pair-grid" class="message-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="dataset-summary" class="card section">
+        <h3>Dataset summary</h3>
+        <p class="meta">These counts come from exported repo data, not handwritten constants. Taxonomy cards now show measured anomaly counts from <code>data/processed/all.jsonl</code>.</p>
+        <div id="dataset-stats" class="stats-grid"></div>
+        <div class="two-col">
+          <div>
+            <h4>Observed anomaly taxonomy</h4>
+            <div id="taxonomy-status" class="detail-card"></div>
+            <div id="taxonomy-grid" class="rule-grid"></div>
+          </div>
+          <div>
+            <h4>Perturbation coverage</h4>
+            <div id="rule-coverage" class="rule-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="training-lifecycle" class="card section">
+        <h3>Fine-tuning lifecycle</h3>
+        <p class="meta">The later project stages are included in this first slice as a concrete lifecycle: processed dataset → SFT formatting → adapter training → evaluation.</p>
+        <div id="training-stages" class="three-col"></div>
+        <h4>Task modes</h4>
+        <div id="task-modes" class="task-mode-grid"></div>
+        <div id="training-notes" class="stack"></div>
+      </section>
+
+      <section id="evaluation-summary" class="card section">
+        <h3>Evaluation summary</h3>
+        <p class="meta">Current committed truth is strongest on measured dataset distributions and perturbation diagnostics. Future run-report metrics can plug into the same section later.</p>
+        <div id="evaluation-stats" class="stats-grid"></div>
+        <div class="two-col">
+          <div>
+            <h4>Observed anomaly type distribution</h4>
+            <div id="anomaly-type-grid" class="rule-grid"></div>
+          </div>
+          <div>
+            <h4>Status notes</h4>
+            <div id="evaluation-notes" class="stack"></div>
+          </div>
+        </div>
+        <p class="footer-note">Payloads are generated into <code>apps/trajectory_explorer/assets/</code> and bundled into <code>payload_bundle.js</code> for static local viewing.</p>
+      </section>
+    </main>
+  </div>
+
+  <script src="assets/payload_bundle.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -235,3 +235,9 @@
   - docs/learning-materials/dataset-builder/phase-3/3.3-perturbation-diagnostics/rule-diagnostics-script/answers.md
 - Updated navigation:
   - index.md
+
+## [2026-04-27] query | Interactive trajectory explorer first slice recorded
+- Added durable query page:
+  - queries/interactive-trajectory-explorer-first-slice-2026-04-27.md
+- Updated navigation:
+  - index.md

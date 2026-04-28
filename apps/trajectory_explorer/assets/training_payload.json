@@ -1,0 +1,53 @@
+{
+  "training_stages": [
+    {
+      "stage_id": "prepare-binary-sft",
+      "label": "Prepare binary SFT data",
+      "script": "training/prepare_sft_data.py --task binary",
+      "input_artifact": "data/processed/train.jsonl",
+      "output_artifact": "data/processed/train_sft_binary.jsonl"
+    },
+    {
+      "stage_id": "train-e2b-binary",
+      "label": "Train Gemma 4 E2B binary adapter",
+      "script": "training/train_e2b.py --task binary",
+      "input_artifact": "data/processed/train_sft_binary.jsonl",
+      "output_artifact": "outputs/adapters/e2b-sft-binary-run1/final"
+    },
+    {
+      "stage_id": "evaluate-run",
+      "label": "Evaluate predictions against held-out data",
+      "script": "training/evaluate.py --predictions <file> --ground-truth data/processed/test.jsonl",
+      "input_artifact": "outputs/reports/predictions.jsonl",
+      "output_artifact": "outputs/reports/eval_results.json"
+    }
+  ],
+  "task_modes": [
+    {
+      "task": "binary",
+      "train_rows": 13767,
+      "dev_rows": 1833,
+      "test_rows": 2755,
+      "prompt_file": "prompts/anomaly_binary.txt"
+    },
+    {
+      "task": "localize",
+      "train_rows": 0,
+      "dev_rows": 0,
+      "test_rows": 0,
+      "prompt_file": "prompts/anomaly_localize.txt"
+    },
+    {
+      "task": "joint",
+      "train_rows": 0,
+      "dev_rows": 0,
+      "test_rows": 0,
+      "prompt_file": "prompts/anomaly_joint.txt"
+    }
+  ],
+  "run_notes": [
+    "E2B is the primary local-first fine-tuning target.",
+    "E4B remains an optional comparison path for later runs.",
+    "RL/GRPO belongs to a later phase after SFT and evaluation are stable."
+  ]
+}

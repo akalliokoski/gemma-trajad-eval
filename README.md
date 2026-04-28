@@ -153,10 +153,18 @@ gemma-trajad-eval/
   integrations/
   prompts/
   docs/
+  apps/
 
   wiki/                      # Project LLM Wiki (to be created and maintained by Hermes)
   outputs/                   # Generated adapters, reports, artifacts
 ```
+
+Trajectory explorer first slice:
+- `apps/trajectory_explorer/index.html` — static visualization shell
+- `apps/trajectory_explorer/assets/` — generated payload JSON + bundled JS
+- `docs/visualization/trajectory-explorer-spec.md` — product spec
+- `docs/visualization/trajectory-explorer-storyboard.md` — scene-by-scene plan
+- `docs/visualization/trajectory-explorer-data-contract.md` — export contract
 
 Important docs:
 - `AGENTS.md` — project operating instructions for Hermes and future agents
